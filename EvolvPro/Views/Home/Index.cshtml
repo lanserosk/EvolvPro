@@ -1,0 +1,84 @@
+﻿@{
+    ViewData["Title"] = "Inicie sesion";
+}
+
+@model Usuario
+
+<style>
+    .card {
+        margin-top: 50px;
+        border: none;
+        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+        border-radius: 10px;
+        background-color: #121212;
+    }
+
+    .card-title {
+        margin-bottom: 30px;
+        color: #FFFFFF;
+        font-weight: bold;
+    }
+
+    .btn-green {
+        background-color: #1DB954;
+        color: white;
+        border-radius: 10px;
+        margin-top: 20px;
+        border: none;
+    }
+
+        .btn-green:hover {
+            background-color: #1ED760;
+        }
+
+    .form-group label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #FFFFFF;
+    }
+
+    .form-control {
+        height: 40px;
+        border-radius: 10px;
+        border: none;
+        background-color: #FFFFFF;
+        font-size: 14px;
+        font-weight: 500;
+        color: #121212;
+    }
+
+    .form-check-input[type="checkbox"] {
+        height: 18px;
+        width: 18px;
+        margin-right: 10px;
+    }
+
+    .form-check-label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #FFFFFF;
+    }
+</style>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Inicio de sesion</h5>
+                    <form asp-action="Login" asp-controller="Home" method="post">
+                        <div class="form-group">
+                            <label for="email">Email address</label>
+                            <input type="text" class="form-control" id="correo" placeholder="correo del usuario" name="correo">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" placeholder="Contraseña" name="contra">
+                        </div>
+                        <center><button type="submit" class="btn btn-green btn-block">Ingresar</button></center>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
