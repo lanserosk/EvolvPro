@@ -7,10 +7,29 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/EvolvPro.styles.css" asp-append-version="true" />
+    <style>
+        body {
+            background-color: #1E1E1E;
+            color: #F8F8F8;
+        }
+
+        .navbar-light .navbar-brand {
+            color: #F8F8F8;
+        }
+
+        .navbar-light .navbar-nav .nav-link {
+            color: #F8F8F8;
+        }
+
+        .footer {
+            background-color: #333333;
+            color: #F8F8F8;
+        }
+    </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">EvolvPro</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -36,7 +55,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class=" footer text-muted">
         <div class="container">
             &copy; 2023 - EvolvPro - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>

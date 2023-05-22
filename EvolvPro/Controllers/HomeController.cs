@@ -27,6 +27,10 @@ namespace EvolvPro.Controllers
         {
             return View();
         }
+        public IActionResult Recu_Contra()
+        {
+            return View();
+        }
         public IActionResult Menu()
         {
             ViewBag.sesion = HttpContext.Session.GetString("VarSesion1");
