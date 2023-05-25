@@ -1,0 +1,303 @@
+﻿@model Usuario
+
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white" style="height: 90vh;">
+                <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                    <span class="fs-5 d-none d-sm-inline">Menu</span>
+                </a>
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link align-middle px-0">
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Inicio</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-collection-fill"></i> <span class="ms-1 d-none d-sm-inline">Mantenimiento</span>
+                        </a>
+                        <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
+                            <li class="w-100">
+                                <a asp-action="Usuarios" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Usuarios</span> </a>
+                            </li>
+                            <li>
+                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Clientes</span></a>
+                            </li>
+                            <li>
+                                <a class="nav-link px-0" asp-area="" asp-controller="Home" asp-action="DetEstado" method="POST"> <span class="d-none d-sm-inline">Detalle Estado</span></a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Cronograma</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
+                            <i class="fs-4 bi-folder-fill"></i> <span class="ms-1 d-none d-sm-inline">Proyectos</span>
+                        </a>
+                        <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
+                            <li class="w-100">
+                                ''
+                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 1</a>
+                            </li>
+                            <li>
+                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 2</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-bug-fill"></i> <span class="ms-1 d-none d-sm-inline">Problemas(issues)</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-bug-fill"></i> <span class="ms-1 d-none d-sm-inline">Reuniones</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="dropdown pb-4">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30" class="rounded-circle">
+                        <span class="d-none d-sm-inline mx-1">loser</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                        <li><a class="dropdown-item" href="#">New project...</a></li>
+                        <li><a class="dropdown-item" href="#">Settings</a></li>
+                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">Sign out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col py-3">
+            <form asp-action="Index" asp-controller="Home" method="POST">
+                <button type="submit" class="btn btn-dark float-end">Cerrar sesion</button>
+            </form>
+            @if (ViewBag.sesion == "1")
+            {
+
+                <h3>Mantenimiento usuarios</h3>
+                <hr>
+
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#usuarioModal">
+                    Nuevo usuario
+                </button>
+
+                <hr />
+                <br />
+
+                <div id="contenido">
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="usuarioModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <h5 class="modal-title text-dark" id="exampleModalLabel">Creación de accesos </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body text-dark">
+
+                                <form id="Form1">
+                                    <label for="message-text" class="col-form-label">Nombre Completo: *</label>
+                                    <input asp-for="NombreUsu" class="form-control" placeholder="Ejm Juan Perez" />
+
+                                    <label for="message-text" class="col-form-label">Teléfono: *</label>
+                                    <input asp-for="TelefonoUsu" class="form-control" placeholder="Ejm. 2565-9855" />
+
+                                    <label for="message-text" class="col-form-label">Correo Electrónico:</label>
+                                    <input asp-for="CorreoUsu" class="form-control" placeholder="Ejm. juan.perez@gmail.com" />
+
+                                    <label for="message-text" class="col-form-label">Contraseña:</label>
+                                    <input asp-for="ContrasenaUsu" class="form-control" type="password" placeholder="***" />
+
+                                    <label for="message-text" class="col-form-label">Seleccione una pregunta de seguridad: *</label>
+                                    <div>
+                                        <select class="form-select" id="seguridad" asp-for="FkPregunta">
+                                        </select>
+                                    </div>
+
+                                    <label for="message-text" class="col-form-label">Ingrese una respuesta:</label>
+                                    <input asp-for="RespuestaUsu" class="form-control" placeholder="Ejm. Luki" />
+
+                                    <label for="message-text" class="col-form-label">Seleccione un tipo de usuario:*</label>
+                                    <div>
+                                        <select class="form-select" id="tUsuarios" asp-for="FkTipousu">
+                                        </select>
+                                    </div>
+                                </form>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" id="btnCerrar" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="button" id="btnGuardar" class="btn btn-primary">Guardar</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            }
+            else
+            {
+                <center><h1>Bienvenido Project manager</h1></center>
+            }
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+
+        function cargarTabla() {
+
+            $.ajax({
+                url: '/Home/mostrarUsuarios',
+                type: 'post',
+                dataType: 'json',
+                cache: false
+            }).done(function (resp) {
+                console.log(resp);
+                var div = $("#contenido");
+                var tabla = "<table class='table table-stripperd text-white'><thead><tr><th>Id </th><th>Nombre </th><th>Teléfono</th><th>Correo</th><th> Preg. a usuario </th><th>Res. Usuario</th><th>Estado</th><th>Tip. Usuario</th><th>Acciones</th></tr></thead><tbody>";
+                $.each(resp, function (index, users) {
+                    tabla += "<tr>";
+                    tabla += "<td>" + users.idUsuario + "</td>";
+                    tabla += "<td>" + users.nombreUsu + "</td>";
+                    tabla += "<td>" + users.telefonoUsu + "</td>";
+                    tabla += "<td>" + users.correoUsu + "</td>";
+                    tabla += "<td>" + users.preguntaUsu + "</td>";
+                    tabla += "<td>" + users.respuestaUsu + "</td>";
+
+                    if (users.fkEstadousu == 1) {
+                        tabla += "<td>Activo</td>";
+                    } else {
+                        tabla += "<td>Desactivado</td>";
+                    }
+                    tabla += "<td>" + users.fkTipousu + "</td>";
+                    tabla += "<td><a class='nav-link' href=\"javascript:editarUse('" + users.idUsuario + "')\">Editar</a><a class='nav-link' href=\"javascript:elimiarUsu('" + users.idUsuario + "')\">Eliminar</a></td>";
+                    tabla += "</tr>";
+                });
+                tabla += "</tbody></table>";
+                div.empty();
+                div.append(tabla);
+            }).fail();
+
+        }
+
+        function cargartUsuario() {
+
+            $.ajax({
+                url: '/Home/listTUsuario',
+                type: 'post',
+                dataType: 'json',
+                cache: false
+            }).done(function (resp) {
+                console.log(resp);
+                var div = $("#tUsuarios");
+                var select = " <option selected>Seleccione</option>";
+                $.each(resp, function (index, x) {
+                    select += "<option  value=" + x.idTipousu + ">" + x.nombreTipo + "</option>";
+                });
+                div.empty();
+                div.append(select);
+            }).fail();
+        }
+
+        function cargarPregSeguridad() {
+
+            $.ajax({
+                url: '/Home/listPreguntas',
+                type: 'post',
+                dataType: 'json',
+                cache: false
+            }).done(function (resp) {
+                console.log(resp);
+                var div = $("#seguridad");
+                var select = " <option selected>Seleccione</option>";
+                $.each(resp, function (index, x) {
+                    select += "<option value=" + x.idPregunta + ">" + x.descPregunta + "</option>";
+                });
+                div.empty();
+                div.append(select);
+            }).fail();
+
+        }
+        function elimiarUsu(IdUsuario) {
+            swal({
+                title: "Estas seguro?",
+                text: "Una vez eliminado se pierde definitivamente....",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $.ajax({
+                            url: '@Url.Action("EliminarUsuario", "Home")',
+                            type: 'post',
+                            dataType: 'json',
+                            cache: false,
+                            data: { id: IdUsuario }
+                        }).done(function (resp) {
+                            if (resp) {
+                                swal("Eliminado!")
+                                cargarTabla();
+                            } else {
+                                swal("Problemas al eliminar!")
+                            }
+                        }).fail();
+
+                    } else {
+                        swal("El registro no se elimino!");
+                    }
+                });
+        }
+        $(document).ready(function () {
+
+            //jquery
+            cargarTabla();
+            cargarPregSeguridad();
+            cargartUsuario();
+            //programamos los botones
+            $("#btnGuardar").click(function () {
+                if ($("#NombreUsu").val() != "" &&
+                    $("#TelefonoUsu").val() != "" &&
+                    $("#CorreoUsu").val() != "" &&
+                    $("#RespuestaUsu").val() != "" &&
+                    $("#FkTipousu").val() != "") {
+                    //procedemos
+                    var formulario = $("#Form1").serialize();
+
+                    $.ajax({
+                        url: '@Url.Action("guardarUsuario","Home")',
+                        type: 'post',
+                        cache: false,
+                        dataType: 'json',
+                        data: formulario
+                    }).done(function (resp) {
+                        if (resp) {
+                            swal("Guardado con éxito");
+                            cargarTabla();
+                            $("#btnCerrar").click();
+                        } else {
+                            swal("Error al guardar");
+                        }
+                    }).fail(function () {
+                        swal("Error al guardar");
+                    });
+                } else {
+                    swal("Todos los campos son requeridos");
+                }
+            });
+        });
+    </script>
+}

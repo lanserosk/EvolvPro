@@ -1,0 +1,228 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model DetalleEstado
+
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white" style="height: 90vh;">
+                <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                    <span class="fs-5 d-none d-sm-inline">Menu</span>
+                </a>
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link align-middle px-0">
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Inicio</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-collection-fill"></i> <span class="ms-1 d-none d-sm-inline">Mantenimiento</span>
+                        </a>
+                        <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
+                            <li class="w-100">
+                                <a asp-action="Usuarios" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Usuarios</span> </a>
+                            </li>
+                            <li>
+                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Clientes</span></a>
+                            </li>
+                            <li>
+                                <a class="nav-link px-0" asp-area="" asp-controller="Home" asp-action="Detalle_Estado"> <span class="d-none d-sm-inline">Detalle Estado</span></a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Cronograma</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
+                            <i class="fs-4 bi-folder-fill"></i> <span class="ms-1 d-none d-sm-inline">Proyectos</span>
+                        </a>
+                        <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
+                            <li class="w-100">
+                                ''
+                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 1</a>
+                            </li>
+                            <li>
+                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 2</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-bug-fill"></i> <span class="ms-1 d-none d-sm-inline">Problemas(issues)</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-bug-fill"></i> <span class="ms-1 d-none d-sm-inline">Reuniones</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="dropdown pb-4">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30" class="rounded-circle">
+                        <span class="d-none d-sm-inline mx-1">loser</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                        <li><a class="dropdown-item" href="#">New project...</a></li>
+                        <li><a class="dropdown-item" href="#">Settings</a></li>
+                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">Sign out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col py-3">
+            <form asp-action="Index" asp-controller="Home" method="POST">
+                <button type="submit" class="btn btn-dark float-end">Cerrar sesion</button>
+            </form>
+
+            <div class="card bg-dark text-white">
+                <div class="card-header">
+                    <h5>Detalles de estados</h5>
+                </div>
+                <div class="card-body">
+
+                    <style>
+                        .form-inline .form-control {
+                            display: inline-block;
+                            width: auto;
+                            vertical-align: middle;
+                        }
+                    </style>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detEstadoModal">
+                        Nuevo Detalle de estado
+                    </button>
+                    <div class="table-responsive" id="contenido">
+                        
+                    </div>
+
+                </div>
+
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="detEstadoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title text-dark" id="exampleModalLabel">Creación de accesos </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-dark">
+
+                            <form id="FormDetEstado">
+                                <label for="message-text" class="col-form-label">Valor del estado</label>
+                                <input asp-for="ValorDestado" class="form-control" placeholder="Activo, suspendido, abierto, etc" />
+
+
+                                <label for="message-text" class="col-form-label">Seleccione un Estado</label>
+                                <div>
+                                    <select class="form-select" id="estado" asp-for="FkEstado">
+                                    </select>
+                                </div>
+                            </form>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="btnCerrar" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="button" id="btnGuardar" class="btn btn-primary">Guardar</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            cargarTabla();
+            cargarEstado();
+            $("#btnGuardar").click(function () {
+                if ($("#ValorDestado").val() != "" &&
+                    $("#FkEstado").val() != "") {
+                    //procedemos
+                    var formulario = $("#FormDetEstado").serialize();
+
+                    $.ajax({
+                        url: '@Url.Action("guardarDetEstado","Home")',
+                        type: 'post',
+                        cache: false,
+                        dataType: 'json',
+                        data: formulario
+                    }).done(function (resp) {
+                        if (resp) {
+                            swal("Guardado con éxito");
+                            cargarTabla();
+                            $("#btnCerrar").click();
+                        } else {
+                            swal("Error al guardar");
+                        }
+                    }).fail(function () {
+                        swal("Error al guardar");
+                    });
+                } else {
+                    swal("Todos los campos son requeridos");
+                }
+            });
+        });
+        function cargarTabla() {
+
+            $.ajax({
+                url: '/Home/mostrarDestalleEst',
+                type: 'post',
+                dataType: 'json',
+                cache: false
+            }).done(function (resp) {
+                console.log(resp);
+                var div = $("#contenido");
+                var tabla = "<table class='table table-dark table - striped'> <thead> <tr> <th> codigo </th> <th> Valor </th> <th> Estado </th> <th>  </th> <th>  </th> <tbody> ";
+                $.each(resp, function (index, detalleestado) {
+                    tabla += "<tr>";
+                    tabla += "<td>" + detalleestado.idDetalleestado + "</td>";
+                    tabla += "<td>" + detalleestado.valorDestado + "</td>";
+                    tabla += "<td>" + detalleestado.nombre + "</td>";
+                    tabla += "</tr>";
+                });
+                tabla += "</tbody></table>";
+                div.empty();
+                div.append(tabla);
+            }).fail();
+
+        }
+
+        function cargarEstado() {
+
+            $.ajax({
+                url: '/Home/listEstado',
+                type: 'post',
+                dataType: 'json',
+                cache: false
+            }).done(function (resp) {
+                console.log(resp);
+                var div = $("#estado");
+                var select = " <option selected>Seleccione</option>";
+                $.each(resp, function (index, x) {
+                    select += "<option value=" + x.idEstado + ">" + x.nombre + "</option>";
+                });
+                div.empty();
+                div.append(select);
+            }).fail();
+
+        }
+
+    </script>
+}
