@@ -279,6 +279,7 @@
                             if (resp) {
                                 swal("Eliminado!")
                                 cargarTabla();
+                                $("#IdUsuario").val("");
                             } else {
                                 swal("Problemas al eliminar!")
                             }
@@ -315,12 +316,13 @@
                         if (resp) {
                             swal("Guardado con éxito");
                             cargarTabla();
+                            $("#IdUsuario").val("");
                             $("#btnCerrar").click();
                         } else {
-                            swal("Error al guardar");
+                            swal("Error al guardar1");
                         }
                     }).fail(function () {
-                        swal("Error al guardar");
+                        swal("Error al guardar2");
                     });
                 } else {
                     swal("Todos los campos son requeridos");

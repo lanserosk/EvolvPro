@@ -98,6 +98,21 @@ namespace EvolvPro.Controllers
             return Json(resultado);
         }
 
+        [HttpPost]
+        public IActionResult EditarDetEstado(int id)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            DetalleEstado res = new DetalleEstado();
+            var objEdit = contexto.DetalleEstados.FirstOrDefault(x => x.IdDetalleestado == id);
+
+
+            res.IdDetalleestado = objEdit.IdDetalleestado;
+            res.ValorDestado = objEdit.ValorDestado;
+            res.FkEstado = objEdit.FkEstado;
+
+            return Json(res);
+        }
+
         //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
         //MANTENIMIENTO USUARIOS
         [HttpPost]
@@ -259,14 +274,22 @@ namespace EvolvPro.Controllers
         {
             EvolvProContext contexto = new EvolvProContext();
             DetalleEstado obj = new DetalleEstado();
+            obj.IdDetalleestado = det.IdDetalleestado;
             obj.ValorDestado = det.ValorDestado;
 
             obj.FkEstado = det.FkEstado;
             //CAPTURAMOS ALGUN POSIBLE ERROR
             try
             {
-                
+                if(obj.IdDetalleestado == 0 || obj.IdDetalleestado == null)
+                {
                     contexto.DetalleEstados.Add(obj);
+                }
+                else
+                {
+                    contexto.Entry(det).State = EntityState.Modified;
+                }
+                    
                     contexto.SaveChanges();
 
 

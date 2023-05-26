@@ -122,8 +122,9 @@
                         <div class="modal-body text-dark">
 
                             <form id="FormDetEstado">
+                                <input id="IdDetalleestado" name="IdDetalleestado" asp-for="IdDetalleestado" type="hidden" class="form-control" placeholder="Ejm Juan Perez" />
                                 <label for="message-text" class="col-form-label">Valor del estado</label>
-                                <input asp-for="ValorDestado" class="form-control" placeholder="Activo, suspendido, abierto, etc" />
+                                <input id="ValorDestado" name="ValorDestado" asp-for="ValorDestado" class="form-control" placeholder="Activo, suspendido, abierto, etc" />
 
 
                                 <label for="message-text" class="col-form-label">Seleccione un Estado</label>
@@ -167,12 +168,13 @@
                         if (resp) {
                             swal("Guardado con éxito");
                             cargarTabla();
+                            $("#IdDetalleestado").val(""); // Vaciar el campo de entrada
                             $("#btnCerrar").click();
                         } else {
-                            swal("Error al guardar");
+                            swal("Error al guardar1");
                         }
                     }).fail(function () {
-                        swal("Error al guardar");
+                        swal("Error al guardar2");
                     });
                 } else {
                     swal("Todos los campos son requeridos");
@@ -199,6 +201,7 @@
                             if (resp) {
                                 swal("Eliminado!")
                                 cargarTabla();
+                                $("#IdDetalleestado").val("");
                             } else {
                                 swal("Problemas al eliminar!")
                             }
@@ -208,6 +211,25 @@
                         swal("El registro no se elimino!");
                     }
                 });
+        }
+        function editarDetEstado(idDetalleestado) {
+            $.ajax({
+                url: '/Home/EditarDetEstado',
+                type: 'post',
+                dataType: 'json',
+
+                data: { id: idDetalleestado },
+                success: function (data) {
+
+                    $('#IdDetalleestado').val(data.idDetalleestado);
+                    $('#ValorDestado').val(data.valorDestado);
+                    $('#estado').val(data.fkEstado);
+                    $('#detEstadoModal').modal('show');
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
         }
 
 
@@ -227,7 +249,7 @@
                     tabla += "<td>" + detalleestado.idDetalleestado + "</td>";
                     tabla += "<td>" + detalleestado.valorDestado + "</td>";
                     tabla += "<td>" + detalleestado.nombre + "</td>";
-                    tabla += "<td><a class='btn btn-primary' href=\"javascript:editarUse('" + detalleestado.idDetalleestado + "')\">Editar</a><a class='btn btn-danger' href=\"javascript:elimiarDetEstado('" + detalleestado.idDetalleestado + "')\">Eliminar</a></td>";
+                    tabla += "<td><a class='btn btn-primary' href=\"javascript:editarDetEstado('" + detalleestado.idDetalleestado + "')\">Editar</a><a class='btn btn-danger' href=\"javascript:elimiarDetEstado('" + detalleestado.idDetalleestado + "')\">Eliminar</a></td>";
                     tabla += "</tr>";
                 });
                 tabla += "</tbody></table>";

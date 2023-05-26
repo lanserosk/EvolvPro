@@ -208,6 +208,7 @@
                             if (resp) {
                                 swal("Eliminado!")
                                 cargarTabla();
+                                $("#IdCliente").val("");
                             } else {
                                 swal("Problemas al eliminar!")
                             }
@@ -240,6 +241,7 @@
                         if (resp) {
                             swal("Guardado con éxito");
                             cargarTabla();
+                            $("#IdCliente").val("");
                             $("#btnCerrar").click();
                         } else {
                             swal("Error al guardar");
