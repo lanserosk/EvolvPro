@@ -1,5 +1,7 @@
 ﻿
-@model Usuario
+@model Cliente
+
+
 
 <div class="container-fluid">
     <div class="row flex-nowrap">
@@ -85,11 +87,11 @@
             @if (ViewBag.sesion == "1")
             {
                 
-                <h3>Mantenimiento usuarios</h3>
+                <h3>Mantenimiento Clientes</h3>
                 <hr>
 
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#usuarioModal">
-                    Nuevo usuario
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#clienteModal">
+                    Nuevo cliente
                 </button>
 
                 <hr />
@@ -98,44 +100,24 @@
                 <div id="contenido">
                 </div>
                 <!-- Modal -->
-                <div class="modal fade" id="usuarioModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade" id="clienteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
 
                             <div class="modal-header">
-                                <h5 class="modal-title text-dark" id="exampleModalLabel">Creación de accesos </h5>
+                                <h5 class="modal-title text-dark" id="exampleModalLabel">Registro de clientes </h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body text-dark">
 
                                 <form id="Form1">
                                     <label for="message-text" class="col-form-label">Nombre Completo: *</label>
-                                    <input id="IdUsuario" name="IdUsuario" asp-for="IdUsuario" type="hidden" class="form-control" placeholder="Ejm Juan Perez" />
-                                    <input id="NombreUsu" name="NombreUsu" asp-for="NombreUsu" class="form-control  text-primary" placeholder="Ejm Juan Perez" />
+                                    <input id="IdCliente" name="IdCliente" asp-for="IdCliente" type="hidden" class="form-control" />
+                                    <input id="NombreCliente" name="NombreCliente" asp-for="NombreCliente" class="form-control  text-primary" placeholder="Ejm Juan Perez" />
 
-                                    <label for="message-text" class="col-form-label">Teléfono: *</label>
-                                    <input id="TelefonoUsu" name="TelefonoUsu"  asp-for="TelefonoUsu" class="form-control text-primary" placeholder="Ejm. 2565-9855" />
+                                    <label for="message-text" class="col-form-label">Dirección: *</label>
+                                    <input id="DireccionCliente" name="DireccionCliente" asp-for="DireccionCliente" class="form-control text-primary" placeholder="Ejm. Col. Buenos Aires l#1" />
 
-                                    <label for="message-text" class="col-form-label">Correo Electrónico:</label>
-                                    <input id="CorreoUsu" name="CorreoUsu" asp-for="CorreoUsu" class="form-control  text-primary" placeholder="Ejm. juan.perez@gmail.com" />
-
-                                    <label for="message-text" class="col-form-label">Contraseña:</label>
-                                    <input id="ContrasenaUsu" name="ContrasenaUsu" asp-for="ContrasenaUsu" class="form-control  text-primary" type="password" placeholder="*********" />
-                                   
-                                    <label for="message-text" class="col-form-label">Seleccione una pregunta de seguridad: *</label>
-                                    <div >
-                                        <select class="form-select text-primary" id="seguridad" asp-for="FkPregunta">
-                                        </select>
-                                    </div>
-
-                                    <label for="message-text" class="col-form-label">Ingrese una respuesta:</label>
-                                    <input id="RespuestaUsu" name="RespuestaUsu" asp-for="RespuestaUsu" class="form-control  text-primary" placeholder="Ejm. Luki" />
-
-                                    <label for="message-text" class="col-form-label">Seleccione un tipo de usuario:*</label>
-                                    <div>
-                                        <select class="form-select text-primary" id="tUsuarios" asp-for="FkTipousu">
-                                        </select>
-                                    </div>
                                 </form>
 
                             </div>
@@ -161,30 +143,20 @@
 
         function cargarTabla() {
             $.ajax({
-                url: '/Home/mostrarUsuarios',
+                url: '/Home/mostrarClientes',
                 type: 'post',
                 dataType: 'json',
                 cache: false
             }).done(function (resp) {
                 // console.log(resp);
                 var div = $("#contenido");
-                var tabla = "<table class='table table-stripperd text-white'><thead><tr><th>Id </th><th>Nombre </th><th>Teléfono</th><th>Correo</th><th> Preg. a usuario </th><th>Res. Usuario</th><th>Estado</th><th>Tip. Usuario</th><th>Acciones</th></tr></thead><tbody>";
-                $.each(resp, function (index, users) {
+                var tabla = "<table class='table table-stripperd text-white'><thead><tr><th>Id </th><th>Nombre Cliente</th><th>Dirección</th><th>Acciones</th></tr></thead><tbody>";
+                $.each(resp, function (index, cli) {
                     tabla += "<tr>";
-                    tabla += "<td>" + users.idUsuario + "</td>";
-                    tabla += "<td>" + users.nombreUsu + "</td>";
-                    tabla += "<td>" + users.telefonoUsu + "</td>";
-                    tabla += "<td>" + users.correoUsu + "</td>";
-                    tabla += "<td>" + users.preguntaUsu + "</td>";
-                    tabla += "<td>" + users.respuestaUsu + "</td>";
-
-                    if (users.fkEstadousu == 1) {
-                        tabla += "<td>Activo</td>";
-                    } else {
-                        tabla += "<td>Desactivado</td>";
-                    }
-                    tabla += "<td>" + users.fkTipousu + "</td>";
-                    tabla += "<td><a class='nav-link' href=\"javascript:editarUsu('" + users.idUsuario + "')\">Editar</a><a class='nav-link' href=\"javascript:elimiarUsu('" + users.idUsuario + "')\">Eliminar</a></td>";
+                    tabla += "<td>" + cli.idCliente + "</td>";
+                    tabla += "<td>" + cli.nombreCli + "</td>";
+                    tabla += "<td>" + cli.direccionCli + "</td>";
+                    tabla += "<td><a class='nav-link' href=\"javascript:editarCli('" + cli.idCliente + "')\">Editar</a><a class='nav-link' href=\"javascript:elimiarCli('" + cli.idCliente + "')\">Eliminar</a></td>";
                     tabla += "</tr>";
                 });
                 tabla += "</tbody></table>";
@@ -194,44 +166,21 @@
 
         }
 
-        function cargartUsuario() {
 
+        function editarCli(idCliente) {
             $.ajax({
-                url: '/Home/listTUsuario',
-                type: 'post',
-                dataType: 'json',
-                cache: false
-            }).done(function (resp) {
-                // console.log(resp);
-                var div = $("#tUsuarios");
-                var select = " <option selected>Seleccione</option>";
-                $.each(resp, function (index, x) {
-                    select += "<option  value=" + x.idTipousu + ">" + x.nombreTipo + "</option>";
-                });
-                div.empty();
-                div.append(select);
-            }).fail();
-        }
-
-        function editarUsu(idUsuario) {
-            $.ajax({
-                url: '/Home/EditarUsuario',
+                url: '/Home/EditarClientes',
                 type: 'post',
                 dataType: 'json',
 
-                data: { id: idUsuario },
+                data: { id: idCliente },
                 success: function (data) {
                     // console.log(data.nombreUsu);
 
-                    $('#IdUsuario').val(data.idUsuario);
-                    $('#NombreUsu').val(data.nombreUsu);
-                    $('#TelefonoUsu').val(data.telefonoUsu);
-                    $('#CorreoUsu').val(data.correoUsu);
-                    $('#seguridad').val(data.fkPregunta);
-                    $('#RespuestaUsu').val(data.respuestaUsu);
-                    $('#FkEstadousu').val(data.fkEstadousu);
-                    $('#tUsuarios').val(data.fkTipousu);
-                    $('#usuarioModal').modal('show');
+                    $('#IdCliente').val(data.idCliente);
+                    $('#NombreCliente').val(data.nombreCliente);
+                    $('#DireccionCliente').val(data.direccionCliente);
+                    $('#clienteModal').modal('show');
                 },
                 error: function (error) {
                     console.log(error);
@@ -239,27 +188,7 @@
             });
         }
 
-        function cargarPregSeguridad() {
-
-            $.ajax({
-                url: '/Home/listPreguntas',
-                type: 'post',
-                dataType: 'json',
-                cache: false
-            }).done(function (resp) {
-                //console.log(resp);
-                var div = $("#seguridad");
-                var select = " <option selected>Seleccione</option>";
-                $.each(resp, function (index, x) {
-                    select += "<option value=" + x.idPregunta + ">" + x.descPregunta + "</option>";
-                });
-                div.empty();
-                div.append(select);
-            }).fail();
-
-        }
-
-        function elimiarUsu(IdUsuario) {
+        function elimiarUsu(IdCliente) {
             swal({
                 title: "Estas seguro?",
                 text: "Una vez eliminado se pierde definitivamente....",
@@ -270,11 +199,11 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url: '@Url.Action("EliminarUsuario", "Home")',
+                            url: '@Url.Action("EliminarClientes", "Home")',
                             type: 'post',
                             dataType: 'json',
                             cache: false,
-                            data: { id: IdUsuario }
+                            data: { id: IdCliente }
                         }).done(function (resp) {
                             if (resp) {
                                 swal("Eliminado!")
@@ -293,20 +222,16 @@
 
             //jquery
             cargarTabla();
-            cargarPregSeguridad();
-            cargartUsuario();
+
             //programamos los botones
             $("#btnGuardar").click(function () {
-                if ($("#NombreUsu").val() != "" &&
-                    $("#TelefonoUsu").val() != "" &&
-                    $("#CorreoUsu").val() != "" &&
-                    $("#RespuestaUsu").val() != "" &&
-                    $("#FkTipousu").val() != "") {
+                if ($("#NombreCliente").val() != "" &&
+                    $("#DireccionCliente").val()) {
                     //procedemos
                     var formulario = $("#Form1").serialize();
 
                     $.ajax({
-                        url: '@Url.Action("guardarUsuario","Home")',
+                        url: '@Url.Action("guardarClientes","Home")',
                         type: 'post',
                         cache: false,
                         dataType: 'json',
@@ -329,6 +254,8 @@
         });
     </script>
 }
+
+
 
 
 

@@ -179,6 +179,38 @@
                 }
             });
         });
+        function elimiarDetEstado(IdDetalleestado) {
+            swal({
+                title: "Estas seguro?",
+                text: "Una vez eliminado se pierde definitivamente....",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $.ajax({
+                            url: '@Url.Action("EliminarDetEstado", "Home")',
+                            type: 'post',
+                            dataType: 'json',
+                            cache: false,
+                            data: { id: IdDetalleestado }
+                        }).done(function (resp) {
+                            if (resp) {
+                                swal("Eliminado!")
+                                cargarTabla();
+                            } else {
+                                swal("Problemas al eliminar!")
+                            }
+                        }).fail();
+
+                    } else {
+                        swal("El registro no se elimino!");
+                    }
+                });
+        }
+
+
         function cargarTabla() {
 
             $.ajax({
@@ -195,6 +227,7 @@
                     tabla += "<td>" + detalleestado.idDetalleestado + "</td>";
                     tabla += "<td>" + detalleestado.valorDestado + "</td>";
                     tabla += "<td>" + detalleestado.nombre + "</td>";
+                    tabla += "<td><a class='btn btn-primary' href=\"javascript:editarUse('" + detalleestado.idDetalleestado + "')\">Editar</a><a class='btn btn-danger' href=\"javascript:elimiarDetEstado('" + detalleestado.idDetalleestado + "')\">Eliminar</a></td>";
                     tabla += "</tr>";
                 });
                 tabla += "</tbody></table>";
