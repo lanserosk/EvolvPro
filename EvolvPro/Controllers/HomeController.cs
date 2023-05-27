@@ -36,6 +36,11 @@ namespace EvolvPro.Controllers
             return View();
         }
 
+        public IActionResult Proyectos()
+        {
+            return View();
+        }
+
         public IActionResult Usuarios()
         {
             ViewBag.sesion = HttpContext.Session.GetString("VarSesion1");
@@ -254,6 +259,24 @@ namespace EvolvPro.Controllers
             List<Estado> estados = contexto.Estados.ToList();
             return Json(estados);
         }
+        public IActionResult listDetEstado()
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            List<DetalleEstado> detestados = contexto.DetalleEstados.Where(d => d.FkEstado == 2).ToList();
+            return Json(detestados);
+        }
+        public IActionResult listCliente()
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            List<Cliente> clientes = contexto.Clientes.ToList();
+            return Json(clientes);
+        }
+        public IActionResult listUsuario()
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            List<Usuario> usu = contexto.Usuarios.Where(d => d.FkTipousu == 2).ToList();
+            return Json(usu);
+        }
         public IActionResult cargarFormEstado(int IdDetalleestado)
         {
             EvolvProContext contexto = new EvolvProContext();
@@ -392,6 +415,139 @@ namespace EvolvPro.Controllers
         }
 
         //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+        //::::::::::::::PROYECTOS:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+        [HttpPost]
+        public IActionResult mostrarProyectos()
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            var query = from proyecto in contexto.Proyectos
+                        join cliente in contexto.Clientes on proyecto.FkCliente equals cliente.IdCliente
+                        join estado in contexto.DetalleEstados on proyecto.FkEstado equals estado.IdDetalleestado
+                        join usuario in contexto.Usuarios on proyecto.FkUsuario equals usuario.IdUsuario
+                        orderby proyecto.IdProyecto descending
+                        select new
+                        {
+                            proyecto.IdProyecto,
+                            proyecto.NombrePry,
+                            proyecto.CasoNegocio,
+                            proyecto.HorasTotales,
+                            proyecto.HorasTotalesreal,
+                            proyecto.Interesados,
+                            proyecto.FechaInicio,
+                            proyecto.FechaFinalProp,
+                            proyecto.FechaFinalReal,
+                            ClienteNombre = cliente.NombreCliente,
+                            EstadoNombre = estado.ValorDestado,
+                            UsuarioNombre = usuario.NombreUsu
+                        };
+
+            List<Object> resultado = new List<object>();
+            foreach (var item in query)
+            {
+                resultado.Add(item);
+            }
+            return Json(resultado);
+        }
+
+        [HttpPost]
+        public ActionResult guardarProyecto(Proyecto pry)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            Proyecto obj = new Proyecto();
+            obj.IdProyecto = pry.IdProyecto;
+            obj.NombrePry = pry.NombrePry;
+            obj.CasoNegocio = pry.CasoNegocio;
+            obj.HorasTotales = pry.HorasTotales;
+            obj.HorasTotalesreal = null;
+            obj.Interesados = pry.Interesados;
+            obj.FechaInicio = pry.FechaInicio;
+            obj.FechaFinalProp = pry.FechaFinalProp;
+            obj.FechaFinalReal = null;
+            obj.FkCliente = pry.FkCliente;
+            obj.FkUsuario = pry.FkUsuario;
+            obj.FkEstado = pry.FkEstado;
+            //CAPTURAMOS ALGUN POSIBLE ERROR
+            try
+            {
+                if (obj.IdProyecto == 0 || obj.IdProyecto == null)
+                {
+                    contexto.Proyectos.Add(obj);
+                }
+                else
+                {
+                    contexto.Entry(pry).State = EntityState.Modified;
+                }
+
+                contexto.SaveChanges();
+
+
+                return Json(true);
+            }
+            catch (Exception ex)
+            {
+                return Json(false);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult EditarProyectos(int id)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            Proyecto res = new Proyecto();
+            var objEdit = contexto.Proyectos.FirstOrDefault(x => x.IdProyecto == id);
+
+            res.IdProyecto = objEdit.IdProyecto;
+            res.NombrePry = objEdit.NombrePry;
+            res.CasoNegocio = objEdit.CasoNegocio;
+            res.HorasTotales = objEdit.HorasTotales;
+            res.Interesados = objEdit.Interesados;
+            res.FechaInicio = objEdit.FechaInicio;
+            res.FechaFinalProp = objEdit.FechaFinalProp;
+            res.FkCliente = objEdit.FkCliente;
+            res.FkEstado = objEdit.FkEstado;
+            res.FkUsuario = objEdit.FkUsuario;
+
+            return Json(res);
+        }
+
+        [HttpPost]
+        public IActionResult DetallesProyectos(int id)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            var query = from proyecto in contexto.Proyectos
+                        join cliente in contexto.Clientes on proyecto.FkCliente equals cliente.IdCliente
+                        join estado in contexto.DetalleEstados on proyecto.FkEstado equals estado.IdDetalleestado
+                        join usuario in contexto.Usuarios on proyecto.FkUsuario equals usuario.IdUsuario
+                        where proyecto.IdProyecto == id // Filtrar por IdProyecto
+                        select new
+                        {
+                            proyecto.IdProyecto,
+                            proyecto.NombrePry,
+                            proyecto.CasoNegocio,
+                            proyecto.HorasTotales,
+                            proyecto.HorasTotalesreal,
+                            proyecto.Interesados,
+                            proyecto.FechaInicio,
+                            proyecto.FechaFinalProp,
+                            proyecto.FechaFinalReal,
+                            ClienteNombre = cliente.NombreCliente,
+                            EstadoNombre = estado.ValorDestado,
+                            UsuarioNombre = usuario.NombreUsu
+                        };
+
+            List<Object> resultado = new List<object>();
+            foreach (var item in query)
+            {
+                resultado.Add(item);
+            }
+            return Json(resultado);
+        }
+
+
+        //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -1,0 +1,433 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model Proyecto
+
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white" style="height: 90vh;">
+                <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                    <span class="fs-5 d-none d-sm-inline">Menu</span>
+                </a>
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link align-middle px-0">
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Inicio</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-collection-fill"></i> <span class="ms-1 d-none d-sm-inline">Mantenimiento</span>
+                        </a>
+                        <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
+                            <li class="w-100">
+                                <a asp-action="Usuarios" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Usuarios</span> </a>
+                            </li>
+                            <li>
+                                <a asp-action="Clientes" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Clientes</span> </a>
+                            </li>
+                            <li>
+                                <a class="nav-link px-0"> <span class="d-none d-sm-inline">Estados</span></a>
+                            </li>
+                            <li>
+                                <a class="nav-link px-0" asp-area="" asp-controller="Home" asp-action="DetEstado" method="POST"> <span class="d-none d-sm-inline">Detalle Estado</span></a>
+                            </li>
+                            <li>
+                                <a class="nav-link px-0"> <span class="d-none d-sm-inline">Recursos</span></a>
+                            </li>
+                            <li>
+                                <a class="nav-link px-0"> <span class="d-none d-sm-inline">Categorias de problemas</span></a>
+                            </li>
+                            <li>
+                                <a class="nav-link px-0"> <span class="d-none d-sm-inline">Tipos de usuario</span></a>
+                            </li>
+                            <li>
+                                <a class="nav-link px-0"> <span class="d-none d-sm-inline">Preguntas de seguridad</span></a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-calendar-week-fill"></i> <span class="ms-1 d-none d-sm-inline">Cronograma</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link px-0 align-middle" asp-area="" asp-controller="Home" asp-action="Proyectos" method="POST">
+                            <i class="fs-4 bi-folder-fill"></i> <span class="ms-1 d-none d-sm-inline">Proyectos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-bug-fill"></i> <span class="ms-1 d-none d-sm-inline">Problemas(issues)</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-camera-video-fill "></i> <span class="ms-1 d-none d-sm-inline">Reuniones</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="dropdown pb-4">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30" class="rounded-circle">
+                        <span class="d-none d-sm-inline mx-1">loser</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                        <li><a class="dropdown-item" href="#">New project...</a></li>
+                        <li><a class="dropdown-item" href="#">Settings</a></li>
+                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">Sign out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col py-3">
+            <form asp-action="Index" asp-controller="Home" method="POST">
+                <button type="submit" class="btn btn-dark float-end">Cerrar sesion</button>
+            </form>
+            <div class="card bg-dark text-white">
+                <div class="card-header">
+                    <h5>Proyectos</h5>
+                </div>
+                <div class="card-body">
+
+                    <style>
+                        .form-inline .form-control {
+                            display: inline-block;
+                            width: auto;
+                            vertical-align: middle;
+                        }
+                    </style>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#proyectoModal">
+                        Nuevo Proyecto
+                    </button>
+                    <br />
+                    <br />
+                    <div class="" id="contenido">
+                        
+                    </div>
+                    <!-- Modal -->
+                    <div class="modal fade" id="proyectoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <!-- Agregamos la clase "modal-lg" para hacerla más ancha -->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title text-dark" id="exampleModalLabel">Creación de accesos </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body text-dark">
+                                    <form id="FormProyectos">
+                                        <input id="IdProyecto" name="IdProyecto" asp-for="IdProyecto" type="hidden" class="form-control" placeholder="Ejm Juan Perez" />
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <label for="message-text" class="col-form-label">Nombre del proyecto</label>
+                                                <input id="NombrePry" name="NombrePry" asp-for="NombrePry" class="form-control" placeholder="Ej. Proyecto 1" />
+                                            </div>
+                                            <div class="col-6">
+                                                <label for="message-text" class="col-form-label">Horas estimadas del proyecto</label>
+                                                <input id="HorasTotales" name="HorasTotales" asp-for="HorasTotales" class="form-control" placeholder="1 entero y 2 decimales" />
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="input-group">
+                                                <span class="input-group-text">caso de negocio </span>
+                                                <textarea class="form-control" aria-label="With textarea" id="CasoNegocio" name="CasoNegocio" asp-for="CasoNegocio"></textarea>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="input-group">
+                                                <span class="input-group-text">Interesados </span>
+                                                <textarea class="form-control" aria-label="With textarea" id="Interesados" name="Interesados" asp-for="Interesados"></textarea>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <label for="message-text" class="col-form-label">Fecha de inicio</label>
+                                                <div class="input-group">
+                                                    
+                                                    <input id="FechaInicio" name="FechaInicio" asp-for="FechaInicio" type="text" class="form-control datepicker" placeholder="Selecciona una fecha">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <label for="message-text" class="col-form-label">Fecha de final</label>
+                                                <div class="input-group">
+                                                    
+                                                    <input id="FechaFinalProp" name="FechaFinalProp" asp-for="FechaFinalProp" type="text" class="form-control datepickerFinal" placeholder="Selecciona una fecha">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <label for="message-text" class="col-form-label">Seleccione un Cliente</label>
+                                                <div>
+                                                    <select class="form-select" id="cliente" asp-for="FkCliente">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <label for="message-text" class="col-form-label">Seleccione un Project Manager</label>
+                                                <div>
+                                                    <select class="form-select" id="usuario" asp-for="FkUsuario">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <label for="message-text" class="col-form-label">Seleccione un Estado</label>
+                                                <div>
+                                                    <select class="form-select" id="estado" asp-for="FkEstado">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" id="btnCerrar" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                    <button type="button" id="btnGuardar" class="btn btn-primary">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="proyectoDetallesModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl">
+                            <!-- Agregamos la clase "modal-xl" para hacerla más ancha -->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title text-dark" id="exampleModalLabel">Detalles de proyecto </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body text-dark" id="Pry">
+                                    
+                                    <center><h2 id="HorasTotalesReal"></h2><h2> horas de </h2><h2 id="HorasTotales"></h2><h2> horas estimnadas</h2></center>
+                                    <center><h5>Fecha de inicio:</h5> <h5 id="FechaInicio"></h5><h5> | Fecha actual: --/--/-- | Fecha final presupuestada: </h5> <h5 id="FechaFinalProp"></h5><h5> | Fecha Final: </h5> <h5 id="FechaFinalReal"></h5></h5></center>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <h6>Cliente: nombre_cliente</h6>
+                                            <h6>Project Manager: nombre_usuario</h6>
+                                        </div>
+                                        <div class="col-6" ">
+                                            <h6>Estado del proyecto: estado_proyecto</h3>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <h6 for="message-text" class="col-form-label">Caso de negocio:</h6>
+                                            <p></p>
+                                        </div>
+                                        <div class="col-6">
+                                            <h6 for="message-text" class="col-form-label">Interesados</h6>
+                                            <p></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" id="btnCerrar" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                    <button type="button" id="btnGuardar" class="btn btn-primary">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        var today = new Date();
+        $(document).ready(function () {
+            cargarProyectos();
+            cargarClienteLst();
+            cargarDetEstado();
+            cargarUsuarioLst();
+            $('.datepicker').datepicker({
+                format: 'dd/mm/yyyy',
+                language: 'es',
+                autoclose: true,
+                startDate: today
+            });
+            $('.datepickerFinal').datepicker({
+                format: 'dd/mm/yyyy',
+                language: 'es',
+                autoclose: true,
+                startDate: today
+            });
+            $("#btnGuardar").click(function () {
+                if ($("#NombrePry").val() != "" &&
+                    $("#HorasTotales").val() != "" &&
+                    $("#CasoNegocio").val() != "" &&
+                    $("#Interesados").val() != "" &&
+                    $("#FechaInicio").val() != "" &&
+                    $("#FechaFinalProp").val() != "" &&
+                    $("#FkCliente").val() != "" &&
+                    $("#FkUsuario").val() != "" &&
+                    $("#FkEstado").val() != "") {
+                    //procedemos
+                    var formulario = $("#FormProyectos").serialize();
+
+                    $.ajax({
+                        url: '@Url.Action("guardarProyecto","Home")',
+                        type: 'post',
+                        cache: false,
+                        dataType: 'json',
+                        data: formulario
+                    }).done(function (resp) {
+                        if (resp) {
+                            swal("Guardado con éxito");
+                            cargarProyectos();
+                            $("#IdProyecto").val(""); // Vaciar el campo de entrada
+                            $("#btnCerrar").click();
+                        } else {                            swal("Error al guardar1");
+                        }
+                    }).fail(function () {
+                        swal("Error al guardar2");
+                    });
+                } else {
+                    swal("Todos los campos son requeridos");
+                }
+            });
+        });
+        function cargarProyectos() {
+
+            $.ajax({
+                url: '/Home/mostrarProyectos',
+                type: 'post',
+                dataType: 'json',
+                cache: false
+            }).done(function (resp) {
+                console.log(resp);
+                var div = $("#contenido");
+                var tabla = "";
+                $.each(resp, function (index, proyecto) {
+                    tabla += "<div class='card text-white card mb-3' style='width: 100 %; background-color: #232f36;'><div class='container'><br /><h2 class='card-title'>" + proyecto.nombrePry + "</h2><hr/><div class=card-body' style='display: flex; align-items: center;' ><div style='flex-grow: 1;'><h3> -- horas actuales de " + proyecto.horasTotales + " horas propuestas </h3><h4>Fecha de creación:" + proyecto.fechaInicio + " </h4><h4 style = 'text-align: right;'> Hoy: --/--/-- | Estimada: " + proyecto.fechaFinalProp + " </h4></div><h2 style = 'margin-top: -1rem; align-self: flex-start;'> Estado: " + proyecto.estadoNombre + " </h2><a class='btn btn-primary' href=\"javascript:editarProyecto('" + proyecto.idProyecto + "')\"> Editar </a><a class='btn btn-warning' href=\"javascript:detallesProyecto('" + proyecto.idProyecto + "')\"> Ver detalles </a></div></div></div>";
+                });
+                div.empty();
+                div.append(tabla);
+            }).fail();
+
+        }
+        function editarProyecto(idProyecto) {
+            $.ajax({
+                url: '/Home/EditarProyectos',
+                type: 'post',
+                dataType: 'json',
+                data: { id: idProyecto },
+                success: function (data) {
+
+                    $('#IdProyecto').val(data.idProyecto);
+                    $('#NombrePry').val(data.nombrePry);
+                    $('#HorasTotales').val(data.horasTotales);
+                    $('#CasoNegocio').val(data.casoNegocio);
+                    $('#Interesados').val(data.interesados);
+                    $('#FechaInicio').val(data.fechaInicio);
+                    $('#FechaFinalProp').val(data.fechaFinalProp);
+                    $('#cliente').val(data.fkCliente);
+                    $('#estado').val(data.fkEstado);
+                    $('#usuario').val(data.fkUsuario);
+                    $('#proyectoModal').modal('show');
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+        function detallesProyecto(idProyecto) {
+            $.ajax({
+                url: '/Home/DetallesProyectos/' + idProyecto,
+                type: 'post',
+                dataType: 'json',
+                cache: false
+            }).done(function (resp) {
+                console.log(resp);
+                var div = $("#Pry");
+                var h1 = "";
+                $.each(resp, function (index, x) {
+                    h1 += "<center><h1>" + x.nombrePry + "</h1></center><center><h2>-- horas de " + x.horasTotales + " horas estimadas</h2></center> <center><h5>Fecha de inicio:" + x.fechaInicio + " | Fecha actual: --/--/-- | Fecha final presupuestada: " + x.fechaFinalProp + " | Fecha Final: --/--/--</h5></center> <div class='row'> <div class='col-6'> <h6>Cliente: " + x.clienteNombre + "</h6> <h6>Project Manager: " + x.usuarioNombre + "</h6> </div> <div class='col-6'> <h6>Estado del proyecto: " + x.estadoNombre + "</h3> </div> </div> <div class='row'> <div class='col-6'> <h6 for='message-text' class='col-form-label'>Caso de negocio:</h6> <p>" + x.casoNegocio + "</p> </div> <div class='col-6'> <h6 for='message-text' class='col-form-label'>Interesados</h6> <p>" + x.interesados + "</p> </div> </div>";
+                });
+                div.empty();
+                div.append(h1);
+                $('#proyectoDetallesModal').modal('show');
+            }).fail();
+        }
+
+        function cargarDetEstado() {
+
+            $.ajax({
+                url: '/Home/listDetEstado',
+                type: 'post',
+                dataType: 'json',
+                cache: false
+            }).done(function (resp) {
+                console.log(resp);
+                var div = $("#estado");
+                var select = " <option selected>Seleccione</option>";
+                $.each(resp, function (index, x) {
+                    select += "<option value=" + x.idDetalleestado + ">" + x.valorDestado + "</option>";
+                });
+                div.empty();
+                div.append(select);
+            }).fail();
+
+        }
+        function cargarClienteLst() {
+
+            $.ajax({
+                url: '/Home/listCliente',
+                type: 'post',
+                dataType: 'json',
+                cache: false
+            }).done(function (resp) {
+                console.log(resp);
+                var div = $("#cliente");
+                var select = " <option selected>Seleccione</option>";
+                $.each(resp, function (index, x) {
+                    select += "<option value=" + x.idCliente + ">" + x.nombreCliente + "</option>";
+                });
+                div.empty();
+                div.append(select);
+            }).fail();
+
+        }
+        function cargarUsuarioLst() {
+
+            $.ajax({
+                url: '/Home/listUsuario',
+                type: 'post',
+                dataType: 'json',
+                cache: false
+            }).done(function (resp) {
+                console.log(resp);
+                var div = $("#usuario");
+                var select = " <option selected>Seleccione</option>";
+                $.each(resp, function (index, x) {
+                    select += "<option value=" + x.idUsuario + ">" + x.nombreUsu + "</option>";
+                });
+                div.empty();
+                div.append(select);
+            }).fail();
+
+        }
+
+    </script>
+}
