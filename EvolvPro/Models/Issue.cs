@@ -17,11 +17,15 @@ public partial class Issue
 
     public string? ResolucionIssue { get; set; }
 
+    public decimal? HorasIssue { get; set; }
+
     public int? FkEstado { get; set; }
 
     public int? FkCronograma { get; set; }
 
     public int? FkRecurso { get; set; }
+
+    public virtual ICollection<DetalleIssue> DetalleIssues { get; set; } = new List<DetalleIssue>();
 
     public virtual Cronograma? FkCronogramaNavigation { get; set; }
 

@@ -9,9 +9,9 @@ public partial class DetalleIssue
 
     public int? FkCategoria { get; set; }
 
-    public int? FkCronograma { get; set; }
+    public int? FkIssue { get; set; }
 
     public virtual CategoriaIssue? FkCategoriaNavigation { get; set; }
 
-    public virtual Cronograma? FkCronogramaNavigation { get; set; }
+    public virtual Issue? FkIssueNavigation { get; set; }
 }

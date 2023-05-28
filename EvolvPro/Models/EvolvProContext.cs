@@ -53,7 +53,7 @@ public partial class EvolvProContext : DbContext
     {
         modelBuilder.Entity<CategoriaIssue>(entity =>
         {
-            entity.HasKey(e => e.IdCatissue).HasName("PK__Categori__6C53B46F068F1C85");
+            entity.HasKey(e => e.IdCatissue).HasName("PK__Categori__6C53B46F7783F311");
 
             entity.ToTable("CategoriaIssue");
 
@@ -66,7 +66,7 @@ public partial class EvolvProContext : DbContext
 
         modelBuilder.Entity<Cliente>(entity =>
         {
-            entity.HasKey(e => e.IdCliente).HasName("PK__Clientes__677F38F5ACDA3D79");
+            entity.HasKey(e => e.IdCliente).HasName("PK__Clientes__677F38F50A926AB1");
 
             entity.Property(e => e.IdCliente).HasColumnName("id_cliente");
             entity.Property(e => e.DireccionCliente)
@@ -81,7 +81,7 @@ public partial class EvolvProContext : DbContext
 
         modelBuilder.Entity<Cronograma>(entity =>
         {
-            entity.HasKey(e => e.IdCronograma).HasName("PK__Cronogra__9C4E436C69CAC108");
+            entity.HasKey(e => e.IdCronograma).HasName("PK__Cronogra__9C4E436C3B17B7F3");
 
             entity.ToTable("Cronograma");
 
@@ -122,7 +122,7 @@ public partial class EvolvProContext : DbContext
 
         modelBuilder.Entity<DetalleEstado>(entity =>
         {
-            entity.HasKey(e => e.IdDetalleestado).HasName("PK__DetalleE__5A4CC0F074660A9F");
+            entity.HasKey(e => e.IdDetalleestado).HasName("PK__DetalleE__5A4CC0F06AB5D7B0");
 
             entity.ToTable("DetalleEstado");
 
@@ -140,26 +140,26 @@ public partial class EvolvProContext : DbContext
 
         modelBuilder.Entity<DetalleIssue>(entity =>
         {
-            entity.HasKey(e => e.IdDetalleissue).HasName("PK__DetalleI__0D554F74F6BCCA26");
+            entity.HasKey(e => e.IdDetalleissue).HasName("PK__DetalleI__0D554F742FEBD8DF");
 
             entity.ToTable("DetalleIssue");
 
             entity.Property(e => e.IdDetalleissue).HasColumnName("id_detalleissue");
             entity.Property(e => e.FkCategoria).HasColumnName("fk_categoria");
-            entity.Property(e => e.FkCronograma).HasColumnName("fk_cronograma");
+            entity.Property(e => e.FkIssue).HasColumnName("fk_issue");
 
             entity.HasOne(d => d.FkCategoriaNavigation).WithMany(p => p.DetalleIssues)
                 .HasForeignKey(d => d.FkCategoria)
                 .HasConstraintName("FK__DetalleIs__fk_ca__49C3F6B7");
 
-            entity.HasOne(d => d.FkCronogramaNavigation).WithMany(p => p.DetalleIssues)
-                .HasForeignKey(d => d.FkCronograma)
-                .HasConstraintName("FK__DetalleIs__fk_cr__4AB81AF0");
+            entity.HasOne(d => d.FkIssueNavigation).WithMany(p => p.DetalleIssues)
+                .HasForeignKey(d => d.FkIssue)
+                .HasConstraintName("FK__DetalleIs__fk_is__4AB81AF0");
         });
 
         modelBuilder.Entity<Documento>(entity =>
         {
-            entity.HasKey(e => e.IdDocumento).HasName("PK__Document__5D2EE7E57E6FA98F");
+            entity.HasKey(e => e.IdDocumento).HasName("PK__Document__5D2EE7E5750D2C54");
 
             entity.Property(e => e.IdDocumento).HasColumnName("id_documento");
             entity.Property(e => e.Documento1).HasColumnName("documento");
@@ -172,7 +172,7 @@ public partial class EvolvProContext : DbContext
 
         modelBuilder.Entity<Estado>(entity =>
         {
-            entity.HasKey(e => e.IdEstado).HasName("PK__Estado__86989FB24924210D");
+            entity.HasKey(e => e.IdEstado).HasName("PK__Estado__86989FB261236CE4");
 
             entity.ToTable("Estado");
 
@@ -185,7 +185,7 @@ public partial class EvolvProContext : DbContext
 
         modelBuilder.Entity<Issue>(entity =>
         {
-            entity.HasKey(e => e.IdIssue).HasName("PK__Issues__14B38C5C72D55D0A");
+            entity.HasKey(e => e.IdIssue).HasName("PK__Issues__14B38C5C86E490F0");
 
             entity.Property(e => e.IdIssue).HasColumnName("id_issue");
             entity.Property(e => e.DescripcionIssue)
@@ -201,6 +201,9 @@ public partial class EvolvProContext : DbContext
             entity.Property(e => e.FkCronograma).HasColumnName("fk_cronograma");
             entity.Property(e => e.FkEstado).HasColumnName("fk_estado");
             entity.Property(e => e.FkRecurso).HasColumnName("fk_recurso");
+            entity.Property(e => e.HorasIssue)
+                .HasColumnType("decimal(6, 2)")
+                .HasColumnName("horas_issue");
             entity.Property(e => e.ResolucionIssue)
                 .HasMaxLength(200)
                 .IsUnicode(false)
@@ -225,7 +228,7 @@ public partial class EvolvProContext : DbContext
 
         modelBuilder.Entity<PreguntaSeguridad>(entity =>
         {
-            entity.HasKey(e => e.IdPregunta).HasName("PK__Pregunta__6867FFA4FE349D01");
+            entity.HasKey(e => e.IdPregunta).HasName("PK__Pregunta__6867FFA4D9889068");
 
             entity.ToTable("PreguntaSeguridad");
 
@@ -238,7 +241,7 @@ public partial class EvolvProContext : DbContext
 
         modelBuilder.Entity<Proyecto>(entity =>
         {
-            entity.HasKey(e => e.IdProyecto).HasName("PK__Proyecto__F38AD81D0F82BAF7");
+            entity.HasKey(e => e.IdProyecto).HasName("PK__Proyecto__F38AD81D32CD1913");
 
             entity.Property(e => e.IdProyecto).HasColumnName("id_proyecto");
             entity.Property(e => e.CasoNegocio)
@@ -287,7 +290,7 @@ public partial class EvolvProContext : DbContext
 
         modelBuilder.Entity<Recurso>(entity =>
         {
-            entity.HasKey(e => e.IdRecurso).HasName("PK__Recursos__2B386DE4AC85C5E1");
+            entity.HasKey(e => e.IdRecurso).HasName("PK__Recursos__2B386DE444735F7E");
 
             entity.Property(e => e.IdRecurso).HasColumnName("id_recurso");
             entity.Property(e => e.CorreoRec)
@@ -306,7 +309,7 @@ public partial class EvolvProContext : DbContext
 
         modelBuilder.Entity<Reunione>(entity =>
         {
-            entity.HasKey(e => e.IdReunion).HasName("PK__Reunione__52FBEC83267167B1");
+            entity.HasKey(e => e.IdReunion).HasName("PK__Reunione__52FBEC8332305D44");
 
             entity.Property(e => e.IdReunion).HasColumnName("id_reunion");
             entity.Property(e => e.Asistentes)
@@ -340,7 +343,7 @@ public partial class EvolvProContext : DbContext
 
         modelBuilder.Entity<RolHora>(entity =>
         {
-            entity.HasKey(e => e.IdRolhora).HasName("PK__RolHora__67D9CED00FEE40E5");
+            entity.HasKey(e => e.IdRolhora).HasName("PK__RolHora__67D9CED02F466398");
 
             entity.ToTable("RolHora");
 
@@ -364,7 +367,7 @@ public partial class EvolvProContext : DbContext
 
         modelBuilder.Entity<TipoUsuario>(entity =>
         {
-            entity.HasKey(e => e.IdTipousu).HasName("PK__TipoUsua__E719BBB25903D77B");
+            entity.HasKey(e => e.IdTipousu).HasName("PK__TipoUsua__E719BBB29A9F52C7");
 
             entity.ToTable("TipoUsuario");
 
@@ -377,7 +380,7 @@ public partial class EvolvProContext : DbContext
 
         modelBuilder.Entity<Usuario>(entity =>
         {
-            entity.HasKey(e => e.IdUsuario).HasName("PK__Usuarios__4E3E04AD900ED9FD");
+            entity.HasKey(e => e.IdUsuario).HasName("PK__Usuarios__4E3E04AD56DD69FD");
 
             entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
             entity.Property(e => e.ContrasenaUsu)
@@ -418,13 +421,6 @@ public partial class EvolvProContext : DbContext
         });
 
         OnModelCreatingPartial(modelBuilder);
-    }
-
-    public void SaveChangesAndNotify()
-    {
-        Subject subject = new Subject();
-        base.SaveChanges();
-        subject.Notify();
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

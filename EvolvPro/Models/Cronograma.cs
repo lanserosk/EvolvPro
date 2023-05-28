@@ -23,8 +23,6 @@ public partial class Cronograma
 
     public int? FkRecurso { get; set; }
 
-    public virtual ICollection<DetalleIssue> DetalleIssues { get; set; } = new List<DetalleIssue>();
-
     public virtual DetalleEstado? FkEstadoNavigation { get; set; }
 
     public virtual Proyecto? FkProyectoNavigation { get; set; }
