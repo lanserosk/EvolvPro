@@ -23,31 +23,37 @@
                                 <a asp-action="Usuarios" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Usuarios</span> </a>
                             </li>
                             <li>
-                                <a asp-action="Clientes" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Clientes</span></a>
+                                <a asp-action="Clientes" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Clientes</span> </a>
+                            </li>
+                            <li>
+                                <a class="nav-link px-0"> <span class="d-none d-sm-inline">Estados</span></a>
                             </li>
                             <li>
                                 <a class="nav-link px-0" asp-area="" asp-controller="Home" asp-action="DetEstado" method="POST"> <span class="d-none d-sm-inline">Detalle Estado</span></a>
                             </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Cronograma</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
-                            <i class="fs-4 bi-folder-fill"></i> <span class="ms-1 d-none d-sm-inline">Proyectos</span>
-                        </a>
-                        <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
-                            <li class="w-100">
-                                ''
-                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 1</a>
+                            <li>
+                                <a class="nav-link px-0"> <span class="d-none d-sm-inline">Recursos</span></a>
                             </li>
                             <li>
-                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 2</a>
+                                <a class="nav-link px-0"> <span class="d-none d-sm-inline">Categorias de problemas</span></a>
+                            </li>
+                            <li>
+                                <a class="nav-link px-0"> <span class="d-none d-sm-inline">Tipos de usuario</span></a>
+                            </li>
+                            <li>
+                                <a class="nav-link px-0"> <span class="d-none d-sm-inline">Preguntas de seguridad</span></a>
                             </li>
                         </ul>
+                    </li>
+                    <li>
+                        <a class="nav-link px-0 align-middle" asp-area="" asp-controller="Home" asp-action="Cronograma" method="POST">
+                            <i class="fs-4 bi-calendar-week-fill"></i> <span class="ms-1 d-none d-sm-inline">Cronograma</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link px-0 align-middle" asp-area="" asp-controller="Home" asp-action="Proyectos" method="POST">
+                            <i class="fs-4 bi-folder-fill"></i> <span class="ms-1 d-none d-sm-inline">Proyectos</span>
+                        </a>
                     </li>
                     <li>
                         <a href="#" class="nav-link px-0 align-middle">
@@ -56,7 +62,7 @@
                     </li>
                     <li>
                         <a href="#" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi-bug-fill"></i> <span class="ms-1 d-none d-sm-inline">Reuniones</span>
+                            <i class="fs-4 bi-camera-video-fill "></i> <span class="ms-1 d-none d-sm-inline">Reuniones</span>
                         </a>
                     </li>
                 </ul>

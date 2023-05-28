@@ -50,7 +50,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="#" class="nav-link px-0 align-middle">
+                        <a class="nav-link px-0 align-middle" asp-area="" asp-controller="Home" asp-action="Cronograma" method="POST">
                             <i class="fs-4 bi-calendar-week-fill"></i> <span class="ms-1 d-none d-sm-inline">Cronograma</span>
                         </a>
                     </li>
@@ -105,9 +105,18 @@
                             vertical-align: middle;
                         }
                     </style>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#proyectoModal">
-                        Nuevo Proyecto
-                    </button>
+                    <div class="row">
+                        <div class="col-6">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#proyectoModal">
+                                Nuevo Proyecto
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <input type="text" class="form-control" name="cadena" id="cadena"/><a href="javascript:detallesProyectoBusca()" class="btn btn-primary btn-sm">Buscar</a>
+                        </div>
+                        
+                        
+                    </div>
                     <br />
                     <br />
                     <div class="" id="contenido">
@@ -325,6 +334,47 @@
                 div.empty();
                 div.append(tabla);
             }).fail();
+
+        }
+        function detallesProyectoBusca() {
+            
+
+            if ($("#cadena").val() == "") {
+                $.ajax({
+                    url: '/Home/mostrarProyectos',
+                    type: 'post',
+                    dataType: 'json',
+                    cache: false
+                }).done(function (resp) {
+                    console.log(resp);
+                    var div = $("#contenido");
+                    var tabla = "";
+                    $.each(resp, function (index, proyecto) {
+                        tabla += "<div class='card text-white card mb-3' style='width: 100 %; background-color: #232f36;'><div class='container'><br /><h2 class='card-title'>" + proyecto.nombrePry + "</h2><hr/><div class=card-body' style='display: flex; align-items: center;' ><div style='flex-grow: 1;'><h3> -- horas actuales de " + proyecto.horasTotales + " horas propuestas </h3><h4>Fecha de creación:" + proyecto.fechaInicio + " </h4><h4 style = 'text-align: right;'> Hoy: --/--/-- | Estimada: " + proyecto.fechaFinalProp + " </h4></div><h2 style = 'margin-top: -1rem; align-self: flex-start;'> Estado: " + proyecto.estadoNombre + " </h2><a class='btn btn-primary' href=\"javascript:editarProyecto('" + proyecto.idProyecto + "')\"> Editar </a><a class='btn btn-warning' href=\"javascript:detallesProyecto('" + proyecto.idProyecto + "')\"> Ver detalles </a></div></div></div>";
+                    });
+                    div.empty();
+                    div.append(tabla);
+                }).fail();
+            }else{
+                var valor = document.getElementById("cadena").value;
+                $.ajax({
+                    url: '/Home/mostrarProyectosBusca/',
+                    type: 'post',
+                    dataType: 'json',
+                    data: { cadena: valor }, // Pasar la variable valor como parámetro
+                    cache: false
+                }).done(function (resp) {
+                    console.log(resp);
+                    var div = $("#contenido");
+                    var tabla = "";
+                    $.each(resp, function (index, proyecto) {
+                        tabla += "<div class='card text-white card mb-3' style='width: 100 %; background-color: #232f36;'><div class='container'><br /><h2 class='card-title'>" + proyecto.nombrePry + "</h2><hr/><div class=card-body' style='display: flex; align-items: center;' ><div style='flex-grow: 1;'><h3> -- horas actuales de " + proyecto.horasTotales + " horas propuestas </h3><h4>Fecha de creación:" + proyecto.fechaInicio + " </h4><h4 style = 'text-align: right;'> Hoy: --/--/-- | Estimada: " + proyecto.fechaFinalProp + " </h4></div><h2 style = 'margin-top: -1rem; align-self: flex-start;'> Estado: " + proyecto.estadoNombre + " </h2><a class='btn btn-primary' href=\"javascript:editarProyecto('" + proyecto.idProyecto + "')\"> Editar </a><a class='btn btn-warning' href=\"javascript:detallesProyecto('" + proyecto.idProyecto + "')\"> Ver detalles </a></div></div></div>";
+                    });
+                    div.empty();
+                    div.append(tabla);
+                }).fail();
+            }
+            
 
         }
         function editarProyecto(idProyecto) {

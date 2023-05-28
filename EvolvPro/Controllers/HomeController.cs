@@ -18,8 +18,7 @@ namespace EvolvPro.Controllers
 
         public IActionResult Index()
         {
-            EvolvProContext evolv = new EvolvProContext();
-            evolv.SaveChangesAndNotify();
+            
             return View();
         }
 
@@ -37,6 +36,10 @@ namespace EvolvPro.Controllers
         }
 
         public IActionResult Proyectos()
+        {
+            return View();
+        }
+        public IActionResult Cronograma()
         {
             return View();
         }
@@ -443,6 +446,40 @@ namespace EvolvPro.Controllers
                             EstadoNombre = estado.ValorDestado,
                             UsuarioNombre = usuario.NombreUsu
                         };
+
+            List<Object> resultado = new List<object>();
+            foreach (var item in query)
+            {
+                resultado.Add(item);
+            }
+            return Json(resultado);
+        }
+        [HttpPost]
+        public IActionResult mostrarProyectosBusca(string cadena)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            var query = from proyecto in contexto.Proyectos
+                        join cliente in contexto.Clientes on proyecto.FkCliente equals cliente.IdCliente
+                        join estado in contexto.DetalleEstados on proyecto.FkEstado equals estado.IdDetalleestado
+                        join usuario in contexto.Usuarios on proyecto.FkUsuario equals usuario.IdUsuario
+                        where proyecto.NombrePry.Contains(cadena)
+                        orderby proyecto.IdProyecto descending
+                        select new
+                        {
+                            proyecto.IdProyecto,
+                            proyecto.NombrePry,
+                            proyecto.CasoNegocio,
+                            proyecto.HorasTotales,
+                            proyecto.HorasTotalesreal,
+                            proyecto.Interesados,
+                            proyecto.FechaInicio,
+                            proyecto.FechaFinalProp,
+                            proyecto.FechaFinalReal,
+                            ClienteNombre = cliente.NombreCliente,
+                            EstadoNombre = estado.ValorDestado,
+                            UsuarioNombre = usuario.NombreUsu
+                        };
+
 
             List<Object> resultado = new List<object>();
             foreach (var item in query)
