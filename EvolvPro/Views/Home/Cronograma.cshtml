@@ -3,7 +3,7 @@
 *@
 @{
 }
-
+@model Cronograma
 <div class="container-fluid">
     <div class="row flex-nowrap">
         <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
@@ -94,7 +94,7 @@
 
             <div class="card bg-dark text-white">
                 <div class="card-header">
-                    <h5>Detalles de estados</h5>
+                    <h5>Cronograma</h5>
                 </div>
                 <div class="card-body">
 
@@ -107,29 +107,242 @@
                     </style>
                     <div class="row d-flex">
                           <div class="col-sm-4 d-flex align-items-center justify-content-between">
-                            <select class="form-select" aria-label="Seleccione una opción">
-                              <option value="">Opción 1</option>
-                              <option value="">Opción 2</option>
-                              <option value="">Opción 3</option>
-                            </select>
-                            <input type="text" class="form-control" placeholder="Ingrese valor">
+                            <select class="form-select" id="proyectos"></select>
+                            <br />
+                            <br />
+                            <input type="text" class="form-control" id="actividad" placeholder="nombre o id de actividad">
                           </div>
                           <div class="col-sm-4">
-                            <button type="submit" class="btn btn-primary">Enviar</button>
+                            <a href="javascript:cargarActividades()" class="btn btn-primary">Enviar</a>
                           </div>
                         </div> 
-                    <div id="contenido">
-                        
-
-                            
+                    <div id="contenido"> 
                     </div>
 
                 </div>
 
             </div>
+            <!-- Modal -->
+            <div class="modal fade" id="ActividadModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title text-dark" id="exampleModalLabel">Creación de accesos </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-dark">
+
+                            <form id="FormActualizarAct">
+                                <input id="IdCronograma" name="IdCronograma" asp-for="IdCronograma" type="hidden" class="form-control" placeholder="Ejm Juan Perez" />
+                                <input id="NombreCrgm" name="NombreCrgm" asp-for="NombreCrgm" type="hidden" class="form-control" placeholder="Ejm Juan Perez" />
+                                <input id="DescripcionCrgm" name="DescripcionCrgm" asp-for="DescripcionCrgm" type="hidden" class="form-control" placeholder="Ejm Juan Perez" />
+                                <input id="Jerarquia" name="Jerarquia" asp-for="Jerarquia" type="hidden" class="form-control" placeholder="Ejm Juan Perez" />
+                                <input id="FkProyecto" name="FkProyecto" asp-for="FkProyecto" type="hidden" class="form-control" placeholder="Ejm Juan Perez" />
+                                <input id="FkRolhora" name="FkRolhora" asp-for="FkRolhora" type="hidden" class="form-control" placeholder="Ejm Juan Perez" />
+                                <input id="FkRecurso" name="FkRecurso" asp-for="FkRecurso" type="hidden" class="form-control" placeholder="Ejm Juan Perez" />
+                                <label for="message-text" class="col-form-label">Horas de la actividad</label>
+                                <input id="HorasCrgm" name="HorasCrgm" asp-for="HorasCrgm" class="form-control" placeholder="formato(0000.00)" />
+
+
+                                <label for="message-text" class="col-form-label">Seleccione un Estado</label>
+                                <div>
+                                    <select class="form-select" id="estado" asp-for="FkEstado">
+                                    </select>
+                                </div>
+                            </form>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="btnCerrar" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="button" id="btnGuardar" class="btn btn-primary">Guardar</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 @section Scripts{
+    <script>
+        $(document).ready(function () {
+                cargarProyectos();
+                cargarDetEstado();
+            $("#btnGuardar").click(function () {
+                if ($("#estado").val() != "") {
+                    //procedemos
+                    var formulario = $("#FormActualizarAct").serialize();
 
+                    $.ajax({
+                        url: '@Url.Action("guardarActividad","Home")',
+                        type: 'post',
+                        cache: false,
+                        dataType: 'json',
+                        data: formulario
+                    }).done(function (resp) {
+                        if (resp) {
+                            swal("Actualizado con éxito");
+                            cargarActividades();
+                            $("#IdCronograma").val(""); // Vaciar el campo de entrada
+                            $("#btnCerrar").click();
+                        } else {
+                            swal("Error al guardar1");
+                        }
+                    }).fail(function () {
+                        swal("Error al guardar2");
+                    });
+                } else {
+                    swal("El campo de estado es requerido");
+                }
+            });
+        });
+        function cargarActividades() {
+                var valor = document.getElementById("proyectos").value;
+                var valoract = document.getElementById("actividad").value;
+                    if(valor == 0){
+                            swal("elija un proyecto");
+                        }else if(valor != 0 && valoract == ""){
+                            $.ajax({
+                                url: '/Home/mostrarActividadesBusca/',
+                                type: 'post',
+                                dataType: 'json',
+                                data: { cadena: valor }, // Pasar la variable valor como parámetro
+                                cache: false
+                            }).done(function (resp) {
+                                console.log(resp);
+                                var div = $("#contenido");
+                                    var tabla = "<table class='table table-dark table - striped'> <thead> <tr> <th> codigo </th> <th> Titulo </th> <th> Descripcion </th> <th> Rol </th><th> Estado </th><th> Asignado a </th> <th>  </th> <th>  </th> <tbody> ";
+                                $.each(resp, function (index, crono) {
+                                    tabla += "<tr>";
+                                    tabla += "<td>" + crono.idCronograma + "</td>";
+                                    tabla += "<td>" + crono.nombreCrgm + "</td>";
+                                    tabla += "<td>" + crono.descripcionCrgm + "</td>";
+                                    tabla += "<td>" + crono.rolHora + "</td>";
+                                    tabla += "<td>" + crono.estado + "</td>";
+                                    tabla += "<td>" + crono.recurso + "</td>";
+                                    tabla += "<td><a class='btn btn-primary' href=\"javascript:editarActividad('" + crono.idCronograma + "')\">Editar</a></td>";
+                                    tabla += "</tr>";
+                                });
+                                    tabla += "</tbody></table>";
+                                div.empty();
+                                div.append(tabla);
+                            }).fail();
+                        }else if(valor != 0 && valoract != "" && !isNaN(valoract) == true){
+                            $.ajax({
+                                url: '/Home/mostrarActividadesBusca2/',
+                                type: 'post',
+                                dataType: 'json',
+                                    data: { cadena: valor, id: valoract },  // Pasar la variable valor como parámetro
+                                cache: false
+                            }).done(function (resp) {
+                                console.log(resp);
+                                var div = $("#contenido");
+                                    var tabla = "<table class='table table-dark table - striped'> <thead> <tr> <th> codigo </th> <th> Titulo </th> <th> Descripcion </th> <th> Rol </th><th> Estado </th><th> Asignado a </th> <th>  </th> <th>  </th> <tbody> ";
+                                $.each(resp, function (index, crono) {
+                                    tabla += "<tr>";
+                                    tabla += "<td>" + crono.idCronograma + "</td>";
+                                    tabla += "<td>" + crono.nombreCrgm + "</td>";
+                                    tabla += "<td>" + crono.descripcionCrgm + "</td>";
+                                    tabla += "<td>" + crono.rolHora + "</td>";
+                                    tabla += "<td>" + crono.estado + "</td>";
+                                    tabla += "<td>" + crono.recurso + "</td>";
+                                    tabla += "<td><a class='btn btn-primary' href=\"javascript:editarActividad('" + crono.idCronograma + "')\">Editar</a></td>";
+                                    tabla += "</tr>";
+                                });
+                                    tabla += "</tbody></table>";
+                                div.empty();
+                                div.append(tabla);
+                            }).fail();
+                        }else if(valor != 0 && valoract != "" && !isNaN(valoract) == false){
+                            $.ajax({
+                                url: '/Home/mostrarActividadesBusca3/',
+                                type: 'post',
+                                dataType: 'json',
+                                    data: { cadena: valor, acti: valoract },  // Pasar la variable valor como parámetro
+                                cache: false
+                            }).done(function (resp) {
+                                console.log(resp);
+                                var div = $("#contenido");
+                                    var tabla = "<table class='table table-dark table - striped'> <thead> <tr> <th> codigo </th> <th> Titulo </th> <th> Descripcion </th> <th> Rol </th><th> Estado </th><th> Asignado a </th> <th>  </th> <th>  </th> <tbody> ";
+                                $.each(resp, function (index, crono) {
+                                    tabla += "<tr>";
+                                    tabla += "<td>" + crono.idCronograma + "</td>";
+                                    tabla += "<td>" + crono.nombreCrgm + "</td>";
+                                    tabla += "<td>" + crono.descripcionCrgm + "</td>";
+                                    tabla += "<td>" + crono.rolHora + "</td>";
+                                    tabla += "<td>" + crono.estado + "</td>";
+                                    tabla += "<td>" + crono.recurso + "</td>";
+                                    tabla += "<td><a class='btn btn-primary' href=\"javascript:editarActividad('" + crono.idCronograma + "')\">Editar</a></td>";
+                                    tabla += "</tr>";
+                                });
+                                    tabla += "</tbody></table>";
+                                div.empty();
+                                div.append(tabla);
+                            }).fail();
+                        }
+                    
+        }
+        function cargarProyectos() {
+
+            $.ajax({
+                url: '/Home/listProyectos',
+                type: 'post',
+                dataType: 'json',
+                cache: false
+            }).done(function (resp) {
+                console.log(resp);
+                var div = $("#proyectos");
+                    var select = " <option value='0' selected>Seleccione un proyecto</option>";
+                $.each(resp, function (index, x) {
+                    select += "<option value=" + x.idProyecto + ">"+ x.idProyecto +"."+ x.nombrePry + "</option>";
+                });
+                div.empty();
+                div.append(select);
+            }).fail();
+
+        }
+        function editarActividad(idCronograma) {
+            $.ajax({
+                url: '/Home/EditarActividad',
+                type: 'post',
+                dataType: 'json',
+                data: { id: idCronograma },
+                success: function (data) {
+                    $('#IdCronograma').val(data.idCronograma);
+                    $('#NombreCrgm').val(data.nombreCrgm);
+                    $('#DescripcionCrgm').val(data.descripcionCrgm);
+                    $('#HorasCrgm').val(data.horasCrgm);
+                    $('#Jerarquia').val(data.jerarquia);
+                    $('#FkProyecto').val(data.fkProyecto);
+                    $('#estado').val(data.fkEstado);
+                    $('#FkRolhora').val(data.fkRolhora);
+                    $('#FkRecurso').val(data.fkRecurso);
+                    $('#ActividadModal').modal('show');
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+        function cargarDetEstado() {
+
+            $.ajax({
+                    url: '/Home/listDetEstadoact',
+                type: 'post',
+                dataType: 'json',
+                cache: false
+            }).done(function (resp) {
+                console.log(resp);
+                var div = $("#estado");
+                var select = " <option selected>Seleccione</option>";
+                $.each(resp, function (index, x) {
+                    select += "<option value=" + x.idDetalleestado + ">" + x.valorDestado + "</option>";
+                });
+                div.empty();
+                div.append(select);
+            }).fail();
+
+        }
+    </script>
 }

@@ -584,6 +584,168 @@ namespace EvolvPro.Controllers
         }
 
 
+
+        //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+        //::::::::::::::::::::::::Cronograma::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        public IActionResult listProyectos()
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            List<Proyecto> prys = contexto.Proyectos.ToList();
+            return Json(prys);
+        }
+        public IActionResult listDetEstadoact()
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            List<DetalleEstado> detestados = contexto.DetalleEstados.Where(d => d.FkEstado == 3).ToList();
+            return Json(detestados);
+        }
+
+        [HttpPost]
+        public IActionResult mostrarActividadesBusca(int cadena)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            var query = from crg in contexto.Cronogramas
+                        join prj in contexto.Proyectos on crg.FkProyecto equals prj.IdProyecto
+                        join dh in contexto.DetalleEstados on crg.FkEstado equals dh.IdDetalleestado
+                        join rh in contexto.RolHoras on crg.FkRolhora equals rh.IdRolhora
+                        join rc in contexto.Recursos on crg.FkRecurso equals rc.IdRecurso
+                        where prj.IdProyecto == cadena
+                        select new
+                        {
+                            crg.IdCronograma,
+                            crg.NombreCrgm,
+                            crg.DescripcionCrgm,
+                            crg.HorasCrgm,
+                            crg.Jerarquia,
+                            Proyecto = prj.NombrePry,
+                            Estado = dh.ValorDestado,
+                            RolHora = rh.NombreRol,
+                            Recurso = rc.NombreRec
+                        };
+
+
+            List<Object> resultado = new List<object>();
+            foreach (var item in query)
+            {
+                resultado.Add(item);
+            }
+            return Json(resultado);
+        }
+
+        [HttpPost]
+        public IActionResult mostrarActividadesBusca2(int cadena, int id)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            var query = from crg in contexto.Cronogramas
+                        join prj in contexto.Proyectos on crg.FkProyecto equals prj.IdProyecto
+                        join dh in contexto.DetalleEstados on crg.FkEstado equals dh.IdDetalleestado
+                        join rh in contexto.RolHoras on crg.FkRolhora equals rh.IdRolhora
+                        join rc in contexto.Recursos on crg.FkRecurso equals rc.IdRecurso
+                        where prj.IdProyecto == cadena && crg.IdCronograma == id
+                        select new
+                        {
+                            crg.IdCronograma,
+                            crg.NombreCrgm,
+                            crg.DescripcionCrgm,
+                            crg.HorasCrgm,
+                            crg.Jerarquia,
+                            Proyecto = prj.NombrePry,
+                            Estado = dh.ValorDestado,
+                            RolHora = rh.NombreRol,
+                            Recurso = rc.NombreRec
+                        };
+
+
+            List<Object> resultado = new List<object>();
+            foreach (var item in query)
+            {
+                resultado.Add(item);
+            }
+            return Json(resultado);
+        }
+
+        [HttpPost]
+        public IActionResult mostrarActividadesBusca3(int cadena, string acti)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            var query = from crg in contexto.Cronogramas
+                        join prj in contexto.Proyectos on crg.FkProyecto equals prj.IdProyecto
+                        join dh in contexto.DetalleEstados on crg.FkEstado equals dh.IdDetalleestado
+                        join rh in contexto.RolHoras on crg.FkRolhora equals rh.IdRolhora
+                        join rc in contexto.Recursos on crg.FkRecurso equals rc.IdRecurso
+                        where prj.IdProyecto == cadena && crg.NombreCrgm.Contains(acti)
+                        select new
+                        {
+                            crg.IdCronograma,
+                            crg.NombreCrgm,
+                            crg.DescripcionCrgm,
+                            crg.HorasCrgm,
+                            crg.Jerarquia,
+                            Proyecto = prj.NombrePry,
+                            Estado = dh.ValorDestado,
+                            RolHora = rh.NombreRol,
+                            Recurso = rc.NombreRec
+                        };
+
+
+            List<Object> resultado = new List<object>();
+            foreach (var item in query)
+            {
+                resultado.Add(item);
+            }
+            return Json(resultado);
+        }
+
+        [HttpPost]
+        public IActionResult EditarActividad(int id)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            Cronograma res = new Cronograma();
+            var objEdit = contexto.Cronogramas.FirstOrDefault(x => x.IdCronograma == id);
+
+            res.IdCronograma = objEdit.IdCronograma;
+            res.NombreCrgm = objEdit.NombreCrgm;
+            res.DescripcionCrgm = objEdit.DescripcionCrgm;
+            res.HorasCrgm = objEdit.HorasCrgm;
+            res.Jerarquia = objEdit.Jerarquia;
+            res.FkProyecto = objEdit.FkProyecto;
+            res.FkEstado = objEdit.FkEstado;
+            res.FkRolhora = objEdit.FkRolhora;
+            res.FkRecurso = objEdit.FkRecurso;
+
+            return Json(res);
+        }
+
+        [HttpPost]
+        public ActionResult guardarActividad(Cronograma crono)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            Cronograma obj = new Cronograma();
+            obj.IdCronograma = crono.IdCronograma;
+            obj.NombreCrgm = crono.NombreCrgm;
+            obj.DescripcionCrgm= crono.DescripcionCrgm;
+            obj.HorasCrgm = crono.HorasCrgm;
+            obj.Jerarquia = crono.Jerarquia;
+            obj.FkProyecto = crono.FkProyecto;
+            obj.FkEstado = crono.FkEstado;
+            obj.FkRolhora= crono.FkRolhora;
+            obj.FkRecurso= crono.FkRecurso;
+            //CAPTURAMOS ALGUN POSIBLE ERROR
+            try
+            {
+                contexto.Entry(crono).State = EntityState.Modified;
+                contexto.SaveChanges();
+
+
+                return Json(true);
+            }
+            catch (Exception ex)
+            {
+                return Json(false);
+            }
+        }
+
         //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
