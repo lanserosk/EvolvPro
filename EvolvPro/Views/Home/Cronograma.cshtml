@@ -115,6 +115,11 @@
                           <div class="col-sm-4">
                             <a href="javascript:cargarActividades()" class="btn btn-primary">Enviar</a>
                           </div>
+                        <div class="col-sm-4">
+                            <input class="form-control-file" type="file" id="inputExcel" />
+                            <a href="javascript:enviarExcel()" class="btn btn-success">Agregar en bloque</a>
+                            <a href="javascript:eliminarCronograma()" class="btn btn-danger">Eliminar Cronograma completo</a>
+                        </div>
                         </div> 
                     <div id="contenido"> 
                     </div>
@@ -134,6 +139,7 @@
                         <div class="modal-body text-dark">
 
                             <form id="FormActualizarAct">
+                                <input id="HorasCrgmHidden" type="hidden" class="form-control" placeholder="formato(0000.00)" />
                                 <input id="IdCronograma" name="IdCronograma" asp-for="IdCronograma" type="hidden" class="form-control" placeholder="Ejm Juan Perez" />
                                 <input id="NombreCrgm" name="NombreCrgm" asp-for="NombreCrgm" type="hidden" class="form-control" placeholder="Ejm Juan Perez" />
                                 <input id="DescripcionCrgm" name="DescripcionCrgm" asp-for="DescripcionCrgm" type="hidden" class="form-control" placeholder="Ejm Juan Perez" />
@@ -172,7 +178,17 @@
             $("#btnGuardar").click(function () {
                 if ($("#estado").val() != "") {
                     //procedemos
+                    var pryid = document.getElementById("proyectos").value;
+                    var horasCrgm = document.getElementById("HorasCrgm").value;
+                    var horasCrgmHidden = document.getElementById("HorasCrgmHidden").value;
                     var formulario = $("#FormActualizarAct").serialize();
+
+                    var data = {
+                        pry: pryid,
+                        horasBase: parseFloat(horasCrgmHidden),
+                        horasNuevo: parseFloat(horasCrgm)
+                    };
+                    
 
                     $.ajax({
                         url: '@Url.Action("guardarActividad","Home")',
@@ -187,6 +203,24 @@
                             $("#IdCronograma").val(""); // Vaciar el campo de entrada
                             $("#btnCerrar").click();
                         } else {
+                            swal("Error al guardar111");
+                        }
+                    }).fail(function () {
+                        swal("Error al guardar222");
+                    });
+
+                    $.ajax({
+                        url: '@Url.Action("sumarHoras","Home")',
+                        type: 'post',
+                        cache: false,
+                        dataType: 'json',
+                        data: data
+                    }).done(function (resp) {
+                        if (resp) {
+                            swal("Actualizado con éxito");
+                            cargarActividades();
+                            $("#btnCerrar").click();
+                        } else {
                             swal("Error al guardar1");
                         }
                     }).fail(function () {
@@ -195,6 +229,9 @@
                 } else {
                     swal("El campo de estado es requerido");
                 }
+
+
+
             });
         });
         function cargarActividades() {
@@ -312,6 +349,7 @@
                     $('#IdCronograma').val(data.idCronograma);
                     $('#NombreCrgm').val(data.nombreCrgm);
                     $('#DescripcionCrgm').val(data.descripcionCrgm);
+                    $('#HorasCrgmHidden').val(data.horasCrgm);
                     $('#HorasCrgm').val(data.horasCrgm);
                     $('#Jerarquia').val(data.jerarquia);
                     $('#FkProyecto').val(data.fkProyecto);
@@ -343,6 +381,64 @@
                 div.append(select);
             }).fail();
 
+        }
+
+        function enviarExcel() {
+            
+            const input = document.getElementById("inputExcel");
+            var pryid = document.getElementById("proyectos").value;
+            var archivoSeleccionado = inputExcel.value;
+            if (pryid != 0 && archivoSeleccionado != "") {
+                const formData = new FormData();
+                formData.append("ArchivoExcel", input.files[0]);
+                formData.append("pry", pryid); // Agregar el valor del select al FormData
+
+                fetch("/Home/EnviarDatos", {
+                    method: "POST",
+                    body: formData
+                })
+                    .then((response) => { return response.json() })
+                    .then((dataJson) => {
+                        alert(dataJson.mensaje);
+                        cargarActividades();
+                        document.getElementById("inputExcel").value = ""; // vaciar input archivo
+                    });
+            }else{
+                swal("Elija un proyecto y un archivo");
+            }
+
+            
+        }
+        function eliminarCronograma() {
+            var pryid = document.getElementById("proyectos").value;
+            swal({
+                title: "Estas seguro?",
+                text: "Una vez eliminado se pierde definitivamente....",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $.ajax({
+                            url: '@Url.Action("EliminarCronograma", "Home")',
+                            type: 'post',
+                            dataType: 'json',
+                            cache: false,
+                            data: { id: pryid }
+                        }).done(function (resp) {
+                            if (resp) {
+                                swal("Eliminado!")
+                                cargarActividades();
+                            } else {
+                                swal("Problemas al eliminar!")
+                            }
+                        }).fail();
+
+                    } else {
+                        swal("El registro no se elimino!");
+                    }
+                });
         }
     </script>
 }

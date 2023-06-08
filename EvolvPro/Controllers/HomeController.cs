@@ -3,6 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
+using NPOI.HSSF.UserModel;
+using EFCore.BulkExtensions;
+using System.Diagnostics.Contracts;
+
 namespace EvolvPro.Controllers
 {
     public class HomeController : Controller
@@ -594,6 +600,12 @@ namespace EvolvPro.Controllers
             List<Proyecto> prys = contexto.Proyectos.ToList();
             return Json(prys);
         }
+        public IActionResult listRolHora()
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            List<RolHora> prys = contexto.RolHoras.ToList();
+            return Json(prys);
+        }
         public IActionResult listDetEstadoact()
         {
             EvolvProContext contexto = new EvolvProContext();
@@ -720,6 +732,9 @@ namespace EvolvPro.Controllers
         [HttpPost]
         public ActionResult guardarActividad(Cronograma crono)
         {
+            double horasupdate = 0;
+            
+
             EvolvProContext contexto = new EvolvProContext();
             Cronograma obj = new Cronograma();
             obj.IdCronograma = crono.IdCronograma;
@@ -745,6 +760,195 @@ namespace EvolvPro.Controllers
                 return Json(false);
             }
         }
+
+        [HttpPost]
+        public ActionResult sumarHoras(int pry, double? horasBase, double horasNuevo)
+        {
+            if (horasBase.HasValue && !double.IsNaN(horasBase.Value))
+            {
+                if (horasBase < horasNuevo)
+                {
+                    decimal horasRest = (decimal)(horasNuevo - horasBase.Value);
+
+                    EvolvProContext contexto = new EvolvProContext();
+                    var crono = contexto.Proyectos.Where(x => x.IdProyecto == pry).FirstOrDefault();
+                    decimal horasTotal = horasRest + (crono.HorasTotalesreal ?? 0);
+
+                    // Actualizar el campo HorasTotalesReal
+                    crono.HorasTotalesreal = horasTotal;
+
+                    // Guardar los cambios en la base de datos
+                    contexto.SaveChanges();
+
+                    // Retornar un resultado exitoso (opcional)
+                    return Json(true);
+                }
+                else if (horasBase > horasNuevo)
+                {
+                    decimal horasRest = (decimal)(horasBase.Value - horasNuevo);
+
+                    EvolvProContext contexto = new EvolvProContext();
+                    var crono = contexto.Proyectos.Where(x => x.IdProyecto == pry).FirstOrDefault();
+                    decimal horasTotal = (crono.HorasTotalesreal ?? 0) - horasRest;
+
+                    // Actualizar el campo HorasTotalesReal
+                    crono.HorasTotalesreal = horasTotal;
+
+                    // Guardar los cambios en la base de datos
+                    contexto.SaveChanges();
+
+                    // Retornar un resultado exitoso (opcional)
+                    return Json(true);
+                }
+                else if (horasBase == horasNuevo)
+                {
+                    return Json(true);
+                }
+                else
+                {
+                    return Json(false);
+                }
+            }
+            else
+            {
+                decimal horasRest = (decimal)(horasNuevo);
+
+                EvolvProContext contexto = new EvolvProContext();
+                var crono = contexto.Proyectos.Where(x => x.IdProyecto == pry).FirstOrDefault();
+                decimal horasTotal = horasRest + (crono.HorasTotalesreal ?? 0);
+
+                // Actualizar el campo HorasTotalesReal
+                crono.HorasTotalesreal = horasTotal;
+
+                // Guardar los cambios en la base de datos
+                contexto.SaveChanges();
+
+                // Retornar un resultado exitoso (opcional)
+                return Json(true);
+            }
+
+            // Retornar un resultado de error
+            return Json(false);
+        }
+
+
+        [HttpPost]
+        public IActionResult EnviarDatos([FromForm] IFormFile ArchivoExcel, int pry)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            Stream stream = ArchivoExcel.OpenReadStream();
+
+            IWorkbook MiExcel = null;
+
+            if (Path.GetExtension(ArchivoExcel.FileName) == ".xlsx")
+            {
+                MiExcel = new XSSFWorkbook(stream);
+            }
+            else
+            {
+                MiExcel = new HSSFWorkbook(stream);
+            }
+
+            ISheet HojaExcel = MiExcel.GetSheetAt(0);
+
+            int cantidadFilas = HojaExcel.LastRowNum;
+            List<Cronograma> lista = new List<Cronograma>();
+            var ids = contexto.Cronogramas
+                    .Where(c => c.FkProyecto == pry).ToList();
+            for (int i = 1; i <= cantidadFilas; i++)
+            {
+
+                IRow fila = HojaExcel.GetRow(i);
+
+                string nombreCrgm = fila.GetCell(0).ToString();
+                string descripcionCrgm = fila.GetCell(1).ToString();
+                int jerarquia = Convert.ToInt32(fila.GetCell(2).ToString());
+                int fkRolhora = Convert.ToInt32(fila.GetCell(3).ToString());
+                int fkRecurso = Convert.ToInt32(fila.GetCell(4).ToString());
+
+                Cronograma actividad = new Cronograma
+                {
+                    NombreCrgm = nombreCrgm,
+                    DescripcionCrgm = descripcionCrgm,
+                    Jerarquia = jerarquia,
+                    FkProyecto = pry,
+                    FkRolhora = fkRolhora,
+                    FkRecurso = fkRecurso
+                };
+
+                // Verificar si la actividad ya existe en la base de datos
+                var actividadExistente = contexto.Cronogramas
+                    .FirstOrDefault(c => c.FkProyecto == pry && c.NombreCrgm == nombreCrgm);
+
+                if (actividadExistente != null)
+                {
+                    actividad.IdCronograma = actividadExistente.IdCronograma;
+                    actividad.HorasCrgm = actividadExistente.HorasCrgm;
+                    actividad.FkEstado = actividadExistente.FkEstado;
+                }
+                else
+                {
+                    actividad.HorasCrgm = null; // Asignar el valor por defecto para nuevas actividades
+                    actividad.FkEstado = 5; // Asignar el valor por defecto para nuevas actividades
+                }
+
+                lista.Add(actividad);
+            }
+
+            // Obtener los nombres de las actividades existentes para el proyecto actual
+            var actividadesExistentes = contexto.Cronogramas
+                .Where(c => c.FkProyecto == pry && lista.Select(a => a.NombreCrgm).Contains(c.NombreCrgm))
+                .ToList();
+
+            // Asignar el IdCronograma correspondiente a cada objeto Cronograma en la lista actividadesActualizar
+            foreach (var actividadActualizar in lista.Where(c => actividadesExistentes.Select(a => a.NombreCrgm).Contains(c.NombreCrgm)))
+            {
+                var actividadExistente = actividadesExistentes.FirstOrDefault(a => a.NombreCrgm == actividadActualizar.NombreCrgm);
+                if (actividadExistente != null)
+                {
+                    actividadActualizar.IdCronograma = actividadExistente.IdCronograma;
+                }
+            }
+
+            // Filtrar las actividades de la lista que ya existen y actualizarlas
+            var actividadesActualizar = lista.Where(c => c.IdCronograma != 0).ToList();
+
+            // Filtrar las actividades de la lista que no existen y agregarlas
+            var actividadesAgregar = lista.Where(c => c.IdCronograma == 0).ToList();
+
+            // Actualizar las actividades existentes
+            if (actividadesActualizar.Any())
+            {
+                contexto.BulkUpdate(actividadesActualizar);
+            }
+
+            // Agregar las nuevas actividades
+            if (actividadesAgregar.Any())
+            {
+                contexto.BulkInsert(actividadesAgregar);
+            }
+
+            return StatusCode(StatusCodes.Status200OK, new { mensaje = "ok" });
+        }
+        [HttpPost]
+        public IActionResult EliminarCronograma(int id)
+        {
+            try
+            {
+                EvolvProContext contexto = new EvolvProContext();
+                var cronogramas = contexto.Cronogramas.Where(x => x.FkProyecto == id).ToList();
+                contexto.Cronogramas.RemoveRange(cronogramas);
+                contexto.SaveChanges();
+                return Json(true);
+            }
+            catch (Exception ex)
+            {
+                return Json(false);
+            }
+        }
+
+
+
 
         //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
