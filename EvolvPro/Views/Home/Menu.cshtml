@@ -19,37 +19,42 @@
                             <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Inicio</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi-collection-fill"></i> <span class="ms-1 d-none d-sm-inline">Mantenimiento</span>
-                        </a>
-                        <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
-                            <li class="w-100">
-                                <a asp-action="Usuarios" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Usuarios</span> </a>
-                            </li>
-                            <li>
-                                <a asp-action="Clientes" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Clientes</span> </a>
-                            </li>
-                            <li>
-                                <a asp-action="Estado" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Estados</span></a>
-                            </li>
-                            <li>
-                                <a class="nav-link px-0" asp-area="" asp-controller="Home" asp-action="DetEstado" method="POST"> <span class="d-none d-sm-inline">Detalle Estado</span></a>
-                            </li>
-                            <li>
-                                <a asp-action="Recurso" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Recursos</span></a>
-                            </li>
-                            <li>
-                                <a asp-action="CategoriaIssue" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Categorias de problemas</span></a>
-                            </li>
-                            <li>
-                                <a asp-action="Rolhora" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Categorias de problemas</span></a>
-                            </li>
-                            <li>
-                                <a class="nav-link px-0"> <span class="d-none d-sm-inline">Preguntas de seguridad</span></a>
-                            </li>
-                        </ul>
-                    </li>
+                    @if (ViewBag.sesion == "1")
+                    {
+                        <li>
+                            <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                                <i class="fs-4 bi-collection-fill"></i> <span class="ms-1 d-none d-sm-inline">Mantenimiento</span>
+                            </a>
+                            <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
+                                <li class="w-100">
+                                    <a asp-action="Usuarios" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Usuarios</span> </a>
+                                </li>
+                                <li>
+                                    <a asp-action="Clientes" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Clientes</span> </a>
+                                </li>
+                                <li>
+                                    <a asp-action="Estado" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Estados</span></a>
+                                </li>
+                                <li>
+                                    <a class="nav-link px-0" asp-area="" asp-controller="Home" asp-action="DetEstado" method="POST"> <span class="d-none d-sm-inline">Detalle Estado</span></a>
+                                </li>
+                                <li>
+                                    <a asp-action="Recurso" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Recursos</span></a>
+                                </li>
+                                <li>
+                                    <a asp-action="CategoriaIssue" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Categorias de problemas</span></a>
+                                </li>
+                                <li>
+                                    <a asp-action="Rolhora" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Categorias de problemas</span></a>
+                                </li>
+                                <li>
+                                    <a class="nav-link px-0"> <span class="d-none d-sm-inline">Preguntas de seguridad</span></a>
+                                </li>
+                            </ul>
+                        </li>
+
+                    }
+                    
                     <li>
                         <a class="nav-link px-0 align-middle" asp-area="" asp-controller="Home" asp-action="Cronograma" method="POST">
                             <i class="fs-4 bi-calendar-week-fill"></i> <span class="ms-1 d-none d-sm-inline">Cronograma</span>
@@ -58,11 +63,6 @@
                     <li>
                         <a class="nav-link px-0 align-middle" asp-area="" asp-controller="Home" asp-action="Proyectos" method="POST">
                             <i class="fs-4 bi-folder-fill"></i> <span class="ms-1 d-none d-sm-inline">Proyectos</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi-bug-fill"></i> <span class="ms-1 d-none d-sm-inline">Problemas(issues)</span>
                         </a>
                     </li>
                     <li>
