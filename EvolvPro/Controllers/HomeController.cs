@@ -612,6 +612,25 @@ namespace EvolvPro.Controllers
             List<DetalleEstado> detestados = contexto.DetalleEstados.Where(d => d.FkEstado == 3).ToList();
             return Json(detestados);
         }
+        public IActionResult listDetEstadoIssue()
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            List<DetalleEstado> detestados = contexto.DetalleEstados.Where(d => d.FkEstado == 4).ToList();
+            return Json(detestados);
+        }
+        public IActionResult listRecurso()
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            List<Recurso> detestados = contexto.Recursos.ToList();
+            return Json(detestados);
+        }
+
+        public IActionResult listCategoria()
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            List<CategoriaIssue> cat = contexto.CategoriaIssues.ToList();
+            return Json(cat);
+        }
 
         [HttpPost]
         public IActionResult mostrarActividadesBusca(int cadena)
@@ -935,7 +954,19 @@ namespace EvolvPro.Controllers
         {
             try
             {
+
                 EvolvProContext contexto = new EvolvProContext();
+                // Paso 1: Calcular la suma de las horas_crgm para el proyecto
+                var sumaHorasCrgm = contexto.Cronogramas.Where(x => x.FkProyecto == id).Sum(x => x.HorasCrgm);
+
+                // Paso 2: Obtener el proyecto correspondiente
+                var proyecto = contexto.Proyectos.Find(id);
+
+                // Paso 3: Restar la suma al campo horas_totalesreal del proyecto
+                proyecto.HorasTotalesreal -= sumaHorasCrgm;
+
+                // Paso 4: Guardar los cambios en la base de datos
+                contexto.SaveChanges();
                 var cronogramas = contexto.Cronogramas.Where(x => x.FkProyecto == id).ToList();
                 contexto.Cronogramas.RemoveRange(cronogramas);
                 contexto.SaveChanges();
@@ -950,8 +981,214 @@ namespace EvolvPro.Controllers
 
 
 
-        //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+        //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        //::::::::::::::::::::::::::PROBLEMAS O ISSUES::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        [HttpPost]
+        public IActionResult mostrarIssues(int id)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+
+            var query = from issue in contexto.Issues
+                        join recurso in contexto.Recursos on issue.FkRecurso equals recurso.IdRecurso
+                        join detalleEstado in contexto.DetalleEstados on issue.FkEstado equals detalleEstado.IdDetalleestado
+                        where issue.FkCronograma == id
+                        orderby issue.IdIssue descending
+                        select new
+                        {
+                            issue.IdIssue,
+                            issue.TituloIssue,
+                            issue.DescripcionIssue,
+                            issue.FechaIssue,
+                            issue.FechaCierre,
+                            issue.ResolucionIssue,
+                            issue.HorasIssue,
+                            recurso.NombreRec,
+                            detalleEstado.ValorDestado
+                        };
+
+            List<object> resultado = new List<object>();
+            foreach (var item in query)
+            {
+                resultado.Add(item);
+            }
+
+            return Json(resultado);
+        }
+
+        [HttpPost]
+        public ActionResult guardarIssues(int id, string titulo, string desc, DateTime fechaIssue, DateTime? fechaFinal, string? resolu, decimal? horas, int estado, int crono, int recurso, int pry)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            
+
+            //CAPTURAMOS ALGUN POSIBLE ERROR
+            try
+            {
+                Issue obj = new Issue();
+                obj.IdIssue = id;
+                obj.TituloIssue = titulo;
+                obj.DescripcionIssue = desc;
+                obj.FechaIssue = fechaIssue;
+                obj.FechaCierre = fechaFinal;
+                obj.ResolucionIssue = resolu;
+                obj.HorasIssue = horas;
+                obj.FkEstado = estado;
+                obj.FkCronograma = crono;
+                obj.FkRecurso = recurso;
+
+                if (obj.IdIssue == 0 || obj.IdIssue == null)
+                {
+                    if (horas != null)
+                    {
+                        contexto.Issues.Add(obj);
+                        contexto.SaveChanges();
+                        var proyecto = contexto.Proyectos.Find(pry);
+                        proyecto.HorasTotalesreal += horas;
+                        contexto.SaveChanges();
+                        return Json(true);
+                    }
+                    else
+                    {
+                        contexto.Issues.Add(obj);
+                        contexto.SaveChanges();
+                        return Json(true);
+                    }
+                }
+                else
+                {
+                    var valorIssue = contexto.Issues.Find(id);
+                    var horasAnterior = valorIssue.HorasIssue;
+                    valorIssue.IdIssue = id;
+                    valorIssue.TituloIssue = titulo;
+                    valorIssue.DescripcionIssue = desc;
+                    valorIssue.FechaIssue = fechaIssue;
+                    valorIssue.FechaCierre = fechaFinal;
+                    valorIssue.ResolucionIssue = resolu;
+                    valorIssue.HorasIssue = horas;
+                    valorIssue.FkEstado = estado;
+                    valorIssue.FkCronograma = crono;
+                    valorIssue.FkRecurso = recurso;
+
+                    
+                    if (horasAnterior == null)
+                    {
+                        horasAnterior = 0;
+                    }
+
+                    if (horas != null)
+                    {
+                        if (horas < horasAnterior)
+                        {
+                            
+                            contexto.Entry(valorIssue).State = EntityState.Modified;
+                            contexto.SaveChanges();
+
+                            var restante = horasAnterior - horas;
+                            var proyecto = contexto.Proyectos.Find(pry);
+                            proyecto.HorasTotalesreal -= restante;
+                            contexto.SaveChanges();
+
+                            return Json(true);
+                        }
+                        else if (horas > horasAnterior)
+                        {
+                            
+                            contexto.Entry(valorIssue).State = EntityState.Modified;
+                            contexto.SaveChanges();
+
+                            var restante = horas - horasAnterior;
+                            var proyecto = contexto.Proyectos.Find(pry);
+                            proyecto.HorasTotalesreal += restante;
+                            contexto.SaveChanges();
+
+                            return Json(true);
+                        }
+                        else
+                        {
+                            contexto.Entry(valorIssue).State = EntityState.Modified;
+                            contexto.SaveChanges();
+                            return Json(true);
+                        }
+                    }
+                    else
+                    {
+                        contexto.Entry(valorIssue).State = EntityState.Modified;
+                        contexto.SaveChanges();
+                        return Json(true);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(false);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult EditarIssues(int id)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            Issue res = new Issue();
+            var objEdit = contexto.Issues.FirstOrDefault(x => x.IdIssue == id);
+
+
+            res.IdIssue = objEdit.IdIssue;
+            res.TituloIssue = objEdit.TituloIssue;
+            res.DescripcionIssue = objEdit.DescripcionIssue;
+            res.FechaIssue = objEdit.FechaIssue;
+            res.FechaCierre = objEdit.FechaCierre;
+            res.ResolucionIssue = objEdit.ResolucionIssue;
+            res.HorasIssue = objEdit.HorasIssue;
+            res.FkEstado = objEdit.FkEstado;
+            res.FkRecurso = objEdit.FkRecurso;
+
+            return Json(res);
+        }
+
+        [HttpPost]
+        public IActionResult EliminarIssue(int id, int pry)
+        {
+            try
+            {
+
+                EvolvProContext contexto = new EvolvProContext();
+                
+                var valorIssue = contexto.Issues.Where(x => x.IdIssue == id).FirstOrDefault();
+
+                var horasIssue = valorIssue.HorasIssue;
+                if (horasIssue != null)
+                {
+                    var proyecto = contexto.Proyectos.Find(pry);
+
+
+                    proyecto.HorasTotalesreal -= horasIssue;
+
+                    // Paso 4: Guardar los cambios en la base de datos
+                    contexto.SaveChanges();
+                    var objDel = contexto.Issues.FirstOrDefault(x => x.IdIssue == id);
+                    contexto.Issues.Remove(objDel);
+                    contexto.SaveChanges();
+                    return Json(true);
+                }
+                else
+                {
+                     var objDel = contexto.Issues.FirstOrDefault(x => x.IdIssue == id);
+                    contexto.Issues.Remove(objDel);
+                    contexto.SaveChanges();
+                    return Json(true);
+                }
+                
+                
+            }
+
+            catch (Exception ex)
+            {
+                return Json(false);
+            }
+
+        }
+        //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

@@ -167,14 +167,114 @@
                     </div>
                 </div>
             </div>
+            <!-- Modal Issues-->
+            <div class="modal fade" id="IssuesModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title text-dark" id="exampleModalLabel">Issues</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-dark">
+
+                            <form id="formIssue">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <input id="IdCronogramaIssue" type="hidden" class="form-control"/>
+                                        <input id="IdIssue" type="hidden" class="form-control" />
+                                        <label for="message-text" class="col-form-label">Titulo del issue</label>
+                                        <input id="TituloIssue" class="form-control" placeholder="Ingrese un titulo" />
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="message-text" class="col-form-label">Descripcion de issue</label>
+                                        <input id="DescIssue" class="form-control" placeholder="Descripcion" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label for="message-text" class="col-form-label">Fecha de inicio</label>
+                                        <div class="input-group">
+
+                                            <input id="FechaInicioIssue" type="text" class="form-control datepicker" placeholder="Selecciona una fecha">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="message-text" class="col-form-label">Fecha de final</label>
+                                        <div class="input-group">
+
+                                            <input id="FechaFinalIssue" type="text" class="form-control datepickerFinal" placeholder="Selecciona una fecha">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label for="message-text" class="col-form-label">Resolucion del issue</label>
+                                        <input id="ResolucionIssue" class="form-control" placeholder="Resolucion" />
+
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="message-text" class="col-form-label">Horas de issue</label>
+                                        <input id="horasIssue" type="number" class="form-control" placeholder="Horas Issue" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label for="message-text" class="col-form-label">Seleccione un Estado</label>
+                                        <div>
+                                            <select class="form-select" id="estadoissue">
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="message-text" class="col-form-label">Seleccione un Recurso</label>
+                                        <div>
+                                            <select class="form-select" id="recurso">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <div id="contenidoIssue">
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="btnCerrarIssues" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="button" id="btnGuardarIssue" class="btn btn-primary">Guardar</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 @section Scripts{
     <script>
         $(document).ready(function () {
-                cargarProyectos();
-                cargarDetEstado();
+            var today = new Date();
+            cargarProyectos();
+            cargarDetEstado();
+            $('.datepicker').datepicker({
+                format: 'dd/mm/yyyy',
+                language: 'es',
+                autoclose: true,
+                startDate: today
+            });
+            $('.datepickerFinal').datepicker({
+                format: 'dd/mm/yyyy',
+                language: 'es',
+                autoclose: true,
+                startDate: today
+            });
             $("#btnGuardar").click(function () {
                 if ($("#estado").val() != "") {
                     //procedemos
@@ -233,6 +333,60 @@
 
 
             });
+            $("#btnGuardarIssue").click(function () {
+                //procedemos
+                var pryid = document.getElementById("proyectos").value;
+                var idIssue = document.getElementById("IdIssue").value;
+                var crgmid = document.getElementById("IdCronogramaIssue").value;
+                var titulo = document.getElementById("TituloIssue").value;
+                var desc = document.getElementById("DescIssue").value;
+                var fechInicio = document.getElementById("FechaInicioIssue").value;
+                var fechFinal = document.getElementById("FechaFinalIssue").value;
+                var resolucion = document.getElementById("ResolucionIssue").value;
+                var horasissue = document.getElementById("horasIssue").value;
+                var estadoissue = document.getElementById("estadoissue").value;
+                var recurso = document.getElementById("recurso").value;
+
+                var data1 = {
+                    id: idIssue,
+                    titulo: titulo,
+                    desc: desc,
+                    fechaIssue: fechInicio,
+                    fechaFinal: fechFinal,
+                    resolu: resolucion,
+                    horas: horasissue,
+                    estado: estadoissue,
+                    crono: crgmid,
+                    recurso: recurso,
+                    pry: pryid
+                };
+                $.ajax({
+                    url: '@Url.Action("guardarIssues","Home")',
+                    type: 'post',
+                    cache: false,
+                    dataType: 'json',
+                    data: data1
+                }).done(function (resp) {
+                    if (resp) {
+                        swal("Actualizado con éxito");
+                        cargarIssues();
+                        $("#IdIssue").val(""); // Vaciar el campo de entrada
+                        $("#FechaInicioIssue").val("");
+                        $("#FechaFinalIssue").val("");
+                        $("#TituloIssue").val("");
+                        $("#DescIssue").val("");
+                        $("#ResolucionIssue").val("");
+                        $("#horasIssue").val("");
+                        $("#estadoissue").val("");
+                        $("#recurso").val("");
+                        //$("#btnCerrar").click();
+                    } else {
+                        swal("Error al guardar111");
+                    }
+                }).fail(function () {
+                    swal("Error al guardar222");
+                });
+            });
         });
         function cargarActividades() {
                 var valor = document.getElementById("proyectos").value;
@@ -259,6 +413,7 @@
                                     tabla += "<td>" + crono.estado + "</td>";
                                     tabla += "<td>" + crono.recurso + "</td>";
                                     tabla += "<td><a class='btn btn-primary' href=\"javascript:editarActividad('" + crono.idCronograma + "')\">Editar</a></td>";
+                        tabla += "<td><a class='btn btn-primary' href=\"javascript:crudIssue('" + crono.idCronograma + "')\">Issue</a></td>";
                                     tabla += "</tr>";
                                 });
                                     tabla += "</tbody></table>";
@@ -285,6 +440,7 @@
                                     tabla += "<td>" + crono.estado + "</td>";
                                     tabla += "<td>" + crono.recurso + "</td>";
                                     tabla += "<td><a class='btn btn-primary' href=\"javascript:editarActividad('" + crono.idCronograma + "')\">Editar</a></td>";
+                                    tabla += "<td><a class='btn btn-primary' href=\"javascript:crudIssue('" + crono.idCronograma + "')\">Issue</a></td>";
                                     tabla += "</tr>";
                                 });
                                     tabla += "</tbody></table>";
@@ -311,6 +467,7 @@
                                     tabla += "<td>" + crono.estado + "</td>";
                                     tabla += "<td>" + crono.recurso + "</td>";
                                     tabla += "<td><a class='btn btn-primary' href=\"javascript:editarActividad('" + crono.idCronograma + "')\">Editar</a></td>";
+                                    tabla += "<td><a class='btn btn-primary' href=\"javascript:crudIssue('" + crono.idCronograma + "')\">Issue</a></td>";
                                     tabla += "</tr>";
                                 });
                                     tabla += "</tbody></table>";
@@ -319,6 +476,39 @@
                             }).fail();
                         }
                     
+        }
+        function cargarIssues() {
+            var idCronograma = document.getElementById("IdCronogramaIssue").value;
+            $.ajax({
+                url: '/Home/mostrarIssues',
+                type: 'post',
+                dataType: 'json',
+                data: { id: idCronograma },
+                cache: false
+            }).done(function (resp) {
+                console.log(resp);
+                var div = $("#contenidoIssue");
+                var tabla = "<table class='table table-striped'> <thead> <tr> <th> codigo </th> <th> Titulo </th> <th> Descripcion </th> <th> Fecha Inicio </th> <th> Fecha Final </th> <th> Resolucion </th> <th> Horas </th> <th>Estado</th> <th>Recurso</th> <th>  </th> <th>  </th> </tr> </thead> <tbody> ";
+                $.each(resp, function (index, issue) {
+                    
+                    tabla += "<tr>";
+                    tabla += "<td>" + issue.idIssue + "</td>";
+                    tabla += "<td>" + issue.tituloIssue + "</td>";
+                    tabla += "<td>" + issue.descripcionIssue + "</td>";
+                    tabla += "<td>" + issue.fechaIssue + "</td>";
+                    tabla += "<td>" + issue.fechaCierre + "</td>";
+                    tabla += "<td>" + issue.resolucionIssue + "</td>";
+                    tabla += "<td>" + issue.horasIssue + "</td>";
+                    tabla += "<td>" + issue.valorDestado + "</td>";
+                    tabla += "<td>" + issue.nombreRec + "</td>";
+                    tabla += "<td><a class='btn btn-primary' href=\"javascript:editarIssue('" + issue.idIssue + "')\">Editar</a><a class='btn btn-danger' href=\"javascript:elimiarIssue('" + issue.idIssue + "')\">Eliminar</a></td>";
+                    tabla += "</tr>";
+                });
+                tabla += "</tbody></table>";
+                div.empty();
+                div.append(tabla);
+            }).fail();
+
         }
         function cargarProyectos() {
 
@@ -363,6 +553,35 @@
                 }
             });
         }
+        function editarIssue(idIssue) {
+            $.ajax({
+                url: '/Home/EditarIssues',
+                type: 'post',
+                dataType: 'json',
+                data: { id: idIssue },
+                success: function (data) {
+                    $('#IdIssue').val(data.idIssue);
+                    $('#TituloIssue').val(data.tituloIssue);
+                    $('#DescIssue').val(data.descripcionIssue);
+                    $('#FechaInicioIssue').val(data.fechaIssue);
+                    $('#FechaFinalIssue').val(data.fechaCierre);
+                    $('#ResolucionIssue').val(data.resolucionIssue);
+                    $('#horasIssue').val(data.horasIssue);
+                    $('#estadoissue').val(data.fkEstado);
+                    $('#recurso').val(data.fkRecurso);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+        function crudIssue(idCronograma) {
+            cargarRecursos();
+            cargarDetEstadoIssues();
+            $('#IssuesModal').modal('show');
+            $('#IdCronogramaIssue').val(idCronograma);
+            cargarIssues();
+        }
         function cargarDetEstado() {
 
             $.ajax({
@@ -376,6 +595,63 @@
                 var select = " <option selected>Seleccione</option>";
                 $.each(resp, function (index, x) {
                     select += "<option value=" + x.idDetalleestado + ">" + x.valorDestado + "</option>";
+                });
+                div.empty();
+                div.append(select);
+            }).fail();
+
+        }
+        function cargarDetEstadoIssues() {
+
+            $.ajax({
+                url: '/Home/listDetEstadoIssue',
+                type: 'post',
+                dataType: 'json',
+                cache: false
+            }).done(function (resp) {
+                console.log(resp);
+                var div = $("#estadoissue");
+                var select = " <option selected>Seleccione</option>";
+                $.each(resp, function (index, x) {
+                    select += "<option value=" + x.idDetalleestado + ">" + x.valorDestado + "</option>";
+                });
+                div.empty();
+                div.append(select);
+            }).fail();
+
+        }
+        function cargarCategorias() {
+
+            $.ajax({
+                url: '/Home/ListCategoria',
+                type: 'post',
+                dataType: 'json',
+                cache: false
+            }).done(function (resp) {
+                console.log(resp);
+                var div = $("#categoria");
+                var select = " <option selected>Seleccione</option>";
+                $.each(resp, function (index, x) {
+                    select += "<option value=" + x.idDetalleestado + ">" + x.valorDestado + "</option>";
+                });
+                div.empty();
+                div.append(select);
+            }).fail();
+
+        }
+        function cargarRecursos() {
+
+            $.ajax({
+                url: '/Home/ListRecurso',
+                type: 'post',
+                dataType: 'json',
+                cache: false
+            }).done(function (resp) {
+                console.log(resp);
+                var div = $("#recurso");
+                var select = " <option selected>Seleccione</option>";
+                $.each(resp, function (index, x) {
+                    select += "<option value=" + x.idRecurso + ">" + x.nombreRec + "</option>";
                 });
                 div.empty();
                 div.append(select);
@@ -430,6 +706,44 @@
                             if (resp) {
                                 swal("Eliminado!")
                                 cargarActividades();
+                            } else {
+                                swal("Problemas al eliminar!")
+                            }
+                        }).fail();
+
+                    } else {
+                        swal("El registro no se elimino!");
+                    }
+                });
+        }
+        function elimiarIssue(IdIssue) {
+            var pryid = document.getElementById("proyectos").value;
+            var data1 = {
+                id: IdIssue,
+                pry: pryid
+            };
+            swal({
+                title: "Estas seguro?",
+                text: "Una vez eliminado se pierde definitivamente....",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $.ajax({
+                            url: '@Url.Action("EliminarIssue", "Home")',
+                            type: 'post',
+                            dataType: 'json',
+                            cache: false,
+                            data: data1
+                        }).done(function (resp) {
+                            if (resp) {
+                                swal("Eliminado!")
+                                cargarIssues();
+                                $("#IdIssue").val(""); // Vaciar el campo de entrada
+                                $("#FechaInicioIssue").val("");
+                                $("#FechaFinalIssue").val("");
                             } else {
                                 swal("Problemas al eliminar!")
                             }
