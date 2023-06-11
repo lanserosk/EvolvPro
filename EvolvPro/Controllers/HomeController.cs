@@ -1015,6 +1015,34 @@ namespace EvolvPro.Controllers
 
             return Json(resultado);
         }
+        [HttpPost]
+        public IActionResult mostrarDetCategoria(int id)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+
+            var query = from detalleIssue in contexto.DetalleIssues
+                        join issue in contexto.Issues on detalleIssue.FkIssue equals issue.IdIssue
+                        join categoria in contexto.CategoriaIssues on detalleIssue.FkCategoria equals categoria.IdCatissue
+                        where detalleIssue.FkIssue == id
+                        select new
+                        {
+                            DetalleIssueId = detalleIssue.IdDetalleissue,
+                            CategoriaId = categoria.IdCatissue,
+                            CategoriaNombre = categoria.Nombre,
+                            IssueId = issue.IdIssue,
+                            IssueTitulo = issue.TituloIssue,
+                            IssueDescripcion = issue.DescripcionIssue
+                        };
+
+            List<object> resultado = new List<object>();
+            foreach (var item in query)
+            {
+                resultado.Add(item);
+            }
+
+            return Json(resultado);
+        }
+
 
         [HttpPost]
         public ActionResult guardarIssues(int id, string titulo, string desc, DateTime fechaIssue, DateTime? fechaFinal, string? resolu, decimal? horas, int estado, int crono, int recurso, int pry)
@@ -1126,6 +1154,29 @@ namespace EvolvPro.Controllers
         }
 
         [HttpPost]
+        public ActionResult guardarDetCategoria(int idDetIssue, int idIssue, int idCate)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            DetalleIssue obj = new DetalleIssue();
+            obj.IdDetalleissue = idDetIssue;
+            obj.FkIssue = idIssue;
+            obj.FkCategoria = idCate;
+            //CAPTURAMOS ALGUN POSIBLE ERROR
+            try
+            {
+                    contexto.DetalleIssues.Add(obj);
+
+
+                contexto.SaveChanges();
+                return Json(true);
+            }
+            catch (Exception ex)
+            {
+                return Json(false);
+            }
+        }
+
+        [HttpPost]
         public IActionResult EditarIssues(int id)
         {
             EvolvProContext contexto = new EvolvProContext();
@@ -1180,6 +1231,25 @@ namespace EvolvPro.Controllers
                 }
                 
                 
+            }
+
+
+            catch (Exception ex)
+            {
+                return Json(false);
+            }
+
+        }
+        [HttpPost]
+        public IActionResult EliminarDetIssue(int id)
+        {
+            try
+            {
+                EvolvProContext contexto = new EvolvProContext();
+                var objDel = contexto.DetalleIssues.FirstOrDefault(x => x.IdDetalleissue == id);
+                contexto.DetalleIssues.Remove(objDel);
+                contexto.SaveChanges();
+                return Json(true);
             }
 
             catch (Exception ex)

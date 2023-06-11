@@ -254,6 +254,43 @@
                     </div>
                 </div>
             </div>
+            <!-- Modal Categorias-->
+            <div class="modal fade" id="CategoriaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title text-dark" id="exampleModalLabel">Issues</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-dark">
+
+                            <form id="formDetIssue">
+                                <div class="row">
+                                    <input id="IdDetalleIssue" type="hidden" class="form-control" />
+                                    <input id="IdIssue" type="hidden" class="form-control" />
+                                    <div class="col-12">
+                                        <label for="message-text" class="col-form-label">Seleccione una Categoria</label>
+                                        <div>
+                                            <select class="form-select" id="categoria">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <div id="contenidoDetIssue">
+                            </div>
+                            <div id="contenidoDetIssue">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="btnCerrarCate" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="button" id="btnGuardarCate" class="btn btn-primary">Guardar</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -387,6 +424,38 @@
                     swal("Error al guardar222");
                 });
             });
+            $("#btnGuardarCate").click(function () {
+                //procedemos
+                var idDetIssue = document.getElementById("IdDetalleIssue").value;
+                var idIssue = document.getElementById("IdIssue").value;
+                var categoria = document.getElementById("categoria").value;
+
+                var data1 = {
+                    idDetIssue: idDetIssue,
+                    idIssue: idIssue,
+                    idCate: categoria
+                };
+
+                $.ajax({
+                    url: '@Url.Action("guardarDetCategoria","Home")',
+                    type: 'post',
+                    cache: false,
+                    dataType: 'json',
+                    data: data1
+                }).done(function (resp) {
+                    if (resp) {
+                        swal("Actualizado con éxito");
+                        cargarDetCategoria();
+                        $("#IdDetalleIssue").val(""); // Vaciar el campo de entrada
+                        $("#categoria").val("");
+                        //$("#btnCerrar").click();
+                    } else {
+                        swal("Error al guardar111");
+                    }
+                }).fail(function () {
+                    swal("Error al guardar222");
+                });
+            });
         });
         function cargarActividades() {
                 var valor = document.getElementById("proyectos").value;
@@ -501,7 +570,33 @@
                     tabla += "<td>" + issue.horasIssue + "</td>";
                     tabla += "<td>" + issue.valorDestado + "</td>";
                     tabla += "<td>" + issue.nombreRec + "</td>";
-                    tabla += "<td><a class='btn btn-primary' href=\"javascript:editarIssue('" + issue.idIssue + "')\">Editar</a><a class='btn btn-danger' href=\"javascript:elimiarIssue('" + issue.idIssue + "')\">Eliminar</a></td>";
+                    tabla += "<td><a class='btn btn-primary' href=\"javascript:editarIssue('" + issue.idIssue + "')\">Editar</a><a class='btn btn-danger' href=\"javascript:elimiarIssue('" + issue.idIssue + "')\">Eliminar</a><a class='btn btn-primary' href=\"javascript:crudCategoria('" + issue.idIssue + "')\">Categoria</a></td>";
+                    tabla += "</tr>";
+                });
+                tabla += "</tbody></table>";
+                div.empty();
+                div.append(tabla);
+            }).fail();
+
+        }
+        function cargarDetCategoria() {
+            var idIssue = document.getElementById("IdIssue").value;
+            $.ajax({
+                url: '/Home/mostrarDetCategoria',
+                type: 'post',
+                dataType: 'json',
+                data: { id: idIssue },
+                cache: false
+            }).done(function (resp) {
+                console.log(resp);
+                var div = $("#contenidoDetIssue");
+                var tabla = "<table class='table table-striped'> <thead> <tr> <th> codigo </th> <th> Categoria </th> <th>  </th> </tr> </thead> <tbody> ";
+                $.each(resp, function (index, detcate) {
+
+                    tabla += "<tr>";
+                    tabla += "<td>" + detcate.detalleIssueId + "</td>";
+                    tabla += "<td>" + detcate.categoriaNombre + "</td>";
+                    tabla += "<td><a class='btn btn-danger' href=\"javascript:elimiarDetIssue('" + detcate.detalleIssueId + "')\">Eliminar</a></td>";
                     tabla += "</tr>";
                 });
                 tabla += "</tbody></table>";
@@ -582,6 +677,12 @@
             $('#IdCronogramaIssue').val(idCronograma);
             cargarIssues();
         }
+        function crudCategoria(idIssue) {
+            cargarCategorias();
+            $('#CategoriaModal').modal('show');
+            $('#IdIssue').val(idIssue);
+            cargarDetCategoria();
+        }
         function cargarDetEstado() {
 
             $.ajax({
@@ -632,7 +733,7 @@
                 var div = $("#categoria");
                 var select = " <option selected>Seleccione</option>";
                 $.each(resp, function (index, x) {
-                    select += "<option value=" + x.idDetalleestado + ">" + x.valorDestado + "</option>";
+                    select += "<option value=" + x.idCatissue + ">" + x.nombre + "</option>";
                 });
                 div.empty();
                 div.append(select);
@@ -744,6 +845,41 @@
                                 $("#IdIssue").val(""); // Vaciar el campo de entrada
                                 $("#FechaInicioIssue").val("");
                                 $("#FechaFinalIssue").val("");
+                            } else {
+                                swal("Problemas al eliminar!")
+                            }
+                        }).fail();
+
+                    } else {
+                        swal("El registro no se elimino!");
+                    }
+                });
+        }
+        function elimiarDetIssue(IdDetIssue) {
+            var data1 = {
+                id: IdDetIssue,
+            };
+            swal({
+                title: "Estas seguro?",
+                text: "Una vez eliminado se pierde definitivamente....",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $.ajax({
+                            url: '@Url.Action("EliminarDetIssue", "Home")',
+                            type: 'post',
+                            dataType: 'json',
+                            cache: false,
+                            data: data1
+                        }).done(function (resp) {
+                            if (resp) {
+                                swal("Eliminado!")
+                                cargarDetCategoria();
+                                $("#IdDetalleIssue").val(""); // Vaciar el campo de entrada
+                                $("#categoria").val("");
                             } else {
                                 swal("Problemas al eliminar!")
                             }
