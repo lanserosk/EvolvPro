@@ -24,29 +24,54 @@ namespace EvolvPro.Controllers
 
         public IActionResult Index()
         {
-            
+
             return View();
         }
 
         public IActionResult Privacy()
         {
+
             return View();
         }
         public IActionResult Recu_Contra()
         {
+            ViewBag.sesion = HttpContext.Session.GetString("VarSesion1");
             return View();
         }
         public IActionResult DetEstado()
         {
+            ViewBag.sesion = HttpContext.Session.GetString("VarSesion1");
             return View();
         }
 
         public IActionResult Proyectos()
         {
+            ViewBag.sesion = HttpContext.Session.GetString("VarSesion1");
             return View();
         }
         public IActionResult Cronograma()
         {
+            ViewBag.sesion = HttpContext.Session.GetString("VarSesion1");
+            return View();
+        }
+        public IActionResult Estado()
+        {
+            ViewBag.sesion = HttpContext.Session.GetString("VarSesion1");
+            return View();
+        }
+        public IActionResult CategoriaIssue()
+        {
+            ViewBag.sesion = HttpContext.Session.GetString("VarSesion1");
+            return View();
+        }
+        public IActionResult Recurso()
+        {
+            ViewBag.sesion = HttpContext.Session.GetString("VarSesion1");
+            return View();
+        }
+        public IActionResult Rolhora()
+        {
+            ViewBag.sesion = HttpContext.Session.GetString("VarSesion1");
             return View();
         }
 
@@ -745,6 +770,8 @@ namespace EvolvPro.Controllers
             res.FkRolhora = objEdit.FkRolhora;
             res.FkRecurso = objEdit.FkRecurso;
 
+            //var comprobacion = contexto.Cronogramas.Where(x => x.FkProyecto == id);
+
             return Json(res);
         }
 
@@ -830,20 +857,41 @@ namespace EvolvPro.Controllers
             }
             else
             {
-                decimal horasRest = (decimal)(horasNuevo);
+                if (horasNuevo != null)
+                {
+                    decimal horasRest = (decimal)(horasNuevo);
+                    EvolvProContext contexto = new EvolvProContext();
+                    var crono = contexto.Proyectos.Where(x => x.IdProyecto == pry).FirstOrDefault();
+                    decimal horasTotal = horasRest + (crono.HorasTotalesreal ?? 0);
 
-                EvolvProContext contexto = new EvolvProContext();
-                var crono = contexto.Proyectos.Where(x => x.IdProyecto == pry).FirstOrDefault();
-                decimal horasTotal = horasRest + (crono.HorasTotalesreal ?? 0);
+                    // Actualizar el campo HorasTotalesReal
+                    crono.HorasTotalesreal = horasTotal;
 
-                // Actualizar el campo HorasTotalesReal
-                crono.HorasTotalesreal = horasTotal;
+                    // Guardar los cambios en la base de datos
+                    contexto.SaveChanges();
 
-                // Guardar los cambios en la base de datos
-                contexto.SaveChanges();
+                    // Retornar un resultado exitoso (opcional)
+                    return Json(true);
+                }
+                else
+                {
+                    decimal horasRest = 0;
+                    EvolvProContext contexto = new EvolvProContext();
+                    var crono = contexto.Proyectos.Where(x => x.IdProyecto == pry).FirstOrDefault();
+                    decimal horasTotal = horasRest + (crono.HorasTotalesreal ?? 0);
 
-                // Retornar un resultado exitoso (opcional)
-                return Json(true);
+                    // Actualizar el campo HorasTotalesReal
+                    crono.HorasTotalesreal = horasTotal;
+
+                    // Guardar los cambios en la base de datos
+                    contexto.SaveChanges();
+
+                    // Retornar un resultado exitoso (opcional)
+                    return Json(true);
+                }
+                
+
+                
             }
 
             // Retornar un resultado de error
@@ -1259,6 +1307,404 @@ namespace EvolvPro.Controllers
 
         }
         //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        //:::::::::::::::::: RECURSOS ::::::::::::::::::::::::::::
+        [HttpPost]
+        public ActionResult guardarRecurso(Recurso rec)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            Recurso obj = new Recurso();
+            obj.IdRecurso = rec.IdRecurso;
+            obj.NombreRec = rec.NombreRec;
+            obj.TelefonoRec = rec.TelefonoRec;
+            obj.CorreoRec = rec.CorreoRec;
+
+            //CAPTURAMOS ALGUN POSIBLE ERROR
+            try
+            {
+                if (obj.IdRecurso == 0 || obj.IdRecurso == null)
+                {
+                    contexto.Recursos.Add(obj);
+                }
+                else
+                {
+                    contexto.Entry(rec).State = EntityState.Modified;
+                }
+                contexto.SaveChanges();
+                return Json(true);
+            }
+            catch (Exception ex)
+            {
+                return Json(false);
+            }
+        }
+
+        //editar recurso
+        [HttpPost]
+        public IActionResult EditarRecurso(int id)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            Recurso res = new Recurso();
+            var objEdit = contexto.Recursos.FirstOrDefault(x => x.IdRecurso == id);
+
+
+            res.IdRecurso = objEdit.IdRecurso;
+            res.NombreRec = objEdit.NombreRec;
+            res.TelefonoRec = objEdit.TelefonoRec;
+            res.CorreoRec = objEdit.CorreoRec;
+
+            return Json(res);
+        }
+
+        // mostrar
+
+        [HttpPost]
+        public IActionResult mostrarRecurso()
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            var query = from recurso in contexto.Recursos
+                        select new
+                        {
+                            recurso.IdRecurso,
+                            recurso.NombreRec,
+                            recurso.TelefonoRec,
+                            recurso.CorreoRec,
+
+                        };
+
+            List<object> resultado = new List<object>();
+            foreach (var item in query)
+            {
+                resultado.Add(item);
+            }
+
+            return Json(resultado);
+        }
+
+        [HttpPost]
+        public IActionResult EliminarRecurso(int id)
+        {
+            try
+            {
+                EvolvProContext contexto = new EvolvProContext();
+                var objRecurso = contexto.Recursos.FirstOrDefault(x => x.IdRecurso == id);
+                contexto.Recursos.Remove(objRecurso);
+                contexto.SaveChanges();
+                return Json(true);
+            }
+
+            catch (Exception ex)
+            {
+                return Json(false);
+            }
+
+        }
+
+
+
+
+
+
+        //:::::::::::::::::: CATEGORIA ::::::::::::::::::::::::
+        [HttpPost]
+        public ActionResult guardarCategoria(CategoriaIssue cat)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            CategoriaIssue obj = new CategoriaIssue();
+            obj.IdCatissue = cat.IdCatissue;
+            obj.Nombre = cat.Nombre;
+
+            try
+            {
+                if (obj.IdCatissue == 0 || obj.IdCatissue == null)
+                {
+                    contexto.CategoriaIssues.Add(obj);
+                }
+                else
+                {
+                    CategoriaIssue categoriaExistiente = contexto.CategoriaIssues.FirstOrDefault(e => e.IdCatissue == obj.IdCatissue);
+                    if (categoriaExistiente != null)
+                    {
+                        categoriaExistiente.Nombre = obj.Nombre;
+                        contexto.Entry(categoriaExistiente).State = EntityState.Modified;
+                    }
+
+                    else
+                    {
+                        return Json(false); // Estado no encontrado, retorna falso
+                    }
+
+                }
+
+                contexto.SaveChanges();
+
+
+                return Json(true);
+            }
+            catch (Exception ex)
+            {
+                return Json(false);
+            }
+        }
+
+        // editar categoria
+        [HttpPost]
+        public IActionResult EditarCategoria(int id)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            CategoriaIssue res = new CategoriaIssue();
+            var objEdit = contexto.CategoriaIssues.FirstOrDefault(x => x.IdCatissue == id);
+
+
+            res.IdCatissue = objEdit.IdCatissue;
+            res.Nombre = objEdit.Nombre;
+
+            return Json(res);
+        }
+
+
+
+        // mostrar
+
+        [HttpPost]
+        public IActionResult mostrarCategoria()
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            var query = from categoria in contexto.CategoriaIssues
+                        select new
+                        {
+                            categoria.IdCatissue,
+                            categoria.Nombre
+                        };
+
+            List<object> resultado = new List<object>();
+            foreach (var item in query)
+            {
+                resultado.Add(item);
+            }
+
+            return Json(resultado);
+        }
+
+
+
+        [HttpPost]
+        public IActionResult EliminarCategoria(int id)
+        {
+            try
+            {
+                EvolvProContext contexto = new EvolvProContext();
+                var objCategoria = contexto.CategoriaIssues.FirstOrDefault(x => x.IdCatissue == id);
+                contexto.CategoriaIssues.Remove(objCategoria);
+                contexto.SaveChanges();
+                return Json(true);
+            }
+
+            catch (Exception ex)
+            {
+                return Json(false);
+            }
+
+        }
+
+
+
+
+        //:::::::::::::::::: ESTADOO :::::::::::::::::::::::
+
+
+        [HttpPost]
+        public ActionResult guardarEstado(Estado est)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            Estado obj = new Estado();
+            obj.IdEstado = est.IdEstado;
+            obj.Nombre = est.Nombre;
+
+
+            // obj.FkEstado = det.FkEstado;
+            //CAPTURAMOS ALGUN POSIBLE ERROR
+            try
+            {
+                if (obj.IdEstado == 0 || obj.IdEstado == null)
+                {
+                    contexto.Estados.Add(obj);
+                }
+                else
+                {
+                    Estado estadoExistiente = contexto.Estados.FirstOrDefault(e => e.IdEstado == obj.IdEstado);
+                    if (estadoExistiente != null)
+                    {
+                        estadoExistiente.Nombre = obj.Nombre;
+                        contexto.Entry(estadoExistiente).State = EntityState.Modified;
+                    }
+
+                    else
+                    {
+                        return Json(false); // Estado no encontrado, retorna falso
+                    }
+
+                }
+
+                contexto.SaveChanges();
+
+
+                return Json(true);
+            }
+            catch (Exception ex)
+            {
+                return Json(false);
+            }
+        }
+
+
+        [HttpPost]
+        public IActionResult EditarEstado(int id)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            Estado res = new Estado();
+            var objEdit = contexto.Estados.FirstOrDefault(x => x.IdEstado == id);
+
+
+            res.IdEstado = objEdit.IdEstado;
+            res.Nombre = objEdit.Nombre;
+
+            return Json(res);
+        }
+
+
+
+        [HttpPost]
+        public IActionResult mostrarEstado()
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            var query = from estado in contexto.Estados
+                        select new
+                        {
+                            estado.IdEstado,
+                            estado.Nombre,
+
+                        };
+
+            List<object> resultado = new List<object>();
+            foreach (var item in query)
+            {
+                resultado.Add(item);
+            }
+
+            return Json(resultado);
+        }
+
+
+
+        [HttpPost]
+        public IActionResult EliminarEstado(int id)
+        {
+            try
+            {
+                EvolvProContext contexto = new EvolvProContext();
+                var objEstado = contexto.Estados.FirstOrDefault(x => x.IdEstado == id);
+                contexto.Estados.Remove(objEstado);
+                contexto.SaveChanges();
+                return Json(true);
+            }
+
+            catch (Exception ex)
+            {
+                return Json(false);
+            }
+
+        }
+        
+        [HttpPost]
+        public IActionResult mostrarRolhora()
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            var query = from rolh in contexto.RolHoras
+                        join proy in contexto.Proyectos on rolh.FkProyecto equals proy.IdProyecto
+
+                        select new
+                        {
+                            idRolhora = rolh.IdRolhora,
+                            nombreRol = rolh.NombreRol,
+                            valorHora = rolh.ValorHora,
+                            horaTotal = rolh.HoraTotal,
+                            fkProyecto = rolh.FkProyecto
+
+                        };
+            List<Object> resultado = new List<object>();
+            foreach (var item in query)
+            {
+                resultado.Add(item);
+            }
+            return Json(resultado);
+        }
+        [HttpPost]
+        public ActionResult guardarRolhora(RolHora rolh)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            RolHora obj = new RolHora();
+            obj.IdRolhora = rolh.IdRolhora;
+            obj.NombreRol = rolh.NombreRol;
+            obj.ValorHora = rolh.ValorHora;
+            obj.HoraTotal = rolh.HoraTotal;
+
+            obj.FkProyecto = rolh.FkProyecto;
+            //CAPTURAMOS ALGUN POSIBLE ERROR
+            try
+            {
+                if (obj.IdRolhora == 0 || obj.IdRolhora == null)
+                {
+                    contexto.RolHoras.Add(obj);
+
+                }
+                else
+                {
+                    contexto.Entry(rolh).State = EntityState.Modified;
+
+                }
+                contexto.SaveChanges();
+                return Json(true);
+            }
+            catch (Exception ex)
+            {
+                return Json(false);
+            }
+        }
+        [HttpPost]
+        public IActionResult EditarRolhora(int id)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            RolHora res = new RolHora();
+            var objEdit = contexto.RolHoras.FirstOrDefault(x => x.IdRolhora == id);
+
+            res.IdRolhora = objEdit.IdRolhora;
+            res.NombreRol = objEdit.NombreRol;
+            res.ValorHora = objEdit.ValorHora;
+            res.HoraTotal = objEdit.HoraTotal;
+
+            res.FkProyecto = objEdit.FkProyecto;
+
+            return Json(res);
+        }
+
+        [HttpPost]
+        public IActionResult EliminarRolhora(int id)
+        {
+            try
+            {
+                EvolvProContext contexto = new EvolvProContext();
+                var objDel = contexto.RolHoras.FirstOrDefault(x => x.IdRolhora == id);
+                contexto.RolHoras.Remove(objDel);
+                contexto.SaveChanges();
+                return Json(true);
+            }
+
+            catch (Exception ex)
+            {
+                return Json(false);
+            }
+
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

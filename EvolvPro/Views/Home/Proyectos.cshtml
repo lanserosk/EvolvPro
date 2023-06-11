@@ -276,6 +276,7 @@
                 autoclose: true,
                 startDate: today
             });
+            
             $('.datepickerFinal').datepicker({
                 format: 'dd/mm/yyyy',
                 language: 'es',
@@ -329,7 +330,16 @@
                 var div = $("#contenido");
                 var tabla = "";
                 $.each(resp, function (index, proyecto) {
-                    tabla += "<div class='card text-white card mb-3' style='width: 100 %; background-color: #232f36;'><div class='container'><br /><h2 class='card-title'>" + proyecto.nombrePry + "</h2><hr/><div class=card-body' style='display: flex; align-items: center;' ><div style='flex-grow: 1;'><h3> -- horas actuales de " + proyecto.horasTotales + " horas propuestas </h3><h4>Fecha de creación:" + proyecto.fechaInicio + " </h4><h4 style = 'text-align: right;'> Hoy: --/--/-- | Estimada: " + proyecto.fechaFinalProp + " </h4></div><h2 style = 'margin-top: -1rem; align-self: flex-start;'> Estado: " + proyecto.estadoNombre + " </h2><a class='btn btn-primary' href=\"javascript:editarProyecto('" + proyecto.idProyecto + "')\"> Editar </a><a class='btn btn-warning' href=\"javascript:detallesProyecto('" + proyecto.idProyecto + "')\"> Ver detalles </a></div></div></div>";
+                    var fechaInicio = new Date(proyecto.fechaInicio);
+                    var formatFechainicio = fechaInicio.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    var fechaFinalProp = new Date(proyecto.fechaFinalProp);
+                    var formatFechaFinalProp = fechaFinalProp.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    var formatHoy = fechaInicio.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    if(proyecto.horasTotalesreal != null){
+                        tabla += "<div class='card text-white card mb-3' style='width: 100 %; background-color: #232f36;'><div class='container'><br /><h2 class='card-title'>" + proyecto.nombrePry + "</h2><hr/><div class=card-body' style='display: flex; align-items: center;' ><div style='flex-grow: 1;'><h3> " + proyecto.horasTotalesreal + " horas actuales de " + proyecto.horasTotales + " horas propuestas </h3><h4>Fecha de creación:" + formatFechainicio + " </h4><h4 style = 'text-align: right;'> Hoy: " + formatHoy + " | Estimada: " + formatFechaFinalProp + " </h4></div><h2 style = 'margin-top: -1rem; align-self: flex-start;'> Estado: " + proyecto.estadoNombre + " </h2><a class='btn btn-primary' href=\"javascript:editarProyecto('" + proyecto.idProyecto + "')\"> Editar </a><a class='btn btn-warning' href=\"javascript:detallesProyecto('" + proyecto.idProyecto + "')\"> Ver detalles </a></div></div></div>";
+                    }else{
+                        tabla += "<div class='card text-white card mb-3' style='width: 100 %; background-color: #232f36;'><div class='container'><br /><h2 class='card-title'>" + proyecto.nombrePry + "</h2><hr/><div class=card-body' style='display: flex; align-items: center;' ><div style='flex-grow: 1;'><h3> -- horas actuales de " + proyecto.horasTotales + " horas propuestas </h3><h4>Fecha de creación:" + formatFechainicio + " </h4><h4 style = 'text-align: right;'> Hoy: " + formatHoy + " | Estimada: " + formatFechaFinalProp + " </h4></div><h2 style = 'margin-top: -1rem; align-self: flex-start;'> Estado: " + proyecto.estadoNombre + " </h2><a class='btn btn-primary' href=\"javascript:editarProyecto('" + proyecto.idProyecto + "')\"> Editar </a><a class='btn btn-warning' href=\"javascript:detallesProyecto('" + proyecto.idProyecto + "')\"> Ver detalles </a></div></div></div>";
+                    }
                 });
                 div.empty();
                 div.append(tabla);
@@ -413,7 +423,19 @@
                 var div = $("#Pry");
                 var h1 = "";
                 $.each(resp, function (index, x) {
-                    h1 += "<center><h1>" + x.nombrePry + "</h1></center><center><h2>-- horas de " + x.horasTotales + " horas estimadas</h2></center> <center><h5>Fecha de inicio:" + x.fechaInicio + " | Fecha actual: --/--/-- | Fecha final presupuestada: " + x.fechaFinalProp + " | Fecha Final: --/--/--</h5></center> <div class='row'> <div class='col-6'> <h6>Cliente: " + x.clienteNombre + "</h6> <h6>Project Manager: " + x.usuarioNombre + "</h6> </div> <div class='col-6'> <h6>Estado del proyecto: " + x.estadoNombre + "</h3> </div> </div> <div class='row'> <div class='col-6'> <h6 for='message-text' class='col-form-label'>Caso de negocio:</h6> <p>" + x.casoNegocio + "</p> </div> <div class='col-6'> <h6 for='message-text' class='col-form-label'>Interesados</h6> <p>" + x.interesados + "</p> </div> </div>";
+                    var fechaInicio = new Date(x.fechaInicio);
+                    var formatFechainicio = fechaInicio.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    var fechaFinalProp = new Date(x.fechaFinalProp);
+                    var formatFechaFinalProp = fechaFinalProp.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    var fechaFinalreal = new Date(x.fechaFinalReal);
+                    var formatFechaFinalreal = fechaFinalreal.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    var formatHoy = fechaInicio.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    if (x.horasTotalesreal != null) {
+                        h1 += "<center><h1>" + x.nombrePry + "</h1></center><center><h2>" + x.horasTotalesreal + " horas de " + x.horasTotales + " horas estimadas</h2></center> <center><h5>Fecha de inicio:" + formatFechainicio + " | Fecha actual: " + formatHoy + " | Fecha final presupuestada: " + formatFechaFinalProp + " | Fecha Final: " + formatFechaFinalreal + "</h5></center> <div class='row'> <div class='col-6'> <h6>Cliente: " + x.clienteNombre + "</h6> <h6>Project Manager: " + x.usuarioNombre + "</h6> </div> <div class='col-6'> <h6>Estado del proyecto: " + x.estadoNombre + "</h3> </div> </div> <div class='row'> <div class='col-6'> <h6 for='message-text' class='col-form-label'>Caso de negocio:</h6> <p>" + x.casoNegocio + "</p> </div> <div class='col-6'> <h6 for='message-text' class='col-form-label'>Interesados</h6> <p>" + x.interesados + "</p> </div> </div>";
+                    }else{
+                        h1 += "<center><h1>" + x.nombrePry + "</h1></center><center><h2>-- horas de " + x.horasTotales + " horas estimadas</h2></center> <center><h5>Fecha de inicio:" + formatFechainicio + " | Fecha actual: " + formatHoy + " | Fecha final presupuestada: " + formatFechaFinalProp + " | Fecha Final: " + formatFechaFinalreal + "</h5></center> <div class='row'> <div class='col-6'> <h6>Cliente: " + x.clienteNombre + "</h6> <h6>Project Manager: " + x.usuarioNombre + "</h6> </div> <div class='col-6'> <h6>Estado del proyecto: " + x.estadoNombre + "</h3> </div> </div> <div class='row'> <div class='col-6'> <h6 for='message-text' class='col-form-label'>Caso de negocio:</h6> <p>" + x.casoNegocio + "</p> </div> <div class='col-6'> <h6 for='message-text' class='col-form-label'>Interesados</h6> <p>" + x.interesados + "</p> </div> </div>";
+                    }
+                    
                 });
                 div.empty();
                 div.append(h1);

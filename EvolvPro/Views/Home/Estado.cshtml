@@ -1,0 +1,265 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model Estado
+
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white" style="height: 90vh;">
+                <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                    <span class="fs-5 d-none d-sm-inline">Menu</span>
+                </a>
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link align-middle px-0">
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Inicio</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-collection-fill"></i> <span class="ms-1 d-none d-sm-inline">Mantenimiento</span>
+                        </a>
+                        <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
+                            <li class="w-100">
+                                <a asp-action="Usuarios" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Usuarios</span> </a>
+                            </li>
+                            <li>
+                                <a asp-action="Clientes" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Clientes</span> </a>
+                            </li>
+                            <li>
+                                <a asp-action="Estado" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Estado</span> </a>
+
+                            </li>
+                            <li>
+
+                                <a class="nav-link px-0" asp-area="" asp-controller="Home" asp-action="DetEstado" method="POST"> <span class="d-none d-sm-inline">Detalle Estado</span></a>
+                            </li>
+                            <li>
+                                <a class="nav-link px-0"> <span class="d-none d-sm-inline">Recursos</span></a>
+                            </li>
+                            <li>
+                                <a class="nav-link px-0" asp-area="" asp-controller="Home" asp-action="CategoriaIssue" method="POST"> <span class="d-none d-sm-inline">Categorias de problemas</span></a>
+                            </li>
+                            <li>
+                                <a class="nav-link px-0"> <span class="d-none d-sm-inline">Tipos de usuario</span></a>
+                            </li>
+                            <li>
+                                <a class="nav-link px-0"> <span class="d-none d-sm-inline">Preguntas de seguridad</span></a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="nav-link px-0 align-middle" asp-area="" asp-controller="Home" asp-action="Cronograma" method="POST">
+                            <i class="fs-4 bi-calendar-week-fill"></i> <span class="ms-1 d-none d-sm-inline">Cronograma</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link px-0 align-middle" asp-area="" asp-controller="Home" asp-action="Proyectos" method="POST">
+                            <i class="fs-4 bi-folder-fill"></i> <span class="ms-1 d-none d-sm-inline">Proyectos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-bug-fill"></i> <span class="ms-1 d-none d-sm-inline">Problemas(issues)</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-camera-video-fill "></i> <span class="ms-1 d-none d-sm-inline">Reuniones</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="dropdown pb-4">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30" class="rounded-circle">
+                        <span class="d-none d-sm-inline mx-1">loser</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                        <li><a class="dropdown-item" href="#">New project...</a></li>
+                        <li><a class="dropdown-item" href="#">Settings</a></li>
+                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">Sign out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col py-3">
+            <form asp-action="Index" asp-controller="Home" method="POST">
+                <button type="submit" class="btn btn-dark float-end">Cerrar sesion</button>
+            </form>
+
+            <div class="card bg-dark text-white">
+                <div class="card-header">
+                    <h5>Editando Estados</h5>
+                </div>
+                <div class="card-body">
+
+                    <style>
+                        .form-inline .form-control {
+                            display: inline-block;
+                            width: auto;
+                            vertical-align: middle;
+                        }
+                    </style>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#estadoModal">
+                        Nuevo Estado
+                    </button>
+                    <div class="table-responsive" id="contenido">
+                        
+                    </div>
+
+                </div>
+
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="estadoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title text-dark" id="exampleModalLabel">Estado </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-dark">
+
+                            <form id="FormEstado">
+                                <input id="IdEstado" name="IdEstado" asp-for="IdEstado" type="hidden" class="form-control" />
+                                <label for="message-text" class="col-form-label">Nombre del estado</label>
+                                <input id="Nombre" name="Nombre" asp-for="Nombre" class="form-control" placeholder="Activo, suspendido, abierto, etc" />
+
+
+                             
+                            </form>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="btnCerrar" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="button" id="btnGuardar" class="btn btn-primary">Guardar</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            cargarTabla();
+            $("#btnGuardar").click(function () {
+                if ($("#Nombre").val()) {
+                    //procedemos
+                    var formulario = $("#FormEstado").serialize();
+
+                    $.ajax({
+                        url: '@Url.Action("guardarEstado","Home")',
+                        type: 'post',
+                        cache: false,
+                        dataType: 'json',
+                        data: formulario
+                    }).done(function (resp) {
+                        if (resp) {
+                            swal("Guardado con éxito");
+                            cargarTabla();
+                            $("#IdEstado").val(""); // Vaciar el campo de entrada
+                            $("#btnCerrar").click();
+                        } else {
+                            swal("Error al guardar1");
+                        }
+                    }).fail(function () {
+                        swal("Error al guardar2");
+                    });
+                } else {
+                    swal("Todos los campos son requeridos");
+                }
+            });
+        });
+        function eliminarEstado(IdEstado) {
+            swal({
+                title: "Estas seguro?",
+                text: "Una vez eliminado se pierde definitivamente....",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $.ajax({
+                            url: '@Url.Action("EliminarEstado", "Home")',
+                            type: 'post',
+                            dataType: 'json',
+                            cache: false,
+                            data: { id: IdEstado }
+                        }).done(function (resp) {
+                            if (resp) {
+                                swal("Eliminado!")
+                                cargarTabla();
+                                $("#IdEstado").val("");
+                            } else {
+                                swal("Problemas al eliminar!")
+                            }
+                        }).fail();
+
+                    } else {
+                        swal("El registro no se elimino!");
+                    }
+                });
+        }
+        function editarEstado(IdEstado) {
+            $.ajax({
+                url: '/Home/EditarEstado',
+                type: 'post',
+                dataType: 'json',
+
+                data: { id: IdEstado },
+                success: function (data) {
+
+                    $('#IdEstado').val(data.idEstado);
+                    $('#Nombre').val(data.nombre);
+                    $('#estadoModal').modal('show');
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+
+        function cargarTabla() {
+
+            $.ajax({
+                url: '/Home/mostrarEstado',
+                type: 'post',
+                dataType: 'json',
+                cache: false
+            }).done(function (resp) {
+                console.log(resp);
+                var div = $("#contenido");
+                var tabla = "<table class='table table-dark table - striped'> <thead> <tr> <th> codigo </th>  <th> Nombre </th> <th>  </th> <th>  </th> <tbody> ";
+                $.each(resp, function (index, estado) {
+                    tabla += "<tr>";
+                    tabla += "<td>" + estado.idEstado + "</td>";
+                    tabla += "<td>" + estado.nombre + "</td>";
+                    tabla += "<td><a class='btn btn-primary' href=\"javascript:editarEstado('" + estado.idEstado + "')\">Editar</a><a class='btn btn-danger' href=\"javascript:eliminarEstado('" + estado.idEstado + "')\">Eliminar</a></td>";
+                    tabla += "</tr>";
+                });
+                tabla += "</tbody></table>";
+                div.empty();
+                div.append(tabla);
+            }).fail();
+
+        }
+
+       
+
+    </script>
+}

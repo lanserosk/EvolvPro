@@ -1,0 +1,275 @@
+﻿@*@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model Recurso
+
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white" style="height: 90vh;">
+                <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                    <span class="fs-5 d-none d-sm-inline">Menu</span>
+                </a>
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link align-middle px-0">
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Inicio</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-collection-fill"></i> <span class="ms-1 d-none d-sm-inline">Mantenimiento</span>
+                        </a>
+                        <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
+                            <li class="w-100">
+                                <a asp-action="Usuarios" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Usuarios</span> </a>
+                            </li>
+                            <li>
+                                <a asp-action="Clientes" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Clientes</span> </a>
+                            </li>
+                            <li>
+                                <a asp-action="Estado" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Estado</span> </a>
+
+                            </li>
+                            <li>
+
+                                <a class="nav-link px-0" asp-area="" asp-controller="Home" asp-action="DetEstado" method="POST"> <span class="d-none d-sm-inline">Detalle Estado</span></a>
+                            </li>
+                            <li>
+                                <a class="nav-link px-0" asp-area="" asp-controller="Home" asp-action="Recurso" method="POST"> <span class="d-none d-sm-inline">Recurso</span></a>
+                             
+                            </li>
+                            <li>
+
+                                <a class="nav-link px-0" asp-area="" asp-controller="Home" asp-action="CategoriaIssue" method="POST"> <span class="d-none d-sm-inline">Categorias de problemas</span></a>
+                            </li>
+                            <li>
+                                <a class="nav-link px-0"> <span class="d-none d-sm-inline">Tipos de usuario</span></a>
+                            </li>
+                            <li>
+                                <a class="nav-link px-0"> <span class="d-none d-sm-inline">Preguntas de seguridad</span></a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="nav-link px-0 align-middle" asp-area="" asp-controller="Home" asp-action="Cronograma" method="POST">
+                            <i class="fs-4 bi-calendar-week-fill"></i> <span class="ms-1 d-none d-sm-inline">Cronograma</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link px-0 align-middle" asp-area="" asp-controller="Home" asp-action="Proyectos" method="POST">
+                            <i class="fs-4 bi-folder-fill"></i> <span class="ms-1 d-none d-sm-inline">Proyectos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-bug-fill"></i> <span class="ms-1 d-none d-sm-inline">Problemas(issues)</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-camera-video-fill "></i> <span class="ms-1 d-none d-sm-inline">Reuniones</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="dropdown pb-4">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30" class="rounded-circle">
+                        <span class="d-none d-sm-inline mx-1">loser</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                        <li><a class="dropdown-item" href="#">New project...</a></li>
+                        <li><a class="dropdown-item" href="#">Settings</a></li>
+                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">Sign out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col py-3">
+            <form asp-action="Index" asp-controller="Home" method="POST">
+                <button type="submit" class="btn btn-dark float-end">Cerrar sesion</button>
+            </form>
+
+            <div class="card bg-dark text-white">
+                <div class="card-header">
+                    <h5> Editando Recurso</h5>
+                </div>
+                <div class="card-body">
+
+                    <style>
+                        .form-inline .form-control {
+                            display: inline-block;
+                            width: auto;
+                            vertical-align: middle;
+                        }
+                    </style>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#estadoModal">
+                        Nuevo Recurso
+                    </button>
+                    <div class="table-responsive" id="contenido">
+                    </div>
+
+                </div>
+
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="estadoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title text-dark" id="exampleModalLabel">Recurso </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-dark">
+
+                            <form id="FormRecurso">
+                                <input id="IdRecurso" name="IdRecurso" asp-for="IdRecurso" type="hidden" class="form-control" />
+                                <label for="message-text" class="col-form-label">Nombre del Recurso</label>
+                                <input id="NombreRec" name="NombreRec" asp-for="NombreRec" class="form-control" placeholder="Recurso 1" />
+                                <br />
+                                <label for="message-text" class="col-form-label">Telefono</label>
+                                <input id="TelefonoRec" name="TelefonoRec" asp-for="TelefonoRec" class="form-control" placeholder="1234-0676" />
+                                <br />
+                                <label for="message-text" class="col-form-label">Correo</label>
+                                <input id="CorreoRec" name="CorreoRec" asp-for="CorreoRec" class="form-control" placeholder="ejemplo@gmail.com" />
+                            </form>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="btnCerrar" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="button" id="btnGuardar" class="btn btn-primary">Guardar</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            cargarTabla();
+            $("#btnGuardar").click(function () {
+                if($("#NombreRec").val() != "" &&
+                    $("#TelefonoRec").val() != "" &&
+                    $("#CorreoRec").val()) {
+                    //procedemos
+                    var formulario = $("#FormRecurso").serialize();
+
+                    $.ajax({
+                        url: '@Url.Action("guardarRecurso","Home")',
+                        type: 'post',
+                        cache: false,
+                        dataType: 'json',
+                        data: formulario
+                    }).done(function (resp) {
+                        if (resp) {
+                            swal("Guardado con éxito");
+                            cargarTabla();
+                            $("#IdRecurso").val(""); // Vaciar el campo de entrada
+                            $("#btnCerrar").click();
+                        } else {
+                            swal("Error al guardar1");
+                        }
+                    }).fail(function () {
+                        swal("Error al guardar2");
+                    });
+                } else {
+                    swal("Todos los campos son requeridos");
+                }
+            });
+        });
+        function eliminarRecurso(IdRecurso) {
+            swal({
+                title: "Estas seguro?",
+                text: "Una vez eliminado se pierde definitivamente....",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $.ajax({
+                            url: '@Url.Action("EliminarRecurso", "Home")',
+                            type: 'post',
+                            dataType: 'json',
+                            cache: false,
+                            data: { id: IdRecurso }
+                        }).done(function (resp) {
+                            if (resp) {
+                                swal("Eliminado!")
+                                cargarTabla();
+                                $("#IdRecurso").val("");
+                            } else {
+                                swal("Problemas al eliminar!")
+                            }
+                        }).fail();
+
+                    } else {
+                        swal("El registro no se elimino!");
+                    }
+                });
+        }
+        function editarRecurso(IdRecurso) {
+            $.ajax({
+                url: '/Home/EditarRecurso',
+                type: 'post',
+                dataType: 'json',
+
+                data: { id: IdRecurso },
+                success: function (data) {
+
+                    $('#IdRecurso').val(data.idRecurso);
+                    $('#NombreRec').val(data.nombreRec);
+                    $('#TelefonoRec').val(data.telefonoRec);
+                    $('#CorreoRec').val(data.correoRec);
+                    $('#estadoModal').modal('show');
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+
+        function cargarTabla() {
+
+            $.ajax({
+                url: '/Home/mostrarRecurso',
+                type: 'post',
+                dataType: 'json',
+                cache: false
+            }).done(function (resp) {
+              //  console.log(resp);
+                var div = $("#contenido");
+                var tabla = "<table class='table table-dark table - striped'> <thead> <tr> <th> codigo </th>  <th> Nombre </th>  <th> Telefono </th>  <th> Correo <th>Acciones</th></tr></thead><tbody>";
+                $.each(resp, function (index, recurso) {
+                    tabla += "<tr>";
+                    tabla += "<td>" + recurso.idRecurso + "</td>";
+                    tabla += "<td>" + recurso.nombreRec + "</td>";
+                    tabla += "<td>" + recurso.telefonoRec + "</td>";
+                    tabla += "<td>" + recurso.correoRec + "</td>";
+                    tabla += "<td><a class='btn btn-primary' href=\"javascript:editarRecurso('" + recurso.idRecurso + "')\">Editar</a><a class='btn btn-danger' href=\"javascript:eliminarRecurso('" + recurso.idRecurso + "')\">Eliminar</a></td>";
+                    tabla += "</tr>";
+                });
+                tabla += "</tbody></table>";
+                div.empty();
+                div.append(tabla);
+            }).fail();
+
+        }
+
+
+
+    </script>
+}

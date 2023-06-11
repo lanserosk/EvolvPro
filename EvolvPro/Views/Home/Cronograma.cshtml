@@ -338,7 +338,7 @@
                             swal("Actualizado con éxito");
                             cargarActividades();
                             $("#IdCronograma").val(""); // Vaciar el campo de entrada
-                            $("#btnCerrar").click();
+                            $("#btnCerrar").click(); 
                         } else {
                             swal("Error al guardar111");
                         }
@@ -363,6 +363,7 @@
                     }).fail(function () {
                         swal("Error al guardar2");
                     });
+                    
                 } else {
                     swal("El campo de estado es requerido");
                 }
@@ -501,6 +502,7 @@
                                 var div = $("#contenido");
                                     var tabla = "<table class='table table-dark table - striped'> <thead> <tr> <th> codigo </th> <th> Titulo </th> <th> Descripcion </th> <th> Rol </th><th> Estado </th><th> Asignado a </th> <th>  </th> <th>  </th> <tbody> ";
                                 $.each(resp, function (index, crono) {
+                                    console.log(crono);
                                     tabla += "<tr>";
                                     tabla += "<td>" + crono.idCronograma + "</td>";
                                     tabla += "<td>" + crono.nombreCrgm + "</td>";

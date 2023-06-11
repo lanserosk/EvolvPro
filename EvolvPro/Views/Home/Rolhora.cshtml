@@ -1,0 +1,304 @@
+﻿
+@model RolHora
+
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white" style="height: 90vh;">
+                <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                    <span class="fs-5 d-none d-sm-inline">Menu</span>
+                </a>
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link align-middle px-0">
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Inicio</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-collection-fill"></i> <span class="ms-1 d-none d-sm-inline">Mantenimiento</span>
+                        </a>
+                        <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
+                            <li class="w-100">
+                                <a asp-action="Usuarios" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Usuarios</span> </a>
+                            </li>
+                            <li>
+                                <a asp-action="Clientes" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Clientes</span> </a>
+                            </li>
+                            <li>
+                                <a class="nav-link px-0"> <span class="d-none d-sm-inline">Estados</span></a>
+                            </li>
+                            <li>
+                                <a class="nav-link px-0" asp-area="" asp-controller="Home" asp-action="DetEstado" method="POST"> <span class="d-none d-sm-inline">Detalle Estado</span></a>
+                            </li>
+                            <li>
+                                <a asp-action="Rolhora" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Rol_hora</span> </a>
+                            </li>
+                            <li>
+                                <a class="nav-link px-0"> <span class="d-none d-sm-inline">Recursos</span></a>
+                            </li>
+                            <li>
+                                <a class="nav-link px-0"> <span class="d-none d-sm-inline">Categorias de problemas</span></a>
+                            </li>
+                            <li>
+                                <a class="nav-link px-0"> <span class="d-none d-sm-inline">Tipos de usuario</span></a>
+                            </li>
+                            <li>
+                                <a class="nav-link px-0"> <span class="d-none d-sm-inline">Preguntas de seguridad</span></a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="nav-link px-0 align-middle" asp-area="" asp-controller="Home" asp-action="Cronograma" method="POST">
+                            <i class="fs-4 bi-calendar-week-fill"></i> <span class="ms-1 d-none d-sm-inline">Cronograma</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link px-0 align-middle" asp-area="" asp-controller="Home" asp-action="Proyectos" method="POST">
+                            <i class="fs-4 bi-folder-fill"></i> <span class="ms-1 d-none d-sm-inline">Proyectos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-bug-fill"></i> <span class="ms-1 d-none d-sm-inline">Problemas(issues)</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-camera-video-fill "></i> <span class="ms-1 d-none d-sm-inline">Reuniones</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="dropdown pb-4">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30" class="rounded-circle">
+                        <span class="d-none d-sm-inline mx-1">loser</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                        <li><a class="dropdown-item" href="#">New project...</a></li>
+                        <li><a class="dropdown-item" href="#">Settings</a></li>
+                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">Sign out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col py-3">
+            @*<form asp-action="Index" asp-controller="Home" method="POST">
+                <button type="submit" class="btn btn-dark float-end">Cerrar sesion</button>
+            </form>*@
+            @if (ViewBag.sesion == "1")
+            {
+                
+                <h3>Mantenimiento Rol-hora</h3>
+                <hr>
+
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#rolhoraModal">
+                    Nuevo Registro
+                </button>
+
+                <hr />
+                <br />
+
+                <div id="contenido">
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="rolhoraModal" tabindex="-1" aria-labelledby="rolhoraModal" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <h5 class="modal-title text-dark" id="rolhoraModal">Creación de accesos </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body text-dark">
+
+                                <form id="Form1">
+                                    <label for="message-text" class="col-form-label">Nombre: *</label>
+                                    <input id="IdRolhora" name="IdRolhora" asp-for="IdRolhora" type="hidden" class="form-control" placeholder="Ejm Juan Perez" />
+                                    <input id="NombreRol" name="NombreRol" asp-for="NombreRol" class="form-control  text-primary" placeholder="Ejm Juan Perez" />
+
+                                    <label for="message-text" class="col-form-label">Valor Hora: *</label>
+                                    <input id="ValorHora" name="ValorHora" asp-for="ValorHora" class="form-control text-primary" placeholder="Ejm. 2565-9855" />
+
+                                    <label for="message-text" class="col-form-label">Hora Total: *</label>
+                                    <input id="HoraTotal" name="HoraTotal" asp-for="HoraTotal" class="form-control  text-primary" placeholder="Ejm. juan.perez@gmail.com" />
+   
+                                    <label for="message-text" class="col-form-label">Seleccione Proyecto: *</label>
+                                    <div >
+                                        <select class="form-select text-primary" id="FkProyecto" asp-for="FkProyecto">
+                                        </select>
+                                    </div>            
+                                </form>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" id="btnCerrar" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="button" id="btnGuardar" class="btn btn-primary">Guardar</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            }
+            else
+            {
+                <center><h1>Bienvenido Project manager</h1></center>
+            }
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+
+        function cargarTabla() {
+            $.ajax({
+                url: '/Home/mostrarRolhora',
+                type: 'post',
+                dataType: 'json',
+                cache: false
+            }).done(function (resp) {
+                // console.log(resp);
+                var div = $("#contenido");
+                var tabla = "<table class='table table-stripperd text-white'><thead><tr><th>Id </th><th>Nombre </th><th>Valor hora</th><th>Hora total</th><th>Proyecto</th><th>Acciones</th></tr></thead><tbody>";
+                $.each(resp, function (index, rolh) {
+                    tabla += "<tr>";
+                    tabla += "<td>" + rolh.idRolhora + "</td>";
+                    tabla += "<td>" + rolh.nombreRol + "</td>";
+                    tabla += "<td>" + rolh.valorHora + "</td>";
+                    tabla += "<td>" + rolh.horaTotal + "</td>";
+
+                    tabla += "<td>" + rolh.fkProyecto + "</td>";
+                    tabla += "<td><a class='btn btn-primary' href=\"javascript:editarRolhora('" + rolh.idRolhora + "')\">Editar</a><a class='btn btn-danger' href=\"javascript:elimiarRolh('" + rolh.idRolhora + "')\">Eliminar</a></td>";
+                    tabla += "</tr>";
+                });
+                tabla += "</tbody></table>";
+                div.empty();
+                div.append(tabla);
+            }).fail();
+
+        }
+
+        function cargarProyecto() {
+
+            $.ajax({
+                url: '/Home/listProyecto',
+                type: 'post',
+                dataType: 'json',
+                cache: false
+            }).done(function (resp) {
+                console.log(resp);
+                var div = $("#FkProyecto");
+                var select = " <option selected>Seleccione</option>";
+                $.each(resp, function (index, x) {
+                    select += "<option  value=" + x.idProyecto + ">" + x.nombrePry + "</option>";
+                });
+                div.empty();
+                div.append(select);
+            }).fail();
+        }
+
+        function editarRolhora(idRolhora) {
+            $.ajax({
+                url: '/Home/EditarRolhora',
+                type: 'post',
+                dataType: 'json',
+
+                data: { id: idRolhora },
+                success: function (data) {
+                    // console.log(data.nombreUsu);
+
+                    $('#IdRolhora').val(data.idRolhora);
+                    $('#NombreRol').val(data.nombreRol);
+                    $('#ValorHora').val(data.valorHora);
+                    $('#HoraTotal').val(data.horaTotal);
+
+                    $('#FkProyecto').val(data.fkProyecto);
+                    $('#rolhoraModal').modal('show');
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        function elimiarRolh(idRolhora) {
+            swal({
+                title: "Estas seguro?",
+                text: "Una vez eliminado se pierde definitivamente....",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $.ajax({
+                            url: '@Url.Action("EliminarRolhora", "Home")',
+                            type: 'post',
+                            dataType: 'json',
+                            cache: false,
+                            data: { id: idRolhora }
+                        }).done(function (resp) {
+                            if (resp) {
+                                swal("Eliminado!")
+                                cargarTabla();
+                                $("#IdRolhora").val("");
+                            } else {
+                                swal("Problemas al eliminar!")
+                            }
+                        }).fail();
+
+                    } else {
+                        swal("El registro no se elimino!");
+                    }
+                });
+        }
+        $(document).ready(function () {
+
+            //jquery
+            cargarTabla();
+            cargarProyecto();
+          
+            //programamos los botones
+            $("#btnGuardar").click(function () {
+                if ($("#NombreRol").val() != "" &&
+                    $("#ValorHora").val() != "" &&
+                    $("#HoraTotal").val() != "" &&
+                    $("#FkProyecto").val() != "") {
+                    //procedemos
+                    var formulario = $("#Form1").serialize();
+
+                    $.ajax({
+                        url: '@Url.Action("guardarRolhora","Home")',
+                        type: 'post',
+                        cache: false,
+                        dataType: 'json',
+                        data: formulario
+                    }).done(function (resp) {
+                        if (resp) {
+                            swal("Guardado con éxito");
+                            cargarTabla();
+                            $("#IdRolhora").val("");
+                            $("#btnCerrar").click();
+                        } else {
+                            swal("Error al guardar1");
+                        }
+                    }).fail(function () {
+                        swal("Error al guardar2");
+                    });
+                } else {
+                    swal("Todos los campos son requeridos");
+                }
+            });
+        });
+    </script>
+}
+
+
+
+
