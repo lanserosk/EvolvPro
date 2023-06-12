@@ -33,6 +33,11 @@ namespace EvolvPro.Controllers
 
             return View();
         }
+        public IActionResult Reuniones()
+        {
+            ViewBag.sesion = HttpContext.Session.GetString("VarSesion1");
+            return View();
+        }
         public IActionResult Recu_Contra()
         {
             ViewBag.sesion = HttpContext.Session.GetString("VarSesion1");
@@ -61,6 +66,11 @@ namespace EvolvPro.Controllers
             return View();
         }
         public IActionResult CategoriaIssue()
+        {
+            ViewBag.sesion = HttpContext.Session.GetString("VarSesion1");
+            return View();
+        }
+        public IActionResult PreguntaSeguridad()
         {
             ViewBag.sesion = HttpContext.Session.GetString("VarSesion1");
             return View();
@@ -1843,6 +1853,196 @@ namespace EvolvPro.Controllers
             return StatusCode(StatusCodes.Status200OK, resumen);
         }
 
+        //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+        //MANTENIMIENTO REUNIONES
+
+        [HttpPost]
+        public ActionResult guardarReuniones(Reunione reu)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            Reunione obj = new Reunione();
+            obj.IdReunion = reu.IdReunion;
+            obj.TituloReu = reu.TituloReu;
+            obj.PuntosTratar = reu.PuntosTratar;
+            obj.DesarrolloPunto = reu.DesarrolloPunto;
+            obj.Asistentes = reu.Asistentes;
+            obj.TiempoReu = reu.TiempoReu;
+            obj.FkProyecto = reu.FkProyecto;
+
+            //CAPTURAMOS ALGUN POSIBLE ERROR
+            try
+            {
+                if (obj.IdReunion == 0 || obj.IdReunion == null)
+                {
+                    contexto.Reuniones.Add(obj);
+                }
+                else
+                {
+                    contexto.Entry(reu).State = EntityState.Modified;
+                }
+                contexto.SaveChanges();
+                return Json(true);
+            }
+            catch (Exception ex)
+            {
+                return Json(false);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult mostrarReuniones()
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            var query = from reu in contexto.Reuniones
+                        join pro in contexto.Proyectos on reu.FkProyecto equals pro.IdProyecto
+                        //join preUsu in contexto.PreguntaSeguridads on usu.FkPregunta equals preUsu.IdPregunta
+                        select new
+                        {
+                            idReunion = reu.IdReunion,
+                            tituloReu = reu.TituloReu,
+                            puntosTratar = reu.PuntosTratar,
+                            desarrolloPunto = reu.DesarrolloPunto,
+                            asistentes = reu.Asistentes,
+                            tiempoReu = reu.TiempoReu,
+                            fkProyecto = pro.NombrePry
+                        };
+            List<Object> resultado = new List<object>();
+            foreach (var item in query)
+            {
+                resultado.Add(item);
+            }
+            return Json(resultado);
+        }
+
+        [HttpPost]
+        public IActionResult EditarReuniones(int id)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            Reunione res = new Reunione();
+            var objEdit = contexto.Reuniones.FirstOrDefault(x => x.IdReunion == id);
+
+            res.IdReunion = objEdit.IdReunion;
+            res.TituloReu = objEdit.TituloReu;
+            res.PuntosTratar = objEdit.PuntosTratar;
+
+            res.DesarrolloPunto = objEdit.DesarrolloPunto;
+            res.Asistentes = objEdit.Asistentes;
+            res.TiempoReu = objEdit.TiempoReu;
+            res.FkProyecto = objEdit.FkProyecto;
+
+            return Json(res);
+        }
+
+        [HttpPost]
+        public IActionResult EliminarReuniones(int id)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            try
+            {
+                var objDel = contexto.Reuniones.FirstOrDefault(x => x.IdReunion == id);
+                contexto.Reuniones.Remove(objDel);
+                contexto.SaveChanges();
+                return Json(true);
+            }
+
+            catch (Exception ex)
+            {
+                return Json(false);
+            }
+
+        }
+
+        public IActionResult listaProyectos()
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            List<Proyecto> proyectos = contexto.Proyectos.ToList();
+            return Json(proyectos);
+        }
+        //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        //:::::::::::::::::: PREGUNTA SEGURIDAD ::::::::::::::::::::
+        [HttpPost]
+        public ActionResult guardarPregunta(PreguntaSeguridad pre)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            PreguntaSeguridad obj = new PreguntaSeguridad();
+            obj.IdPregunta = pre.IdPregunta;
+            obj.DescPregunta = pre.DescPregunta;
+
+            //CAPTURAMOS ALGUN POSIBLE ERROR
+            try
+            {
+                if (obj.IdPregunta == 0 || obj.IdPregunta == null)
+                {
+                    contexto.PreguntaSeguridads.Add(obj);
+                }
+                else
+                {
+                    contexto.Entry(pre).State = EntityState.Modified;
+                }
+                contexto.SaveChanges();
+                return Json(true);
+            }
+            catch (Exception ex)
+            {
+                return Json(false);
+            }
+        }
+
+        //editar recurso
+        [HttpPost]
+        public IActionResult EditarPregunta(int id)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            PreguntaSeguridad res = new PreguntaSeguridad();
+            var objEdit = contexto.PreguntaSeguridads.FirstOrDefault(x => x.IdPregunta == id);
+
+
+            res.IdPregunta = objEdit.IdPregunta;
+            res.DescPregunta = objEdit.DescPregunta;
+
+            return Json(res);
+        }
+
+
+        [HttpPost]
+        public IActionResult mostrarPreguntaSeguridad()
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            var query = from pregunta in contexto.PreguntaSeguridads
+                        select new
+                        {
+                            pregunta.IdPregunta,
+                            pregunta.DescPregunta
+                        };
+
+            List<object> resultado = new List<object>();
+            foreach (var item in query)
+            {
+                resultado.Add(item);
+            }
+
+            return Json(resultado);
+        }
+
+        [HttpPost]
+        public IActionResult EliminarPregunta(int id)
+        {
+            try
+            {
+                EvolvProContext contexto = new EvolvProContext();
+                var objPregunta = contexto.PreguntaSeguridads.FirstOrDefault(x => x.IdPregunta == id);
+                contexto.PreguntaSeguridads.Remove(objPregunta);
+                contexto.SaveChanges();
+                return Json(true);
+            }
+
+            catch (Exception ex)
+            {
+                return Json(false);
+            }
+
+        }
 
 
 

@@ -1,7 +1,9 @@
-﻿
-@model Cliente
-
-
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model PreguntaSeguridad
 
 <div class="container-fluid">
     <div class="row flex-nowrap">
@@ -87,114 +89,98 @@
             </div>
         </div>
         <div class="col py-3">
-            @*<form asp-action="Index" asp-controller="Home" method="POST">
+            <form asp-action="Index" asp-controller="Home" method="POST">
                 <button type="submit" class="btn btn-dark float-end">Cerrar sesion</button>
-            </form>*@
-            @if (ViewBag.sesion == "1")
-            {
-                
-                <h3>Mantenimiento Clientes</h3>
-                <hr>
+            </form>
 
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#clienteModal">
-                    Nuevo cliente
-                </button>
-
-                <hr />
-                <br />
-
-                <div id="contenido">
+            <div class="card bg-dark text-white">
+                <div class="card-header">
+                    <h5>Editando Pregunta de Seguridad</h5>
                 </div>
-                <!-- Modal -->
-                <div class="modal fade" id="clienteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
+                <div class="card-body">
 
-                            <div class="modal-header">
-                                <h5 class="modal-title text-dark" id="exampleModalLabel">Registro de clientes </h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body text-dark">
+                    <style>
+                        .form-inline .form-control {
+                            display: inline-block;
+                            width: auto;
+                            vertical-align: middle;
+                        }
+                    </style>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#estadoModal">
+                        Nuevo Registro
+                    </button>
+                    <div class="table-responsive" id="contenido">
+                    </div>
 
-                                <form id="Form1">
-                                    <label for="message-text" class="col-form-label">Nombre Completo: *</label>
-                                    <input id="IdCliente" name="IdCliente" asp-for="IdCliente" type="hidden" class="form-control" />
-                                    <input id="NombreCliente" name="NombreCliente" asp-for="NombreCliente" class="form-control  text-primary" placeholder="Ejm Juan Perez" />
+                </div>
 
-                                    <label for="message-text" class="col-form-label">Dirección: *</label>
-                                    <input id="DireccionCliente" name="DireccionCliente" asp-for="DireccionCliente" class="form-control text-primary" placeholder="Ejm. Col. Buenos Aires l#1" />
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="estadoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
 
-                                </form>
+                        <div class="modal-header">
+                            <h5 class="modal-title text-dark" id="exampleModalLabel">Pregunta de Seguridad </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-dark">
 
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" id="btnCerrar" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                <button type="button" id="btnGuardar" class="btn btn-primary">Guardar</button>
-                            </div>
+                            <form id="FormEstado">
+                                <input id="IdPregunta" name="IdPregunta" asp-for="IdPregunta" type="hidden" class="form-control" />
+                                <label for="message-text" class="col-form-label">Nombre de la Pregunta</label>
+                                <input id="DescPregunta" name="DescPregunta" asp-for="DescPregunta" class="form-control" placeholder="¿Cual es tu fruta favorita?" />
+
+
+
+                            </form>
 
                         </div>
+                        <div class="modal-footer">
+                            <button type="button" id="btnCerrar" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="button" id="btnGuardar" class="btn btn-primary">Guardar</button>
+                        </div>
+
                     </div>
                 </div>
+            </div>
 
-            }
-            else
-            {
-                <center><h1>Bienvenido Project manager</h1></center>
-            }
         </div>
     </div>
 </div>
 @section Scripts{
     <script>
+        $(document).ready(function () {
+            cargarTabla();
+            $("#btnGuardar").click(function () {
+                if ($("#DescPregunta").val()) {
+                    //procedemos
+                    var formulario = $("#FormEstado").serialize();
 
-        function cargarTabla() {
-            $.ajax({
-                url: '/Home/mostrarClientes',
-                type: 'post',
-                dataType: 'json',
-                cache: false
-            }).done(function (resp) {
-                // console.log(resp);
-                var div = $("#contenido");
-                var tabla = "<table class='table table-stripperd text-white'><thead><tr><th>Id </th><th>Nombre Cliente</th><th>Dirección</th><th>Acciones</th></tr></thead><tbody>";
-                $.each(resp, function (index, cli) {
-                    tabla += "<tr>";
-                    tabla += "<td>" + cli.idCliente + "</td>";
-                    tabla += "<td>" + cli.nombreCli + "</td>";
-                    tabla += "<td>" + cli.direccionCli + "</td>";
-                    tabla += "<td><a class='nav-link' href=\"javascript:editarCli('" + cli.idCliente + "')\">Editar</a><a class='nav-link' href=\"javascript:elimiarCli('" + cli.idCliente + "')\">Eliminar</a></td>";
-                    tabla += "</tr>";
-                });
-                tabla += "</tbody></table>";
-                div.empty();
-                div.append(tabla);
-            }).fail();
-
-        }
-
-
-        function editarCli(idCliente) {
-            $.ajax({
-                url: '/Home/EditarClientes',
-                type: 'post',
-                dataType: 'json',
-
-                data: { id: idCliente },
-                success: function (data) {
-                    // console.log(data.nombreUsu);
-
-                    $('#IdCliente').val(data.idCliente);
-                    $('#NombreCliente').val(data.nombreCliente);
-                    $('#DireccionCliente').val(data.direccionCliente);
-                    $('#clienteModal').modal('show');
-                },
-                error: function (error) {
-                    console.log(error);
+                    $.ajax({
+                        url: '@Url.Action("guardarPregunta","Home")',
+                        type: 'post',
+                        cache: false,
+                        dataType: 'json',
+                        data: formulario
+                    }).done(function (resp) {
+                        if (resp) {
+                            swal("Guardado con éxito");
+                            cargarTabla();
+                            $("#IdPregunta").val(""); // Vaciar el campo de entrada
+                            $("#btnCerrar").click();
+                        } else {
+                            swal("Error al guardar1");
+                        }
+                    }).fail(function () {
+                        swal("Error al guardar2");
+                    });
+                } else {
+                    swal("Todos los campos son requeridos");
                 }
             });
-        }
-
-        function elimiarUsu(IdCliente) {
+        });
+        function eliminarPregunta(IdPregunta) {
             swal({
                 title: "Estas seguro?",
                 text: "Una vez eliminado se pierde definitivamente....",
@@ -205,16 +191,16 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url: '@Url.Action("EliminarClientes", "Home")',
+                            url: '@Url.Action("EliminarPregunta", "Home")',
                             type: 'post',
                             dataType: 'json',
                             cache: false,
-                            data: { id: IdCliente }
+                            data: { id: IdPregunta }
                         }).done(function (resp) {
                             if (resp) {
                                 swal("Eliminado!")
                                 cargarTabla();
-                                $("#IdCliente").val("");
+                                $("#IdPregunta").val("");
                             } else {
                                 swal("Problemas al eliminar!")
                             }
@@ -225,46 +211,52 @@
                     }
                 });
         }
-        $(document).ready(function () {
+        function editarPregunta(IdPregunta) {
+            $.ajax({
+                url: '/Home/EditarPregunta',
+                type: 'post',
+                dataType: 'json',
 
-            //jquery
-            cargarTabla();
+                data: { id: IdPregunta },
+                success: function (data) {
 
-            //programamos los botones
-            $("#btnGuardar").click(function () {
-                if ($("#NombreCliente").val() != "" &&
-                    $("#DireccionCliente").val()) {
-                    //procedemos
-                    var formulario = $("#Form1").serialize();
-
-                    $.ajax({
-                        url: '@Url.Action("guardarClientes","Home")',
-                        type: 'post',
-                        cache: false,
-                        dataType: 'json',
-                        data: formulario
-                    }).done(function (resp) {
-                        if (resp) {
-                            swal("Guardado con éxito");
-                            cargarTabla();
-                            $("#IdCliente").val("");
-                            $("#btnCerrar").click();
-                        } else {
-                            swal("Error al guardar");
-                        }
-                    }).fail(function () {
-                        swal("Error al guardar");
-                    });
-                } else {
-                    swal("Todos los campos son requeridos");
+                    $('#IdPregunta').val(data.idPregunta);
+                    $('#DescPregunta').val(data.descPregunta);
+                    $('#estadoModal').modal('show');
+                },
+                error: function (error) {
+                    console.log(error);
                 }
             });
-        });
+        }
+
+
+        function cargarTabla() {
+
+            $.ajax({
+                url: '/Home/mostrarPreguntaSeguridad',
+                type: 'post',
+                dataType: 'json',
+                cache: false
+            }).done(function (resp) {
+                console.log(resp);
+                var div = $("#contenido");
+                var tabla = "<table class='table table-dark table - striped'> <thead> <tr> <th> codigo </th>  <th> Pregunta </th> <th>  </th> <th>  </th> <tbody> ";
+                $.each(resp, function (index, pregunta) {
+                    tabla += "<tr>";
+                    tabla += "<td>" + pregunta.idPregunta + "</td>";
+                    tabla += "<td>" + pregunta.descPregunta + "</td>";
+                    tabla += "<td><a class='btn btn-primary' href=\"javascript:editarPregunta('" + pregunta.idPregunta + "')\">Editar</a><a class='btn btn-danger' href=\"javascript:eliminarPregunta('" + pregunta.idPregunta + "')\">Eliminar</a></td>";
+                    tabla += "</tr>";
+                });
+                tabla += "</tbody></table>";
+                div.empty();
+                div.append(tabla);
+            }).fail();
+
+        }
+
+
+
     </script>
 }
-
-
-
-
-
-

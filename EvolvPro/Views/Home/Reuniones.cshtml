@@ -1,6 +1,4 @@
-﻿
-@model RolHora
-
+﻿@model Reunione
 <div class="container-fluid">
     <div class="row flex-nowrap">
         <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
@@ -86,16 +84,14 @@
         </div>
         <div class="col py-3">
             @*<form asp-action="Index" asp-controller="Home" method="POST">
-                <button type="submit" class="btn btn-dark float-end">Cerrar sesion</button>
+            <button type="submit" class="btn btn-dark float-end">Cerrar sesion</button>
             </form>*@
-            @if (ViewBag.sesion == "1")
-            {
-                
-                <h3>Mantenimiento Rol-hora</h3>
+
+                <h3>Mantenimiento Reuniones</h3>
                 <hr>
 
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#rolhoraModal">
-                    Nuevo Registro
+                <button type="button" id="newReu" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reunionModal">
+                    Nuevo Reunión
                 </button>
 
                 <hr />
@@ -104,32 +100,41 @@
                 <div id="contenido">
                 </div>
                 <!-- Modal -->
-                <div class="modal fade" id="rolhoraModal" tabindex="-1" aria-labelledby="rolhoraModal" aria-hidden="true">
+                <div class="modal fade" id="reunionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
 
                             <div class="modal-header">
-                                <h5 class="modal-title text-dark" id="rolhoraModal">Creación de accesos </h5>
+                                <h5 class="modal-title text-dark" id="exampleModalLabel">Registro de reuniones </h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body text-dark">
 
                                 <form id="Form1">
-                                    <label for="message-text" class="col-form-label">Nombre: *</label>
-                                    <input id="IdRolhora" name="IdRolhora" asp-for="IdRolhora" type="hidden" class="form-control" placeholder="Ejm Juan Perez" />
-                                    <input id="NombreRol" name="NombreRol" asp-for="NombreRol" class="form-control  text-primary" placeholder="Ejm Juan Perez" />
+                                    <label for="message-text" class="col-form-label">T. Reunión: *</label>
+                                    <input id="IdReunion" name="IdReunion" asp-for="IdReunion" type="hidden" class="form-control" />
+                                    <input id="TituloReu" name="TituloReu" asp-for="TituloReu" class="form-control  text-primary" placeholder="Ejm. Helpdesk" />
 
-                                    <label for="message-text" class="col-form-label">Valor Hora: *</label>
-                                    <input id="ValorHora" name="ValorHora" asp-for="ValorHora" class="form-control text-primary" placeholder="Ejm. 2565-9855" />
+                                    <label for="message-text" class="col-form-label">Puntos a tratar: *</label>
+                                    <input id="PuntosTratar" name="PuntosTratar" asp-for="PuntosTratar" class="form-control text-primary" placeholder="Ejm. Requerimientos" />
 
-                                    <label for="message-text" class="col-form-label">Hora Total: *</label>
-                                    <input id="HoraTotal" name="HoraTotal" asp-for="HoraTotal" class="form-control  text-primary" placeholder="Ejm. juan.perez@gmail.com" />
-   
-                                    <label for="message-text" class="col-form-label">Seleccione Proyecto: *</label>
-                                    <div >
-                                        <select class="form-select text-primary" id="FkProyecto" asp-for="FkProyecto">
+                                    <label for="message-text" class="col-form-label">Des. Puntos *</label>
+                                    <input id="DesarrolloPunto" name="DesarrolloPunto" asp-for="DesarrolloPunto" class="form-control text-primary" placeholder="Ejm. Requerimientos" />
+
+                                    <label for="message-text" class="col-form-label">Asistentes *</label>
+                                    <input id="Asistentes" name="Asistentes" asp-for="Asistentes" class="form-control text-primary" placeholder="Ejm. Requerimientos" />
+
+                                    <label for="message-text" class="col-form-label">T. Reunión horas *</label>
+                                    <input id="TiempoReu" name="TiempoReu" asp-for="TiempoReu" class="form-control text-primary" placeholder="Ejm. Requerimientos" />
+                                  
+                                    <label for="message-text" class="col-form-label">Seleccione Proyecto*</label>
+                                    <div>
+                                        <select class="form-select text-primary" id="proyectos" asp-for="FkProyecto">
                                         </select>
-                                    </div>            
+
+                                    </div>
+
+
                                 </form>
 
                             </div>
@@ -142,11 +147,7 @@
                     </div>
                 </div>
 
-            }
-            else
-            {
-                <center><h1>Bienvenido Project manager</h1></center>
-            }
+
         </div>
     </div>
 </div>
@@ -155,23 +156,24 @@
 
         function cargarTabla() {
             $.ajax({
-                url: '/Home/mostrarRolhora',
+                url: '/Home/mostrarReuniones',
                 type: 'post',
                 dataType: 'json',
                 cache: false
             }).done(function (resp) {
                 // console.log(resp);
                 var div = $("#contenido");
-                var tabla = "<table class='table table-stripperd text-white'><thead><tr><th>Id </th><th>Nombre </th><th>Valor hora</th><th>Hora total</th><th>Proyecto</th><th>Acciones</th></tr></thead><tbody>";
-                $.each(resp, function (index, rolh) {
+                var tabla = "<table class='table table-bordered table-vcenter js-dataTable-full text-white'><thead><tr><th>Id </th><th>T. Reunión</th><th>P. a tratar</th><th>Des. de puntos</th><th>Asistente</th><th>T. Horas</th><th>Nom. Proyecto</th><th class='text-center' style='width: 15%;'>Acciones</th></tr></thead><tbody>";
+                $.each(resp, function (index, reu) {
                     tabla += "<tr>";
-                    tabla += "<td>" + rolh.idRolhora + "</td>";
-                    tabla += "<td>" + rolh.nombreRol + "</td>";
-                    tabla += "<td>" + rolh.valorHora + "</td>";
-                    tabla += "<td>" + rolh.horaTotal + "</td>";
-
-                    tabla += "<td>" + rolh.fkProyecto + "</td>";
-                    tabla += "<td><a class='btn btn-primary' href=\"javascript:editarRolhora('" + rolh.idRolhora + "')\">Editar</a><a class='btn btn-danger' href=\"javascript:elimiarRolh('" + rolh.idRolhora + "')\">Eliminar</a></td>";
+                    tabla += "<td>" + reu.idReunion + "</td>";
+                    tabla += "<td>" + reu.tituloReu + "</td>";
+                    tabla += "<td>" + reu.puntosTratar + "</td>";
+                    tabla += "<td>" + reu.desarrolloPunto + "</td>";
+                    tabla += "<td>" + reu.asistentes + "</td>";
+                    tabla += "<td>" + reu.tiempoReu + "</td>";
+                    tabla += "<td>" + reu.fkProyecto + "</td>";
+                    tabla += "<td><a class='btn btn-primary' href=\"javascript:editarReu('" + reu.idReunion + "')\">Editar</a><a class='btn btn-danger' href=\"javascript:elimiarReu('" + reu.idReunion + "')\">Eliminar</a></td>";
                     tabla += "</tr>";
                 });
                 tabla += "</tbody></table>";
@@ -181,42 +183,24 @@
 
         }
 
-        function cargarProyecto() {
-
+        function editarReu(idReunion) {
             $.ajax({
-                url: '/Home/listProyecto',
-                type: 'post',
-                dataType: 'json',
-                cache: false
-            }).done(function (resp) {
-                console.log(resp);
-                var div = $("#FkProyecto");
-                var select = " <option selected>Seleccione</option>";
-                $.each(resp, function (index, x) {
-                    select += "<option  value=" + x.idProyecto + ">" + x.nombrePry + "</option>";
-                });
-                div.empty();
-                div.append(select);
-            }).fail();
-        }
-
-        function editarRolhora(idRolhora) {
-            $.ajax({
-                url: '/Home/EditarRolhora',
+                url: '/Home/EditarReuniones',
                 type: 'post',
                 dataType: 'json',
 
-                data: { id: idRolhora },
+                data: { id: idReunion },
                 success: function (data) {
-                    // console.log(data.nombreUsu);
+                    
+                    $('#IdReunion').val(data.idReunion);
+                    $('#TituloReu').val(data.tituloReu);
+                    $('#PuntosTratar').val(data.puntosTratar);
+                    $('#DesarrolloPunto').val(data.desarrolloPunto);
+                    $('#Asistentes').val(data.asistentes);
+                    $('#TiempoReu').val(data.tiempoReu);
+                    $('#proyectos').val(data.fkProyecto);
 
-                    $('#IdRolhora').val(data.idRolhora);
-                    $('#NombreRol').val(data.nombreRol);
-                    $('#ValorHora').val(data.valorHora);
-                    $('#HoraTotal').val(data.horaTotal);
-
-                    $('#FkProyecto').val(data.fkProyecto);
-                    $('#rolhoraModal').modal('show');
+                    $('#reunionModal').modal('show');
                 },
                 error: function (error) {
                     console.log(error);
@@ -224,7 +208,7 @@
             });
         }
 
-        function elimiarRolh(idRolhora) {
+        function elimiarReu(idReunion) {
             swal({
                 title: "Estas seguro?",
                 text: "Una vez eliminado se pierde definitivamente....",
@@ -235,16 +219,17 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url: '@Url.Action("EliminarRolhora", "Home")',
+                            url: '@Url.Action("EliminarReuniones", "Home")',
                             type: 'post',
                             dataType: 'json',
                             cache: false,
-                            data: { id: idRolhora }
+                            data: { id: idReunion }
                         }).done(function (resp) {
                             if (resp) {
                                 swal("Eliminado!")
                                 cargarTabla();
-                                $("#IdRolhora").val("");
+
+                                $("#btnCerrar").click();
                             } else {
                                 swal("Problemas al eliminar!")
                             }
@@ -255,23 +240,63 @@
                     }
                 });
         }
-        $(document).ready(function () {
 
+        function cargarProyecto() {
+
+            $.ajax({
+                url: '/Home/listaProyectos',
+                type: 'post',
+                dataType: 'json',
+                cache: false
+            }).done(function (resp) {
+                //console.log(resp);
+                var div = $("#proyectos");
+                var select = " <option selected>Seleccione</option>";
+                $.each(resp, function (index, x) {
+                    select += "<option value=" + x.idProyecto + ">" + x.nombrePry + "</option>";
+                });
+                div.empty();
+                div.append(select);
+            }).fail();
+
+        }
+
+        function limpiarModal() {
+            $('#IdReunion').val("");
+            $('#TituloReu').val("");
+            $('#PuntosTratar').val("");
+            $('#DesarrolloPunto').val("");
+            $('#Asistentes').val("");
+            $('#TiempoReu').val("");
+            //$('#FkProyecto').val('Seleccione');
+
+            // Ocultar el modal
+            $('#reunionModal').modal('hide');
+        }
+
+        $(document).ready(function () {
+            cargarProyecto();
             //jquery
             cargarTabla();
-            cargarProyecto();
-          
+            $('#btnCerrar').on('click', function () {
+                limpiarModal();
+            });
+            $('#newReu').on('click', function () {
+                limpiarModal();
+                cargarProyecto();
+            });
             //programamos los botones
             $("#btnGuardar").click(function () {
-                if ($("#NombreRol").val() != "" &&
-                    $("#ValorHora").val() != "" &&
-                    $("#HoraTotal").val() != "" &&
-                    $("#FkProyecto").val() != "") {
+                if ($("#TituloReu").val() != "" &&
+                    $("#PuntosTratar").val() != "" &&
+                    $("#DesarrolloPunto").val() != "" &&
+                    $("#Asistentes").val() != "" &&
+                    $("#TiempoReu").val() != "") {
                     //procedemos
                     var formulario = $("#Form1").serialize();
 
                     $.ajax({
-                        url: '@Url.Action("guardarRolhora","Home")',
+                        url: '@Url.Action("guardarReuniones","Home")',
                         type: 'post',
                         cache: false,
                         dataType: 'json',
@@ -280,13 +305,13 @@
                         if (resp) {
                             swal("Guardado con éxito");
                             cargarTabla();
-                            $("#IdRolhora").val("");
+                            limpiarModal();
                             $("#btnCerrar").click();
                         } else {
-                            swal("Error al guardar1");
+                            swal("Error al guardar");
                         }
                     }).fail(function () {
-                        swal("Error al guardar2");
+                        swal("Error al guardar");
                     });
                 } else {
                     swal("Todos los campos son requeridos");
@@ -295,6 +320,8 @@
         });
     </script>
 }
+
+
 
 
 
