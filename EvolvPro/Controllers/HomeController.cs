@@ -47,6 +47,7 @@ namespace EvolvPro.Controllers
         public IActionResult Proyectos()
         {
             ViewBag.sesion = HttpContext.Session.GetString("VarSesion1");
+            ViewBag.idusu = HttpContext.Session.GetInt32("VarSesionIdUsu");
             return View();
         }
         public IActionResult Cronograma()
@@ -78,6 +79,7 @@ namespace EvolvPro.Controllers
         public IActionResult Usuarios()
         {
             ViewBag.sesion = HttpContext.Session.GetString("VarSesion1");
+            
             return View();
         }
         public IActionResult Menu()
@@ -98,8 +100,10 @@ namespace EvolvPro.Controllers
                 if (buscarNombre != null && buscarNombre.ContrasenaUsu == contra)
                 {
                     string nivel = buscarNombre.FkTipousu.ToString();
+                    int idusu = Convert.ToInt32(buscarNombre.IdUsuario.ToString());
                     //TempData["NivelUsu"] = nivel; 
                     HttpContext.Session.SetString("VarSesion1", nivel);
+                    HttpContext.Session.SetInt32("VarSesionIdUsu", idusu);
                     return RedirectToAction("Menu", "Home");
 
                 }
@@ -115,6 +119,40 @@ namespace EvolvPro.Controllers
             }
             TempData["Resultado"] = "Intente de nuevo";
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult RecupContra(Usuario usu)
+        {
+            EvolvProContext _DbContext = new EvolvProContext();
+            var obj = _DbContext.Usuarios.FirstOrDefault(x => x.CorreoUsu == usu.CorreoUsu);
+            if (obj != null)
+            {
+
+
+                if (usu.FkPregunta == obj.FkPregunta && usu.RespuestaUsu == obj.RespuestaUsu && usu.CorreoUsu == obj.CorreoUsu)
+                {
+                    obj.ContrasenaUsu = usu.ContrasenaUsu;
+
+                    _DbContext.Entry(obj).State = EntityState.Modified;
+
+                    _DbContext.SaveChanges();
+
+                    var msj = "Cambio de contraseña exitoso!!!";
+                    return Json(msj);
+                }
+                else
+                {
+                    var msj = "Error de validación, intenta de nuevo!!!";
+                    return Json(msj);
+                }
+                return Json(true);
+            }
+            else
+            {
+                var msj = "No se encontrarón registros para el usuario: " + usu.CorreoUsu;
+                return Json(msj);
+            }
         }
 
         [HttpPost]
@@ -486,6 +524,39 @@ namespace EvolvPro.Controllers
             return Json(resultado);
         }
         [HttpPost]
+        public IActionResult mostrarProyectosPM(int id)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            var query = from proyecto in contexto.Proyectos
+                        join cliente in contexto.Clientes on proyecto.FkCliente equals cliente.IdCliente
+                        join estado in contexto.DetalleEstados on proyecto.FkEstado equals estado.IdDetalleestado
+                        join usuario in contexto.Usuarios on proyecto.FkUsuario equals usuario.IdUsuario
+                        where proyecto.FkUsuario == id
+                        orderby proyecto.IdProyecto descending
+                        select new
+                        {
+                            proyecto.IdProyecto,
+                            proyecto.NombrePry,
+                            proyecto.CasoNegocio,
+                            proyecto.HorasTotales,
+                            proyecto.HorasTotalesreal,
+                            proyecto.Interesados,
+                            proyecto.FechaInicio,
+                            proyecto.FechaFinalProp,
+                            proyecto.FechaFinalReal,
+                            ClienteNombre = cliente.NombreCliente,
+                            EstadoNombre = estado.ValorDestado,
+                            UsuarioNombre = usuario.NombreUsu
+                        };
+
+            List<Object> resultado = new List<object>();
+            foreach (var item in query)
+            {
+                resultado.Add(item);
+            }
+            return Json(resultado);
+        }
+        [HttpPost]
         public IActionResult mostrarProyectosBusca(string cadena)
         {
             EvolvProContext contexto = new EvolvProContext();
@@ -494,6 +565,40 @@ namespace EvolvPro.Controllers
                         join estado in contexto.DetalleEstados on proyecto.FkEstado equals estado.IdDetalleestado
                         join usuario in contexto.Usuarios on proyecto.FkUsuario equals usuario.IdUsuario
                         where proyecto.NombrePry.Contains(cadena)
+                        orderby proyecto.IdProyecto descending
+                        select new
+                        {
+                            proyecto.IdProyecto,
+                            proyecto.NombrePry,
+                            proyecto.CasoNegocio,
+                            proyecto.HorasTotales,
+                            proyecto.HorasTotalesreal,
+                            proyecto.Interesados,
+                            proyecto.FechaInicio,
+                            proyecto.FechaFinalProp,
+                            proyecto.FechaFinalReal,
+                            ClienteNombre = cliente.NombreCliente,
+                            EstadoNombre = estado.ValorDestado,
+                            UsuarioNombre = usuario.NombreUsu
+                        };
+
+
+            List<Object> resultado = new List<object>();
+            foreach (var item in query)
+            {
+                resultado.Add(item);
+            }
+            return Json(resultado);
+        }
+        [HttpPost]
+        public IActionResult mostrarProyectosBuscaPM(string cadena, int id)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            var query = from proyecto in contexto.Proyectos
+                        join cliente in contexto.Clientes on proyecto.FkCliente equals cliente.IdCliente
+                        join estado in contexto.DetalleEstados on proyecto.FkEstado equals estado.IdDetalleestado
+                        join usuario in contexto.Usuarios on proyecto.FkUsuario equals usuario.IdUsuario
+                        where proyecto.NombrePry.Contains(cadena) && proyecto.FkUsuario == id
                         orderby proyecto.IdProyecto descending
                         select new
                         {
@@ -1705,6 +1810,41 @@ namespace EvolvPro.Controllers
             }
 
         }
+
+        //:::::::::::::::::::::::::::GRAFICOS:::::::::::::::::::::::::::::::::::::
+        public IActionResult resumenHorasPry()
+        {
+            EvolvProContext _dbcontext = new EvolvProContext();
+            List<Proyecto> Lista = _dbcontext.Proyectos
+                .OrderByDescending(p => p.IdProyecto) // Ordenar descendentemente por las horas totales reales
+                .Select(p => new Proyecto
+                {
+                    NombrePry = p.NombrePry,
+                    HorasTotalesreal = p.HorasTotalesreal
+                })
+                .ToList();
+
+            return StatusCode(StatusCodes.Status200OK, Lista);
+        }
+
+        public IActionResult resumenPryTerPro()
+        {
+            EvolvProContext _dbcontext = new EvolvProContext();
+
+            int proyectosEstado3 = _dbcontext.Proyectos.Count(p => p.FkEstado == 3);
+            int proyectosEstado4 = _dbcontext.Proyectos.Count(p => p.FkEstado == 4);
+
+            var resumen = new
+            {
+                ProyectosEstado3 = proyectosEstado3,
+                ProyectosEstado4 = proyectosEstado4
+            };
+
+            return StatusCode(StatusCodes.Status200OK, resumen);
+        }
+
+
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

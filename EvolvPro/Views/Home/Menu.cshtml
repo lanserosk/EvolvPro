@@ -4,7 +4,7 @@
 @{
 }
 
-
+@model Proyecto
 
 <div class="container-fluid">
     <div class="row flex-nowrap">
@@ -102,6 +102,132 @@
             {
                 <center><h1>Bienvenido Project manager</h1></center>
             }
+            
+            <div class="container">
+                <div class="row mt-2">
+
+                    <div class="col-sm-6">
+
+                        <div class="card bg-dark">
+                            <div class="card-header">Ventas últimos 5 días </div>
+                            <div class="card-body">
+                                <canvas id="chartVentas"></canvas>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-6">
+
+                        <div class="card bg-dark">
+                            <div class="card-header">Productos más vendidos </div>
+                            <div class="card-body">
+                                <canvas id="chartProductos" style="max-height:250px"></canvas>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            Grafico();
+            resumenPryTerPro();
+        });
+        function Grafico() {
+            fetch("/Home/resumenHorasPry")
+                .then((response) => {
+                    return response.ok ? response.json() : Promise.reject(response);
+                })
+                .then((dataJson) => {
+                    const labels = dataJson.map((item) => { return item.nombrePry })
+                    const values = dataJson.map((item) => { return item.horasTotalesreal })
+                    const data = {
+                        labels: labels,
+                        datasets: [{
+                            label: 'horas trabajadas',
+                            data: values,
+                            backgroundColor: [
+                                'rgb(54, 162, 235)',
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(255, 159, 64, 0.2)',
+                                'rgba(255, 205, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(201, 203, 207, 0.2)'
+                            ],
+                            borderWidth: 5
+                        }]
+                    };
+                    const config = {
+                        type: 'bar',
+                        data: data,
+                        options: {
+                            indexAxis: 'y',
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            },
+                            plugins: {
+                                legend: {
+                                    display: true,
+                                    position: 'top',
+                                }
+                            },
+                            barPercentage: 0.5 // Ajustar el ancho de las barras (50% del ancho por defecto)
+                        },
+                    };
+                    const canvasBarras = document.getElementById("chartVentas");
+                    const graficoBarras = new Chart(canvasBarras, config)
+                }).catch((error) => {
+                    console.log("error")
+                })
+
+        }
+        function resumenPryTerPro() {
+            fetch("/Home/resumenPryTerPro")
+                .then((response) => {
+                    return response.ok ? response.json() : Promise.reject(response);
+                })
+                .then((dataJson) => {
+                    const labels = ["En progreso", "Terminados"];
+                    const values = [dataJson.proyectosEstado3, dataJson.proyectosEstado4];
+                    const data = {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Cantidad',
+                            data: values,
+                            backgroundColor: [
+                                'rgb(255, 99, 132)',
+                                'rgb(54, 162, 235)'
+                            ],
+                            hoverOffset: 4
+                        }]
+                    };
+
+                    const config = {
+                        type: 'doughnut',
+                        data: data,
+                    };
+                    const canvasDona = document.getElementById("chartProductos");
+                    const graficoDona = new Chart(canvasDona, config);
+                }).catch((error) => {
+                    console.log(error);
+                });
+        }
+
+
+
+    </script>
+    
+}

@@ -1,6 +1,163 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "Inicie sesion";
 }
-<p>parrafo 2345678</p>
+
+@model Usuario
+
+<style>
+    .card {
+        margin-top: 50px;
+        border: none;
+        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+        border-radius: 10px;
+        background-color: #121212;
+    }
+
+    .card-title {
+        margin-bottom: 30px;
+        color: #FFFFFF;
+        font-weight: bold;
+    }
+
+    .btn-green {
+        background-color: #1DB954;
+        color: white;
+        border-radius: 10px;
+        margin-top: 20px;
+        border: none;
+    }
+
+        .btn-green:hover {
+            background-color: #1ED760;
+        }
+
+    .form-group label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #FFFFFF;
+    }
+
+    .form-control {
+        height: 40px;
+        border-radius: 10px;
+        border: none;
+        background-color: #FFFFFF;
+        font-size: 14px;
+        font-weight: 500;
+        color: #121212;
+    }
+
+    .form-check-input[type="checkbox"] {
+        height: 18px;
+        width: 18px;
+        margin-right: 10px;
+    }
+
+    .form-check-label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #FFFFFF;
+    }
+</style>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Cambiar contraseña</h5>
+                    <form id="Form1">
+                        <div class="form-group">
+                            <label for="message-text">Pegunta de seguridad: (*)</label>
+                            <select class="form-select text-primary" id="seguridad" asp-for="FkPregunta">
+                            </select>
+                        </div>
+                        <label for="message-text" class="col-form-label">Ingrese tu respuesta:</label>
+                        <input id="RespuestaUsu" name="RespuestaUsu" asp-for="RespuestaUsu" class="form-control  text-primary" placeholder="Respuesta" />
+
+                        <label for="email">Correo Electrónico</label>
+                        <input id="CorreoUsu" name="CorreoUsu" asp-for="CorreoUsu" class="form-control text-primary" placeholder="Emj. jperez@gmail.com">
+
+                        <label for="password">Contraseña nueva</label>
+                        <input id="ContrasenaUsu" name="ContrasenaUsu" type="password" asp-for="ContrasenaUsu" class="form-control text-primary" placeholder="Contraseña">
+
+                        <label for="password">Confirmar contraseña</label>
+                        <input id="confPassword" name="confPassword" type="password" class="form-control text-primary" placeholder="Contraseña">
+
+                        <center><button type="button" id="btnGuardar" class="btn btn-green btn-block">Recuperar</button></center>
+                        <a class="text-info" asp-area="" asp-controller="Home" asp-action="Index">Login</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        function cargarPregSeguridad() {
+
+            $.ajax({
+                url: '/Home/listPreguntas',
+                type: 'post',
+                dataType: 'json',
+                cache: false
+            }).done(function (resp) {
+                //console.log(resp);
+                var div = $("#seguridad");
+                var select = " <option selected>Seleccione</option>";
+                $.each(resp, function (index, x) {
+                    select += "<option value=" + x.idPregunta + ">" + x.descPregunta + "</option>";
+                });
+                div.empty();
+                div.append(select);
+            }).fail();
+
+        }
+        function limpiarModal() {
+            $('#CorreoUsu').val('');
+            $('#seguridad').val('Seleccione');
+            $('#RespuestaUsu').val('');
+            $('#ContrasenaUsu').val('');
+            $('#confPassword').val('');
+        }
+        $(document).ready(function () {
+
+            cargarPregSeguridad();
+
+            //programamos los botones
+            $("#btnGuardar").click(function () {
+                if ($("#FkPregunta").val() != "" &&
+                    $("#RespuestaUsu").val() != "" &&
+                    $("#CorreoUsu").val() != "" &&
+                    $("#ContrasenaUsu").val() != "") {
+                    //procedemos
+
+                    if ($("#ContrasenaUsu").val() == $("#confPassword").val()) {
+                        var formulario = $("#Form1").serialize();
+                        $.ajax({
+                            url: '@Url.Action("RecupContra","Home")',
+                            type: 'post',
+                            cache: false,
+                            dataType: 'json',
+                            data: formulario
+                        }).done(function (resp) {
+                            swal(resp);
+                            limpiarModal();
+                        }).fail(function () {
+                            swal("Error al recuperar contraseña");
+                        });
+                    } else {
+                        swal("La contraseña de verificación no coincide");
+                    }
+
+                } else {
+                    swal("Todos los campos son requeridos");
+                }
+
+
+            });
+        });
+    </script>
+}

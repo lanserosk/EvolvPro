@@ -7,86 +7,87 @@
 
 <div class="container-fluid">
     <div class="row flex-nowrap">
-        <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white" style="height: 90vh;">
-            <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                <span class="fs-5 d-none d-sm-inline">Menu</span>
-            </a>
-            <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
-                <li class="nav-item">
-                    <a href="#" class="nav-link align-middle px-0">
-                        <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Inicio</span>
-                    </a>
-                </li>
-                @if (ViewBag.sesion == "1")
-                {
-                    <li>
-                        <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi-collection-fill"></i> <span class="ms-1 d-none d-sm-inline">Mantenimiento</span>
-                        </a>
-                        <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
-                            <li class="w-100">
-                                <a asp-action="Usuarios" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Usuarios</span> </a>
-                            </li>
-                            <li>
-                                <a asp-action="Clientes" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Clientes</span> </a>
-                            </li>
-                            <li>
-                                <a asp-action="Estado" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Estados</span></a>
-                            </li>
-                            <li>
-                                <a class="nav-link px-0" asp-area="" asp-controller="Home" asp-action="DetEstado" method="POST"> <span class="d-none d-sm-inline">Detalle Estado</span></a>
-                            </li>
-                            <li>
-                                <a asp-action="Recurso" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Recursos</span></a>
-                            </li>
-                            <li>
-                                <a asp-action="CategoriaIssue" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Categorias de problemas</span></a>
-                            </li>
-                            <li>
-                                <a asp-action="Rolhora" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Categorias de problemas</span></a>
-                            </li>
-                            <li>
-                                <a class="nav-link px-0"> <span class="d-none d-sm-inline">Preguntas de seguridad</span></a>
-                            </li>
-                        </ul>
-                    </li>
-
-                }
-
-                <li>
-                    <a class="nav-link px-0 align-middle" asp-area="" asp-controller="Home" asp-action="Cronograma" method="POST">
-                        <i class="fs-4 bi-calendar-week-fill"></i> <span class="ms-1 d-none d-sm-inline">Cronograma</span>
-                    </a>
-                </li>
-                <li>
-                    <a class="nav-link px-0 align-middle" asp-area="" asp-controller="Home" asp-action="Proyectos" method="POST">
-                        <i class="fs-4 bi-folder-fill"></i> <span class="ms-1 d-none d-sm-inline">Proyectos</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link px-0 align-middle">
-                        <i class="fs-4 bi-camera-video-fill "></i> <span class="ms-1 d-none d-sm-inline">Reuniones</span>
-                    </a>
-                </li>
-            </ul>
-
-            <div class="dropdown pb-4">
-                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30" class="rounded-circle">
-                    <span class="d-none d-sm-inline mx-1">loser</span>
+        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white" style="height: 90vh;">
+                <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                    <span class="fs-5 d-none d-sm-inline">Menu</span>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-                    <li><a class="dropdown-item" href="#">New project...</a></li>
-                    <li><a class="dropdown-item" href="#">Settings</a></li>
-                    <li><a class="dropdown-item" href="#">Profile</a></li>
-                    <li>
-                        <hr class="dropdown-divider">
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link align-middle px-0">
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Inicio</span>
+                        </a>
                     </li>
-                    <li><a class="dropdown-item" href="#">Sign out</a></li>
+                    @if (ViewBag.sesion == "1")
+                    {
+                        <li>
+                            <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                                <i class="fs-4 bi-collection-fill"></i> <span class="ms-1 d-none d-sm-inline">Mantenimiento</span>
+                            </a>
+                            <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
+                                <li class="w-100">
+                                    <a asp-action="Usuarios" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Usuarios</span> </a>
+                                </li>
+                                <li>
+                                    <a asp-action="Clientes" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Clientes</span> </a>
+                                </li>
+                                <li>
+                                    <a asp-action="Estado" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Estados</span></a>
+                                </li>
+                                <li>
+                                    <a class="nav-link px-0" asp-area="" asp-controller="Home" asp-action="DetEstado" method="POST"> <span class="d-none d-sm-inline">Detalle Estado</span></a>
+                                </li>
+                                <li>
+                                    <a asp-action="Recurso" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Recursos</span></a>
+                                </li>
+                                <li>
+                                    <a asp-action="CategoriaIssue" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Categorias de problemas</span></a>
+                                </li>
+                                <li>
+                                    <a asp-action="Rolhora" asp-controller="Home" method="POST" class="nav-link px-0"> <span class="d-none d-sm-inline">Categorias de problemas</span></a>
+                                </li>
+                                <li>
+                                    <a class="nav-link px-0"> <span class="d-none d-sm-inline">Preguntas de seguridad</span></a>
+                                </li>
+                            </ul>
+                        </li>
+
+                    }
+
+                    <li>
+                        <a class="nav-link px-0 align-middle" asp-area="" asp-controller="Home" asp-action="Cronograma" method="POST">
+                            <i class="fs-4 bi-calendar-week-fill"></i> <span class="ms-1 d-none d-sm-inline">Cronograma</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link px-0 align-middle" asp-area="" asp-controller="Home" asp-action="Proyectos" method="POST">
+                            <i class="fs-4 bi-folder-fill"></i> <span class="ms-1 d-none d-sm-inline">Proyectos</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-camera-video-fill "></i> <span class="ms-1 d-none d-sm-inline">Reuniones</span>
+                        </a>
+                    </li>
                 </ul>
+
+                <div class="dropdown pb-4">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30" class="rounded-circle">
+                        <span class="d-none d-sm-inline mx-1">loser</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                        <li><a class="dropdown-item" href="#">New project...</a></li>
+                        <li><a class="dropdown-item" href="#">Settings</a></li>
+                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">Sign out</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
         <div class="col py-3">
             <form asp-action="Index" asp-controller="Home" method="POST">
                 <button type="submit" class="btn btn-dark float-end">Cerrar sesion</button>
@@ -118,6 +119,8 @@
                     </div>
                     <br />
                     <br />
+                    <input id="idSesion" type="hidden" value="@ViewBag.idusu" class="form-control" placeholder="Ejm Juan Perez" />
+                    <input id="idTipo" type="hidden" value="@ViewBag.sesion" class="form-control" placeholder="Ejm Juan Perez" />
                     <div class="" id="contenido">
                         
                     </div>
@@ -265,7 +268,14 @@
     <script>
         var today = new Date();
         $(document).ready(function () {
-            cargarProyectos();
+            var valor = document.getElementById("idTipo").value;
+            console.log("VALOR:" + valor);
+            if(valor == "1"){
+                cargarProyectos();
+            }else{
+                cargarProyectosPM();
+            }
+            
             cargarClienteLst();
             cargarDetEstado();
             cargarUsuarioLst();
@@ -349,44 +359,187 @@
                 div.append(tabla);
             }).fail();
         }
-        function detallesProyectoBusca() {
-            
+        function cargarProyectosPM() {
+            var valor = document.getElementById("idSesion").value;
+            $.ajax({
+                url: '/Home/mostrarProyectosPM',
+                type: 'post',
+                dataType: 'json',
+                data: { id: valor },
+                cache: false
+            }).done(function (resp) {
+                console.log(resp);
+                var div = $("#contenido");
+                var tabla = "";
+                $.each(resp, function (index, proyecto) {
+                    var fechaInicio = new Date(proyecto.fechaInicio);
+                    var formatFechainicio = fechaInicio.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    var fechaFinalProp = new Date(proyecto.fechaFinalProp);
+                    var formatFechaFinalProp = fechaFinalProp.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    var formatHoy = fechaInicio.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
-            if ($("#cadena").val() == "") {
-                $.ajax({
-                    url: '/Home/mostrarProyectos',
-                    type: 'post',
-                    dataType: 'json',
-                    cache: false
-                }).done(function (resp) {
-                    console.log(resp);
-                    var div = $("#contenido");
-                    var tabla = "";
-                    $.each(resp, function (index, proyecto) {
-                        tabla += "<div class='card text-white card mb-3' style='width: 100 %; background-color: #232f36;'><div class='container'><br /><h2 class='card-title'>" + proyecto.nombrePry + "</h2><hr/><div class=card-body' style='display: flex; align-items: center;' ><div style='flex-grow: 1;'><h3> -- horas actuales de " + proyecto.horasTotales + " horas propuestas </h3><h4>Fecha de creación:" + proyecto.fechaInicio + " </h4><h4 style = 'text-align: right;'> Hoy: --/--/-- | Estimada: " + proyecto.fechaFinalProp + " </h4></div><h2 style = 'margin-top: -1rem; align-self: flex-start;'> Estado: " + proyecto.estadoNombre + " </h2><a class='btn btn-primary' href=\"javascript:editarProyecto('" + proyecto.idProyecto + "')\"> Editar </a><a class='btn btn-warning' href=\"javascript:detallesProyecto('" + proyecto.idProyecto + "')\"> Ver detalles </a></div></div></div>";
-                    });
-                    div.empty();
-                    div.append(tabla);
-                }).fail();
+                    var editarEnlace = "";
+                    if ("@ViewBag.sesion" === "1") {
+                        editarEnlace = "<a class='btn btn-primary' href=\"javascript:editarProyecto('" + proyecto.idProyecto + "')\"> Editar </a>";
+                    }
+
+                    if (proyecto.horasTotalesreal != null) {
+                        tabla += "<div class='card text-white card mb-3' style='width: 100 %; background-color: #232f36;'><div class='container'><br /><h2 class='card-title'>" + proyecto.nombrePry + "</h2><hr/><div class=card-body' style='display: flex; align-items: center;' ><div style='flex-grow: 1;'><h3> " + proyecto.horasTotalesreal + " horas actuales de " + proyecto.horasTotales + " horas propuestas </h3><h4>Fecha de creación:" + formatFechainicio + " </h4><h4 style = 'text-align: right;'> Hoy: " + formatHoy + " | Estimada: " + formatFechaFinalProp + " </h4></div><h2 style = 'margin-top: -1rem; align-self: flex-start;'> Estado: " + proyecto.estadoNombre + " </h2>" + editarEnlace + "<a class='btn btn-warning' href=\"javascript:detallesProyecto('" + proyecto.idProyecto + "')\"> Ver detalles </a></div></div></div>";
+                    } else {
+                        tabla += "<div class='card text-white card mb-3' style='width: 100 %; background-color: #232f36;'><div class='container'><br /><h2 class='card-title'>" + proyecto.nombrePry + "</h2><hr/><div class=card-body' style='display: flex; align-items: center;' ><div style='flex-grow: 1;'><h3> -- horas actuales de " + proyecto.horasTotales + " horas propuestas </h3><h4>Fecha de creación:" + formatFechainicio + " </h4><h4 style = 'text-align: right;'> Hoy: " + formatHoy + " | Estimada: " + formatFechaFinalProp + " </h4></div><h2 style = 'margin-top: -1rem; align-self: flex-start;'> Estado: " + proyecto.estadoNombre + " </h2>" + editarEnlace + "<a class='btn btn-warning' href=\"javascript:detallesProyecto('" + proyecto.idProyecto + "')\"> Ver detalles </a></div></div></div>";
+                    }
+                });
+                div.empty();
+                div.append(tabla);
+            }).fail();
+        }
+        function detallesProyectoBusca() {
+
+            var valorsesion = document.getElementById("idSesion").value; 
+            var valortipo = document.getElementById("idTipo").value;
+
+            if(valortipo == "1"){
+                if ($("#cadena").val() == "") {
+                    $.ajax({
+                        url: '/Home/mostrarProyectos',
+                        type: 'post',
+                        dataType: 'json',
+                        cache: false
+                    }).done(function (resp) {
+                        console.log(resp);
+                        var div = $("#contenido");
+                        var tabla = "";
+                        $.each(resp, function (index, proyecto) {
+                            var fechaInicio = new Date(proyecto.fechaInicio);
+                            var formatFechainicio = fechaInicio.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                            var fechaFinalProp = new Date(proyecto.fechaFinalProp);
+                            var formatFechaFinalProp = fechaFinalProp.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                            var formatHoy = fechaInicio.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+                            var editarEnlace = "";
+                            if ("@ViewBag.sesion" === "1") {
+                                editarEnlace = "<a class='btn btn-primary' href=\"javascript:editarProyecto('" + proyecto.idProyecto + "')\"> Editar </a>";
+                            }
+
+                            if (proyecto.horasTotalesreal != null) {
+                                tabla += "<div class='card text-white card mb-3' style='width: 100 %; background-color: #232f36;'><div class='container'><br /><h2 class='card-title'>" + proyecto.nombrePry + "</h2><hr/><div class=card-body' style='display: flex; align-items: center;' ><div style='flex-grow: 1;'><h3> " + proyecto.horasTotalesreal + " horas actuales de " + proyecto.horasTotales + " horas propuestas </h3><h4>Fecha de creación:" + formatFechainicio + " </h4><h4 style = 'text-align: right;'> Hoy: " + formatHoy + " | Estimada: " + formatFechaFinalProp + " </h4></div><h2 style = 'margin-top: -1rem; align-self: flex-start;'> Estado: " + proyecto.estadoNombre + " </h2>" + editarEnlace + "<a class='btn btn-warning' href=\"javascript:detallesProyecto('" + proyecto.idProyecto + "')\"> Ver detalles </a></div></div></div>";
+                            } else {
+                                tabla += "<div class='card text-white card mb-3' style='width: 100 %; background-color: #232f36;'><div class='container'><br /><h2 class='card-title'>" + proyecto.nombrePry + "</h2><hr/><div class=card-body' style='display: flex; align-items: center;' ><div style='flex-grow: 1;'><h3> -- horas actuales de " + proyecto.horasTotales + " horas propuestas </h3><h4>Fecha de creación:" + formatFechainicio + " </h4><h4 style = 'text-align: right;'> Hoy: " + formatHoy + " | Estimada: " + formatFechaFinalProp + " </h4></div><h2 style = 'margin-top: -1rem; align-self: flex-start;'> Estado: " + proyecto.estadoNombre + " </h2>" + editarEnlace + "<a class='btn btn-warning' href=\"javascript:detallesProyecto('" + proyecto.idProyecto + "')\"> Ver detalles </a></div></div></div>";
+                            }
+                        });
+                        div.empty();
+                        div.append(tabla);
+                    }).fail();
+                } else {
+                    var valor = document.getElementById("cadena").value;
+                    $.ajax({
+                        url: '/Home/mostrarProyectosBusca/',
+                        type: 'post',
+                        dataType: 'json',
+                        data: { cadena: valor }, // Pasar la variable valor como parámetro
+                        cache: false
+                    }).done(function (resp) {
+                        console.log(resp);
+                        var div = $("#contenido");
+                        var tabla = "";
+                        $.each(resp, function (index, proyecto) {
+                            var fechaInicio = new Date(proyecto.fechaInicio);
+                            var formatFechainicio = fechaInicio.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                            var fechaFinalProp = new Date(proyecto.fechaFinalProp);
+                            var formatFechaFinalProp = fechaFinalProp.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                            var formatHoy = fechaInicio.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+                            var editarEnlace = "";
+                            if ("@ViewBag.sesion" === "1") {
+                                editarEnlace = "<a class='btn btn-primary' href=\"javascript:editarProyecto('" + proyecto.idProyecto + "')\"> Editar </a>";
+                            }
+
+                            if (proyecto.horasTotalesreal != null) {
+                                tabla += "<div class='card text-white card mb-3' style='width: 100 %; background-color: #232f36;'><div class='container'><br /><h2 class='card-title'>" + proyecto.nombrePry + "</h2><hr/><div class=card-body' style='display: flex; align-items: center;' ><div style='flex-grow: 1;'><h3> " + proyecto.horasTotalesreal + " horas actuales de " + proyecto.horasTotales + " horas propuestas </h3><h4>Fecha de creación:" + formatFechainicio + " </h4><h4 style = 'text-align: right;'> Hoy: " + formatHoy + " | Estimada: " + formatFechaFinalProp + " </h4></div><h2 style = 'margin-top: -1rem; align-self: flex-start;'> Estado: " + proyecto.estadoNombre + " </h2>" + editarEnlace + "<a class='btn btn-warning' href=\"javascript:detallesProyecto('" + proyecto.idProyecto + "')\"> Ver detalles </a></div></div></div>";
+                            } else {
+                                tabla += "<div class='card text-white card mb-3' style='width: 100 %; background-color: #232f36;'><div class='container'><br /><h2 class='card-title'>" + proyecto.nombrePry + "</h2><hr/><div class=card-body' style='display: flex; align-items: center;' ><div style='flex-grow: 1;'><h3> -- horas actuales de " + proyecto.horasTotales + " horas propuestas </h3><h4>Fecha de creación:" + formatFechainicio + " </h4><h4 style = 'text-align: right;'> Hoy: " + formatHoy + " | Estimada: " + formatFechaFinalProp + " </h4></div><h2 style = 'margin-top: -1rem; align-self: flex-start;'> Estado: " + proyecto.estadoNombre + " </h2>" + editarEnlace + "<a class='btn btn-warning' href=\"javascript:detallesProyecto('" + proyecto.idProyecto + "')\"> Ver detalles </a></div></div></div>";
+                            }
+                        });
+                        div.empty();
+                        div.append(tabla);
+                    }).fail();
+                }
             }else{
-                var valor = document.getElementById("cadena").value;
-                $.ajax({
-                    url: '/Home/mostrarProyectosBusca/',
-                    type: 'post',
-                    dataType: 'json',
-                    data: { cadena: valor }, // Pasar la variable valor como parámetro
-                    cache: false
-                }).done(function (resp) {
-                    console.log(resp);
-                    var div = $("#contenido");
-                    var tabla = "";
-                    $.each(resp, function (index, proyecto) {
-                        tabla += "<div class='card text-white card mb-3' style='width: 100 %; background-color: #232f36;'><div class='container'><br /><h2 class='card-title'>" + proyecto.nombrePry + "</h2><hr/><div class=card-body' style='display: flex; align-items: center;' ><div style='flex-grow: 1;'><h3> -- horas actuales de " + proyecto.horasTotales + " horas propuestas </h3><h4>Fecha de creación:" + proyecto.fechaInicio + " </h4><h4 style = 'text-align: right;'> Hoy: --/--/-- | Estimada: " + proyecto.fechaFinalProp + " </h4></div><h2 style = 'margin-top: -1rem; align-self: flex-start;'> Estado: " + proyecto.estadoNombre + " </h2><a class='btn btn-primary' href=\"javascript:editarProyecto('" + proyecto.idProyecto + "')\"> Editar </a><a class='btn btn-warning' href=\"javascript:detallesProyecto('" + proyecto.idProyecto + "')\"> Ver detalles </a></div></div></div>";
-                    });
-                    div.empty();
-                    div.append(tabla);
-                }).fail();
+                if ($("#cadena").val() == "") {
+                    $.ajax({
+                        url: '/Home/mostrarProyectosPM',
+                        type: 'post',
+                        dataType: 'json',
+                        data: { id: valorsesion },
+                        cache: false
+                    }).done(function (resp) {
+                        console.log(resp);
+                        var div = $("#contenido");
+                        var tabla = "";
+                        $.each(resp, function (index, proyecto) {
+                            var fechaInicio = new Date(proyecto.fechaInicio);
+                            var formatFechainicio = fechaInicio.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                            var fechaFinalProp = new Date(proyecto.fechaFinalProp);
+                            var formatFechaFinalProp = fechaFinalProp.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                            var formatHoy = fechaInicio.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+                            var editarEnlace = "";
+                            if ("@ViewBag.sesion" === "1") {
+                                editarEnlace = "<a class='btn btn-primary' href=\"javascript:editarProyecto('" + proyecto.idProyecto + "')\"> Editar </a>";
+                            }
+
+                            if (proyecto.horasTotalesreal != null) {
+                                tabla += "<div class='card text-white card mb-3' style='width: 100 %; background-color: #232f36;'><div class='container'><br /><h2 class='card-title'>" + proyecto.nombrePry + "</h2><hr/><div class=card-body' style='display: flex; align-items: center;' ><div style='flex-grow: 1;'><h3> " + proyecto.horasTotalesreal + " horas actuales de " + proyecto.horasTotales + " horas propuestas </h3><h4>Fecha de creación:" + formatFechainicio + " </h4><h4 style = 'text-align: right;'> Hoy: " + formatHoy + " | Estimada: " + formatFechaFinalProp + " </h4></div><h2 style = 'margin-top: -1rem; align-self: flex-start;'> Estado: " + proyecto.estadoNombre + " </h2>" + editarEnlace + "<a class='btn btn-warning' href=\"javascript:detallesProyecto('" + proyecto.idProyecto + "')\"> Ver detalles </a></div></div></div>";
+                            } else {
+                                tabla += "<div class='card text-white card mb-3' style='width: 100 %; background-color: #232f36;'><div class='container'><br /><h2 class='card-title'>" + proyecto.nombrePry + "</h2><hr/><div class=card-body' style='display: flex; align-items: center;' ><div style='flex-grow: 1;'><h3> -- horas actuales de " + proyecto.horasTotales + " horas propuestas </h3><h4>Fecha de creación:" + formatFechainicio + " </h4><h4 style = 'text-align: right;'> Hoy: " + formatHoy + " | Estimada: " + formatFechaFinalProp + " </h4></div><h2 style = 'margin-top: -1rem; align-self: flex-start;'> Estado: " + proyecto.estadoNombre + " </h2>" + editarEnlace + "<a class='btn btn-warning' href=\"javascript:detallesProyecto('" + proyecto.idProyecto + "')\"> Ver detalles </a></div></div></div>";
+                            }
+                        });
+                        div.empty();
+                        div.append(tabla);
+                    }).fail();
+                } else {
+                    
+                    var valor = document.getElementById("cadena").value;
+                    var dataPM = {
+                        cadena: valor,
+                        id: valorsesion
+                    };
+                    $.ajax({
+                        url: '/Home/mostrarProyectosBuscaPM/',
+                        type: 'post',
+                        dataType: 'json',
+                        data: dataPM, // Pasar la variable valor como parámetro
+                        cache: false
+                    }).done(function (resp) {
+                        console.log(resp);
+                        var div = $("#contenido");
+                        var tabla = "";
+                        $.each(resp, function (index, proyecto) {
+                            var fechaInicio = new Date(proyecto.fechaInicio);
+                            var formatFechainicio = fechaInicio.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                            var fechaFinalProp = new Date(proyecto.fechaFinalProp);
+                            var formatFechaFinalProp = fechaFinalProp.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                            var formatHoy = fechaInicio.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+                            var editarEnlace = "";
+                            if ("@ViewBag.sesion" === "1") {
+                                editarEnlace = "<a class='btn btn-primary' href=\"javascript:editarProyecto('" + proyecto.idProyecto + "')\"> Editar </a>";
+                            }
+
+                            if (proyecto.horasTotalesreal != null) {
+                                tabla += "<div class='card text-white card mb-3' style='width: 100 %; background-color: #232f36;'><div class='container'><br /><h2 class='card-title'>" + proyecto.nombrePry + "</h2><hr/><div class=card-body' style='display: flex; align-items: center;' ><div style='flex-grow: 1;'><h3> " + proyecto.horasTotalesreal + " horas actuales de " + proyecto.horasTotales + " horas propuestas </h3><h4>Fecha de creación:" + formatFechainicio + " </h4><h4 style = 'text-align: right;'> Hoy: " + formatHoy + " | Estimada: " + formatFechaFinalProp + " </h4></div><h2 style = 'margin-top: -1rem; align-self: flex-start;'> Estado: " + proyecto.estadoNombre + " </h2>" + editarEnlace + "<a class='btn btn-warning' href=\"javascript:detallesProyecto('" + proyecto.idProyecto + "')\"> Ver detalles </a></div></div></div>";
+                            } else {
+                                tabla += "<div class='card text-white card mb-3' style='width: 100 %; background-color: #232f36;'><div class='container'><br /><h2 class='card-title'>" + proyecto.nombrePry + "</h2><hr/><div class=card-body' style='display: flex; align-items: center;' ><div style='flex-grow: 1;'><h3> -- horas actuales de " + proyecto.horasTotales + " horas propuestas </h3><h4>Fecha de creación:" + formatFechainicio + " </h4><h4 style = 'text-align: right;'> Hoy: " + formatHoy + " | Estimada: " + formatFechaFinalProp + " </h4></div><h2 style = 'margin-top: -1rem; align-self: flex-start;'> Estado: " + proyecto.estadoNombre + " </h2>" + editarEnlace + "<a class='btn btn-warning' href=\"javascript:detallesProyecto('" + proyecto.idProyecto + "')\"> Ver detalles </a></div></div></div>";
+                            }
+                        });
+                        div.empty();
+                        div.append(tabla);
+                    }).fail();
+                }
             }
+
+
+            
             
 
         }
