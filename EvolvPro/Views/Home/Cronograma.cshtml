@@ -125,7 +125,9 @@
                             }
                             
                         </div>
-                        </div> 
+                        </div>
+                    <input id="IdUsu" value="@ViewBag.idusu" type="hidden" class="form-control" />
+                    <input id="IdTipo" value="@ViewBag.sesion" type="hidden" class="form-control" />
                     <div id="contenido"> 
                     </div>
 
@@ -323,12 +325,14 @@
                     var pryid = document.getElementById("proyectos").value;
                     var horasCrgm = document.getElementById("HorasCrgm").value;
                     var horasCrgmHidden = document.getElementById("HorasCrgmHidden").value;
+                    var IdRolhora = document.getElementById("FkRolhora").value;
                     var formulario = $("#FormActualizarAct").serialize();
 
                     var data = {
                         pry: pryid,
                         horasBase: parseFloat(horasCrgmHidden),
-                        horasNuevo: parseFloat(horasCrgm)
+                        horasNuevo: parseFloat(horasCrgm),
+                        idrol: IdRolhora
                     };
                     
 
@@ -613,22 +617,47 @@
 
         }
         function cargarProyectos() {
+            var idUsu = document.getElementById("IdUsu").value;
+            var idTipo = document.getElementById("IdTipo").value;
+            var dataUsu = {
+                id: idUsu
+            };
+            if (idTipo == "1") {
+                $.ajax({
+                    url: '/Home/listaProyectos',
+                    type: 'post',
+                    dataType: 'json',
+                    cache: false
+                }).done(function (resp) {
+                    //console.log(resp);
+                    var div = $("#proyectos");
+                    var select = " <option selected>Seleccione</option>";
+                    $.each(resp, function (index, x) {
+                        select += "<option value=" + x.idProyecto + ">" + x.nombrePry + "</option>";
+                    });
+                    div.empty();
+                    div.append(select);
+                }).fail();
+            } else {
+                $.ajax({
+                    url: '/Home/listaProyectosUsu',
+                    type: 'post',
+                    dataType: 'json',
+                    data: dataUsu,
+                    cache: false
+                }).done(function (resp) {
+                    //console.log(resp);
+                    var div = $("#proyectos");
+                    var select = " <option selected>Seleccione</option>";
+                    $.each(resp, function (index, x) {
+                        select += "<option value=" + x.idProyecto + ">" + x.nombrePry + "</option>";
+                    });
+                    div.empty();
+                    div.append(select);
+                }).fail();
+            }
 
-            $.ajax({
-                url: '/Home/listProyectos',
-                type: 'post',
-                dataType: 'json',
-                cache: false
-            }).done(function (resp) {
-                console.log(resp);
-                var div = $("#proyectos");
-                    var select = " <option value='0' selected>Seleccione un proyecto</option>";
-                $.each(resp, function (index, x) {
-                    select += "<option value=" + x.idProyecto + ">"+ x.idProyecto +"."+ x.nombrePry + "</option>";
-                });
-                div.empty();
-                div.append(select);
-            }).fail();
+
 
         }
         function editarActividad(idCronograma) {

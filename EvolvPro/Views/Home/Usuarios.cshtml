@@ -1,5 +1,4 @@
-﻿
-@model Usuario
+﻿@model Usuario
 
 <div class="container-fluid">
     <div class="row flex-nowrap">
@@ -86,15 +85,15 @@
         </div>
         <div class="col py-3">
             @*<form asp-action="Index" asp-controller="Home" method="POST">
-                <button type="submit" class="btn btn-dark float-end">Cerrar sesion</button>
+            <button type="submit" class="btn btn-dark float-end">Cerrar sesion</button>
             </form>*@
             @if (ViewBag.sesion == "1")
             {
-                
+
                 <h3>Mantenimiento usuarios</h3>
                 <hr>
 
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#usuarioModal">
+                <button type="button" id="newUser" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#usuarioModal">
                     Nuevo usuario
                 </button>
 
@@ -120,16 +119,16 @@
                                     <input id="NombreUsu" name="NombreUsu" asp-for="NombreUsu" class="form-control  text-primary" placeholder="Ejm Juan Perez" />
 
                                     <label for="message-text" class="col-form-label">Teléfono: *</label>
-                                    <input id="TelefonoUsu" name="TelefonoUsu"  asp-for="TelefonoUsu" class="form-control text-primary" placeholder="Ejm. 2565-9855" />
+                                    <input id="TelefonoUsu" name="TelefonoUsu" asp-for="TelefonoUsu" class="form-control text-primary" placeholder="Ejm. 2565-9855" />
 
                                     <label for="message-text" class="col-form-label">Correo Electrónico:</label>
                                     <input id="CorreoUsu" name="CorreoUsu" asp-for="CorreoUsu" class="form-control  text-primary" placeholder="Ejm. juan.perez@gmail.com" />
 
                                     <label for="message-text" class="col-form-label">Contraseña:</label>
                                     <input id="ContrasenaUsu" name="ContrasenaUsu" asp-for="ContrasenaUsu" class="form-control  text-primary" type="password" placeholder="*********" />
-                                   
+
                                     <label for="message-text" class="col-form-label">Seleccione una pregunta de seguridad: *</label>
-                                    <div >
+                                    <div>
                                         <select class="form-select text-primary" id="seguridad" asp-for="FkPregunta">
                                         </select>
                                     </div>
@@ -174,7 +173,7 @@
             }).done(function (resp) {
                 // console.log(resp);
                 var div = $("#contenido");
-                var tabla = "<table class='table table-stripperd text-white'><thead><tr><th>Id </th><th>Nombre </th><th>Teléfono</th><th>Correo</th><th> Preg. a usuario </th><th>Res. Usuario</th><th>Estado</th><th>Tip. Usuario</th><th>Acciones</th></tr></thead><tbody>";
+                var tabla = "<table class='table table-bordered table-vcenter js-dataTable-full text-white'><thead><tr><th>Id </th><th>Nombre </th><th>Teléfono</th><th>Correo</th><th> Preg. a usuario </th><th>Res. Usuario</th><th>Estado</th><th>Tip. Usuario</th><th class='text-center' style='width: 15%;'>Acciones</th></tr></thead><tbody>";
                 $.each(resp, function (index, users) {
                     tabla += "<tr>";
                     tabla += "<td>" + users.idUsuario + "</td>";
@@ -190,7 +189,7 @@
                         tabla += "<td>Desactivado</td>";
                     }
                     tabla += "<td>" + users.fkTipousu + "</td>";
-                    tabla += "<td><a class='nav-link' href=\"javascript:editarUsu('" + users.idUsuario + "')\">Editar</a><a class='nav-link' href=\"javascript:elimiarUsu('" + users.idUsuario + "')\">Eliminar</a></td>";
+                    tabla += "<td><a class='btn btn-primary' href=\"javascript:editarUsu(" + users.idUsuario + ")\">Editar</a><a class='btn btn-danger' href=\"javascript:elimiarUsu(" + users.idUsuario + ")\">Eliminar</a></td>";
                     tabla += "</tr>";
                 });
                 tabla += "</tbody></table>";
@@ -296,12 +295,32 @@
                     }
                 });
         }
+
+        function limpiarModal() {
+            $('#IdUsuario').val('');
+            $('#NombreUsu').val('');
+            $('#TelefonoUsu').val('');
+            $('#CorreoUsu').val('');
+            $('#seguridad').val('Seleccione');
+            $('#RespuestaUsu').val('');
+            $('#FkEstadousu').val('');
+            $('#tUsuarios').val('Seleccione');
+            // Ocultar el modal
+            $('#usuarioModal').modal('hide');
+        }
+
         $(document).ready(function () {
 
             //jquery
             cargarTabla();
             cargarPregSeguridad();
             cargartUsuario();
+            $('#btnCerrar').on('click', function () {
+                limpiarModal();
+            });
+            $('#newUser').on('click', function () {
+                limpiarModal();
+            });
             //programamos los botones
             $("#btnGuardar").click(function () {
                 if ($("#NombreUsu").val() != "" &&
@@ -322,7 +341,7 @@
                         if (resp) {
                             swal("Guardado con éxito");
                             cargarTabla();
-                            $("#IdUsuario").val("");
+                            limpiarModal();
                             $("#btnCerrar").click();
                         } else {
                             swal("Error al guardar1");

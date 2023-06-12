@@ -36,6 +36,7 @@ namespace EvolvPro.Controllers
         public IActionResult Reuniones()
         {
             ViewBag.sesion = HttpContext.Session.GetString("VarSesion1");
+            ViewBag.idusu = HttpContext.Session.GetInt32("VarSesionIdUsu");
             return View();
         }
         public IActionResult Recu_Contra()
@@ -57,6 +58,7 @@ namespace EvolvPro.Controllers
         }
         public IActionResult Cronograma()
         {
+            ViewBag.idusu = HttpContext.Session.GetInt32("VarSesionIdUsu");
             ViewBag.sesion = HttpContext.Session.GetString("VarSesion1");
             return View();
         }
@@ -138,8 +140,6 @@ namespace EvolvPro.Controllers
             var obj = _DbContext.Usuarios.FirstOrDefault(x => x.CorreoUsu == usu.CorreoUsu);
             if (obj != null)
             {
-
-
                 if (usu.FkPregunta == obj.FkPregunta && usu.RespuestaUsu == obj.RespuestaUsu && usu.CorreoUsu == obj.CorreoUsu)
                 {
                     obj.ContrasenaUsu = usu.ContrasenaUsu;
@@ -923,7 +923,7 @@ namespace EvolvPro.Controllers
         }
 
         [HttpPost]
-        public ActionResult sumarHoras(int pry, double? horasBase, double horasNuevo)
+        public ActionResult sumarHoras(int pry, double? horasBase, double horasNuevo, int idrol)
         {
             if (horasBase.HasValue && !double.IsNaN(horasBase.Value))
             {
@@ -940,6 +940,16 @@ namespace EvolvPro.Controllers
 
                     // Guardar los cambios en la base de datos
                     contexto.SaveChanges();
+                    var crono2 = contexto.Proyectos.Where(x => x.IdProyecto == pry).FirstOrDefault();
+                    if (crono2.HorasTotalesreal > 0)
+                    {
+                        var rolo = contexto.RolHoras.Where(x => x.IdRolhora == idrol).FirstOrDefault();
+                        decimal totaldinero = ((decimal)(crono2.HorasTotalesreal * rolo.ValorHora));
+
+                        rolo.HoraTotal = totaldinero;
+                        contexto.SaveChanges();
+                    }
+
 
                     // Retornar un resultado exitoso (opcional)
                     return Json(true);
@@ -957,6 +967,15 @@ namespace EvolvPro.Controllers
 
                     // Guardar los cambios en la base de datos
                     contexto.SaveChanges();
+                    var crono2 = contexto.Proyectos.Where(x => x.IdProyecto == pry).FirstOrDefault();
+                    if (crono2.HorasTotalesreal > 0)
+                    {
+                        var rolo = contexto.RolHoras.Where(x => x.IdRolhora == idrol).FirstOrDefault();
+                        decimal totaldinero = ((decimal)(crono2.HorasTotalesreal * rolo.ValorHora));
+
+                        rolo.HoraTotal = totaldinero;
+                        contexto.SaveChanges();
+                    }
 
                     // Retornar un resultado exitoso (opcional)
                     return Json(true);
@@ -984,6 +1003,18 @@ namespace EvolvPro.Controllers
 
                     // Guardar los cambios en la base de datos
                     contexto.SaveChanges();
+                    var crono2 = contexto.Proyectos.Where(x => x.IdProyecto == pry).FirstOrDefault();
+
+                    if (crono2.HorasTotalesreal > 0)
+                    {
+                        var rolo = contexto.RolHoras.Where(x => x.IdRolhora == idrol).FirstOrDefault();
+                        decimal totaldinero = ((decimal)(crono2.HorasTotalesreal * rolo.ValorHora));
+
+                        rolo.HoraTotal = totaldinero;
+                        contexto.SaveChanges();
+                    }
+                    
+
 
                     // Retornar un resultado exitoso (opcional)
                     return Json(true);
@@ -1000,6 +1031,15 @@ namespace EvolvPro.Controllers
 
                     // Guardar los cambios en la base de datos
                     contexto.SaveChanges();
+                    var crono2 = contexto.Proyectos.Where(x => x.IdProyecto == pry).FirstOrDefault();
+                    if (crono2.HorasTotalesreal > 0)
+                    {
+                        var rolo = contexto.RolHoras.Where(x => x.IdRolhora == idrol).FirstOrDefault();
+                        decimal totaldinero = ((decimal)(crono2.HorasTotalesreal * rolo.ValorHora));
+
+                        rolo.HoraTotal = totaldinero;
+                        contexto.SaveChanges();
+                    }
 
                     // Retornar un resultado exitoso (opcional)
                     return Json(true);
@@ -1957,6 +1997,12 @@ namespace EvolvPro.Controllers
         {
             EvolvProContext contexto = new EvolvProContext();
             List<Proyecto> proyectos = contexto.Proyectos.ToList();
+            return Json(proyectos);
+        }
+        public IActionResult listaProyectosUsu(int id)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            List<Proyecto> proyectos = contexto.Proyectos.Where(x => x.FkUsuario == id).ToList();
             return Json(proyectos);
         }
         //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

@@ -1,5 +1,4 @@
-﻿
-@model Cliente
+﻿@model Cliente
 
 
 
@@ -88,11 +87,11 @@
         </div>
         <div class="col py-3">
             @*<form asp-action="Index" asp-controller="Home" method="POST">
-                <button type="submit" class="btn btn-dark float-end">Cerrar sesion</button>
+            <button type="submit" class="btn btn-dark float-end">Cerrar sesion</button>
             </form>*@
             @if (ViewBag.sesion == "1")
             {
-                
+
                 <h3>Mantenimiento Clientes</h3>
                 <hr>
 
@@ -156,13 +155,13 @@
             }).done(function (resp) {
                 // console.log(resp);
                 var div = $("#contenido");
-                var tabla = "<table class='table table-stripperd text-white'><thead><tr><th>Id </th><th>Nombre Cliente</th><th>Dirección</th><th>Acciones</th></tr></thead><tbody>";
+                var tabla = "<table class='table table-bordered table-vcenter js-dataTable-full text-white'><thead><tr><th>Id </th><th>Nombre Cliente</th><th>Dirección</th><th class='text-center' style='width: 15%;'>Acciones</th></tr></thead><tbody>";
                 $.each(resp, function (index, cli) {
                     tabla += "<tr>";
                     tabla += "<td>" + cli.idCliente + "</td>";
                     tabla += "<td>" + cli.nombreCli + "</td>";
                     tabla += "<td>" + cli.direccionCli + "</td>";
-                    tabla += "<td><a class='nav-link' href=\"javascript:editarCli('" + cli.idCliente + "')\">Editar</a><a class='nav-link' href=\"javascript:elimiarCli('" + cli.idCliente + "')\">Eliminar</a></td>";
+                    tabla += "<td><a class='btn btn-primary' href=\"javascript:editarCli('" + cli.idCliente + "')\">Editar</a><a class='btn btn-danger' href=\"javascript:elimiarCli('" + cli.idCliente + "')\">Eliminar</a></td>";
                     tabla += "</tr>";
                 });
                 tabla += "</tbody></table>";
@@ -171,7 +170,6 @@
             }).fail();
 
         }
-
 
         function editarCli(idCliente) {
             $.ajax({
@@ -225,6 +223,16 @@
                     }
                 });
         }
+
+        function limpiarModal() {
+            $('#IdCliente').val('');
+            $('#NombreCliente').val('');
+            $('#DireccionCliente').val('');
+
+            // Ocultar el modal
+            $('#usuarioModal').modal('hide');
+        }
+
         $(document).ready(function () {
 
             //jquery
@@ -233,7 +241,7 @@
             //programamos los botones
             $("#btnGuardar").click(function () {
                 if ($("#NombreCliente").val() != "" &&
-                    $("#DireccionCliente").val()) {
+                    $("#DireccionCliente").val() != "") {
                     //procedemos
                     var formulario = $("#Form1").serialize();
 
@@ -247,7 +255,7 @@
                         if (resp) {
                             swal("Guardado con éxito");
                             cargarTabla();
-                            $("#IdCliente").val("");
+                            limpiarModal();
                             $("#btnCerrar").click();
                         } else {
                             swal("Error al guardar");

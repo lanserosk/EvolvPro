@@ -96,9 +96,19 @@
 
                 <hr />
                 <br />
-
-                <div id="contenido">
+            <input id="IdUsu" value="@ViewBag.idusu" type="hidden" class="form-control" />
+            <input id="IdTipo" value="@ViewBag.sesion" type="hidden" class="form-control" />
+            <div class="container">
+                <div class="row">
+                    <div class="col-6">
+                        <label for="message-text" class="col-form-label">Filtra por proyecto</label>
+                        <select class="form-select text-primary" id="proyectosFiltro"></select>
+                        
+                    </div>
                 </div>
+            </div>
+            <div id="contenido">
+            </div>
                 <!-- Modal -->
                 <div class="modal fade" id="reunionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
@@ -241,8 +251,51 @@
                 });
         }
 
-        function cargarProyecto() {
+        function cargarProyectoFiltro() {
+            var idUsu = document.getElementById("IdUsu").value;
+            var idTipo = document.getElementById("IdTipo").value;
+            var dataUsu = {
+                id: idUsu
+            };
+            if(idTipo == "1"){
+                $.ajax({
+                    url: '/Home/listaProyectos',
+                    type: 'post',
+                    dataType: 'json',
+                    cache: false
+                }).done(function (resp) {
+                    //console.log(resp);
+                    var div = $("#proyectosFiltro");
+                    var select = " <option selected>Seleccione</option>";
+                    $.each(resp, function (index, x) {
+                        select += "<option value=" + x.idProyecto + ">" + x.nombrePry + "</option>";
+                    });
+                    div.empty();
+                    div.append(select);
+                }).fail();
+            }else{
+                $.ajax({
+                    url: '/Home/listaProyectosUsu',
+                    type: 'post',
+                    dataType: 'json',
+                    data: dataUsu,
+                    cache: false
+                }).done(function (resp) {
+                    //console.log(resp);
+                    var div = $("#proyectosFiltro");
+                    var select = " <option selected>Seleccione</option>";
+                    $.each(resp, function (index, x) {
+                        select += "<option value=" + x.idProyecto + ">" + x.nombrePry + "</option>";
+                    });
+                    div.empty();
+                    div.append(select);
+                }).fail();
+            }
+            
+            
 
+        }
+        function cargarProyecto() {
             $.ajax({
                 url: '/Home/listaProyectos',
                 type: 'post',
@@ -258,6 +311,8 @@
                 div.empty();
                 div.append(select);
             }).fail();
+
+
 
         }
 
@@ -276,6 +331,7 @@
 
         $(document).ready(function () {
             cargarProyecto();
+            cargarProyectoFiltro();
             //jquery
             cargarTabla();
             $('#btnCerrar').on('click', function () {
