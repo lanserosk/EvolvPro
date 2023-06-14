@@ -1956,6 +1956,82 @@ namespace EvolvPro.Controllers
         }
 
         [HttpPost]
+        public IActionResult mostrarReunionesBusca(int pry)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            var query = from reu in contexto.Reuniones
+                        join pro in contexto.Proyectos on reu.FkProyecto equals pro.IdProyecto
+                        where pro.IdProyecto == pry 
+                        select new
+                        {
+                            idReunion = reu.IdReunion,
+                            tituloReu = reu.TituloReu,
+                            puntosTratar = reu.PuntosTratar,
+                            desarrolloPunto = reu.DesarrolloPunto,
+                            asistentes = reu.Asistentes,
+                            tiempoReu = reu.TiempoReu,
+                            fkProyecto = pro.NombrePry
+                        };
+            List<Object> resultado = new List<object>();
+            foreach (var item in query)
+            {
+                resultado.Add(item);
+            }
+            return Json(resultado);
+        }
+
+        [HttpPost]
+        public IActionResult mostrarReunionesPM(int id_usu)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            var query = from reu in contexto.Reuniones
+                        join pro in contexto.Proyectos on reu.FkProyecto equals pro.IdProyecto
+                        where pro.FkUsuario == id_usu
+                        select new
+                        {
+                            idReunion = reu.IdReunion,
+                            tituloReu = reu.TituloReu,
+                            puntosTratar = reu.PuntosTratar,
+                            desarrolloPunto = reu.DesarrolloPunto,
+                            asistentes = reu.Asistentes,
+                            tiempoReu = reu.TiempoReu,
+                            fkProyecto = pro.NombrePry
+                        };
+            List<Object> resultado = new List<object>();
+            foreach (var item in query)
+            {
+                resultado.Add(item);
+            }
+            return Json(resultado);
+        }
+
+        [HttpPost]
+        public IActionResult mostrarReunionesPMBuscar(int id_usu, int pry)
+        {
+            EvolvProContext contexto = new EvolvProContext();
+            var query = from reu in contexto.Reuniones
+                        join pro in contexto.Proyectos on reu.FkProyecto equals pro.IdProyecto
+                        where pro.FkUsuario == id_usu && pro.IdProyecto == pry
+                        select new
+                        {
+                            idReunion = reu.IdReunion,
+                            tituloReu = reu.TituloReu,
+                            puntosTratar = reu.PuntosTratar,
+                            desarrolloPunto = reu.DesarrolloPunto,
+                            asistentes = reu.Asistentes,
+                            tiempoReu = reu.TiempoReu,
+                            fkProyecto = pro.NombrePry
+                        };
+            List<Object> resultado = new List<object>();
+            foreach (var item in query)
+            {
+                resultado.Add(item);
+            }
+            return Json(resultado);
+        }
+
+
+        [HttpPost]
         public IActionResult EditarReuniones(int id)
         {
             EvolvProContext contexto = new EvolvProContext();
