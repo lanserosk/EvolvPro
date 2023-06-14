@@ -106,8 +106,8 @@
                                     <label for="message-text" class="col-form-label">Valor Hora: *</label>
                                     <input id="ValorHora" name="ValorHora" asp-for="ValorHora" class="form-control text-primary" placeholder="Ejm. 2565-9855" />
 
-                                    <label for="message-text" class="col-form-label">Hora Total: *</label>
-                                    <input id="HoraTotal" name="HoraTotal" asp-for="HoraTotal" class="form-control  text-primary" placeholder="Ejm. juan.perez@gmail.com" />
+                                    @*<label for="message-text" class="col-form-label">Hora Total: *</label>*@
+                                    <input id="HoraTotal" name="HoraTotal" asp-for="HoraTotal"  type="hidden" class="form-control  text-primary" placeholder="Ejm. juan.perez@gmail.com" />
    
                                     <label for="message-text" class="col-form-label">Seleccione Proyecto: *</label>
                                     <div >
@@ -249,7 +249,6 @@
             $("#btnGuardar").click(function () {
                 if ($("#NombreRol").val() != "" &&
                     $("#ValorHora").val() != "" &&
-                    $("#HoraTotal").val() != "" &&
                     $("#FkProyecto").val() != "") {
                     //procedemos
                     var formulario = $("#Form1").serialize();

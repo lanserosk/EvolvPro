@@ -334,9 +334,9 @@
                     }
 
                     if (proyecto.horasTotalesreal != null) {
-                        tabla += "<div class='card text-white card mb-3' style='width: 100 %; background-color: #232f36;'><div class='container'><br /><h2 class='card-title'>" + proyecto.nombrePry + "</h2><hr/><div class=card-body' style='display: flex; align-items: center;' ><div style='flex-grow: 1;'><h3> " + proyecto.horasTotalesreal + " horas actuales de " + proyecto.horasTotales + " horas propuestas </h3><h4>Fecha de creación:" + formatFechainicio + " </h4><h4 style = 'text-align: right;'> Hoy: " + formatHoy + " | Estimada: " + formatFechaFinalProp + " </h4></div><h2 style = 'margin-top: -1rem; align-self: flex-start;'> Estado: " + proyecto.estadoNombre + " </h2>" + editarEnlace + "<a class='btn btn-warning' href=\"javascript:detallesProyecto('" + proyecto.idProyecto + "')\"> Ver detalles </a></div></div></div>";
+                        tabla += "<div class='card text-white card mb-3' style='width: 100 %; background-color: #232f36;'><div class='container'><br /><h2 class='card-title'>" + proyecto.nombrePry + "</h2><hr/><div class=card-body' style='display: flex; align-items: center;' ><div style='flex-grow: 1;'><h3> " + proyecto.horasTotalesreal + " horas actuales de " + proyecto.horasTotales + " horas propuestas </h3><h4>Fecha de creación:" + formatFechainicio + " </h4><h4 style = 'text-align: right;'> Hoy: " + formatHoy + " | Estimada: " + formatFechaFinalProp + " </h4></div><h2 style = 'margin-top: -1rem; align-self: flex-start;'> Estado: " + proyecto.estadoNombre + " </h2>" + editarEnlace + "<a class='btn btn-warning' href=\"javascript:detallesProyecto('" + proyecto.idProyecto + "')\"> Ver detalles </a><a class='btn btn-success' href=\"javascript:generarRptProyecto('" + proyecto.idProyecto + "')\"><i class='bi bi-printer'></i></a></div></div></div>";
                     } else {
-                        tabla += "<div class='card text-white card mb-3' style='width: 100 %; background-color: #232f36;'><div class='container'><br /><h2 class='card-title'>" + proyecto.nombrePry + "</h2><hr/><div class=card-body' style='display: flex; align-items: center;' ><div style='flex-grow: 1;'><h3> -- horas actuales de " + proyecto.horasTotales + " horas propuestas </h3><h4>Fecha de creación:" + formatFechainicio + " </h4><h4 style = 'text-align: right;'> Hoy: " + formatHoy + " | Estimada: " + formatFechaFinalProp + " </h4></div><h2 style = 'margin-top: -1rem; align-self: flex-start;'> Estado: " + proyecto.estadoNombre + " </h2>" + editarEnlace + "<a class='btn btn-warning' href=\"javascript:detallesProyecto('" + proyecto.idProyecto + "')\"> Ver detalles </a></div></div></div>";
+                        tabla += "<div class='card text-white card mb-3' style='width: 100 %; background-color: #232f36;'><div class='container'><br /><h2 class='card-title'>" + proyecto.nombrePry + "</h2><hr/><div class=card-body' style='display: flex; align-items: center;' ><div style='flex-grow: 1;'><h3> -- horas actuales de " + proyecto.horasTotales + " horas propuestas </h3><h4>Fecha de creación:" + formatFechainicio + " </h4><h4 style = 'text-align: right;'> Hoy: " + formatHoy + " | Estimada: " + formatFechaFinalProp + " </h4></div><h2 style = 'margin-top: -1rem; align-self: flex-start;'> Estado: " + proyecto.estadoNombre + " </h2>" + editarEnlace + "<a class='btn btn-warning' href=\"javascript:detallesProyecto('" + proyecto.idProyecto + "')\"> Ver detalles </a><a class='btn btn-success' href=\"javascript:generarRptProyecto('" + proyecto.idProyecto + "')\"><i class='bi bi-printer'></i></a></div></div></div>";
                     }
                 });
                 div.empty();
@@ -638,6 +638,27 @@
                 div.empty();
                 div.append(select);
             }).fail();
+
+        }
+        function generarRptProyecto(idProyecto) {
+            // Crear un formulario para enviar la solicitud de descarga
+            var form = document.createElement('form');
+            form.action = '/Home/GenerarReporteProyecto';
+            form.method = 'POST';
+            //form.target = '_blank'; // Abrir en una nueva pestaña o ventana
+
+            // Agregar un campo oculto con el ID del proyecto
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'idProyecto';
+            input.value = idProyecto;
+            form.appendChild(input);
+
+            // Agregar el formulario al DOM y enviarlo
+            document.body.appendChild(form);
+            form.submit();
+            // Eliminar el formulario del DOM después de enviarlo
+            document.body.removeChild(form);
 
         }
 
