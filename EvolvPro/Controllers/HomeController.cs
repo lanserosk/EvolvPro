@@ -122,6 +122,7 @@ namespace EvolvPro.Controllers
                 else
                 {
                     return RedirectToAction("Index", "Home");
+                    
                 }
 
             }
@@ -1050,7 +1051,7 @@ namespace EvolvPro.Controllers
             }
             else
             {
-                MiExcel = new HSSFWorkbook(stream);
+                return StatusCode(StatusCodes.Status200OK, new { mensaje = "Solo archivos con extension .xlsx" });
             }
 
             ISheet HojaExcel = MiExcel.GetSheetAt(0);
@@ -1132,7 +1133,7 @@ namespace EvolvPro.Controllers
                 contexto.BulkInsert(actividadesAgregar);
             }
 
-            return StatusCode(StatusCodes.Status200OK, new { mensaje = "ok" });
+            return StatusCode(StatusCodes.Status200OK, new { mensaje = "Datos importados correctamente!" });
         }
         [HttpPost]
         public IActionResult EliminarCronograma(int id)

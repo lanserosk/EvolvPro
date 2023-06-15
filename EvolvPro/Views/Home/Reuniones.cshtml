@@ -71,11 +71,11 @@
         </div>
         <div class="col py-3" style="padding-right: 30px">
 
-                <h3>Mantenimiento Reuniones</h3>
+                <h3>Reuniones</h3>
                 <hr>
 
                 <button type="button" id="newReu" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reunionModal">
-                    Nuevo Reunión
+                    Agregar Reunión
                 </button>
 
                 <hr />
@@ -83,6 +83,8 @@
             <input id="IdUsu" value="@ViewBag.idusu" type="hidden" class="form-control" />
             <input id="IdTipo" value="@ViewBag.sesion" type="hidden" class="form-control" />
             <div class="container">
+                <input id="MeetCode" class="form-control" />
+                <a href="javascript:generarMeet()" class="btn btn-primary">Generar</a>
                 <div class="row">
                     <div class="col-6">
                         <label for="message-text" class="col-form-label">Filtra por proyecto</label>
@@ -428,6 +430,41 @@
 
             // Ocultar el modal
             $('#reunionModal').modal('hide');
+        }
+
+        function generarMeet(){
+            const letras = 'abcdefghijklmnopqrstuvwxyz';
+            let codigo = '';
+
+            // Generar 3 letras aleatorias sin repetir
+            while (codigo.length < 3) {
+                const letra = letras.charAt(Math.floor(Math.random() * letras.length));
+                if (codigo.indexOf(letra) === -1) {
+                    codigo += letra;
+                }
+            }
+
+            // Generar 4 letras aleatorias sin repetir
+            while (codigo.length < 7) {
+                const letra = letras.charAt(Math.floor(Math.random() * letras.length));
+                if (codigo.indexOf(letra) === -1) {
+                    codigo += letra;
+                }
+            }
+
+            // Generar otros 3 letras aleatorias sin repetir
+            while (codigo.length < 11) {
+                const letra = letras.charAt(Math.floor(Math.random() * letras.length));
+                if (codigo.indexOf(letra) === -1) {
+                    codigo += letra;
+                }
+            }
+
+            // Aplicar formato '***-****-***'
+            codigo = codigo.substring(0, 3) + '-' + codigo.substring(3, 7) + '-' + codigo.substring(7);
+
+
+            $('#MeetCode').val(codigo);
         }
 
         $(document).ready(function () {

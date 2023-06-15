@@ -76,11 +76,11 @@
             @if (ViewBag.sesion == "1")
             {
 
-                <h3>Mantenimiento Clientes</h3>
+                <h3>Clientes</h3>
                 <hr>
 
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#clienteModal">
-                    Nuevo cliente
+                    Agregar cliente
                 </button>
 
                 <hr />
@@ -176,7 +176,7 @@
             });
         }
 
-        function elimiarUsu(IdCliente) {
+        function elimiarCli(IdCliente) {
             swal({
                 title: "Estas seguro?",
                 text: "Una vez eliminado se pierde definitivamente....",
