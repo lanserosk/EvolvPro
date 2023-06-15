@@ -1136,7 +1136,7 @@ namespace EvolvPro.Controllers
             return StatusCode(StatusCodes.Status200OK, new { mensaje = "Datos importados correctamente!" });
         }
         [HttpPost]
-        public IActionResult EliminarCronograma(int id)
+        public IActionResult EliminarCronograma(int id) // la base de datos debe ser cascade, o , tomar el id del cronograma y del issue para eliminar todo en conjunto
         {
             try
             {
