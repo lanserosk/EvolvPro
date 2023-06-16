@@ -645,7 +645,7 @@ namespace EvolvPro.Controllers
             obj.NombrePry = pry.NombrePry;
             obj.CasoNegocio = pry.CasoNegocio;
             obj.HorasTotales = pry.HorasTotales;
-            obj.HorasTotalesreal = null;
+            obj.HorasTotalesreal = pry.HorasTotalesreal;
             obj.Interesados = pry.Interesados;
             obj.FechaInicio = pry.FechaInicio;
             obj.FechaFinalProp = pry.FechaFinalProp;
@@ -687,6 +687,7 @@ namespace EvolvPro.Controllers
             res.NombrePry = objEdit.NombrePry;
             res.CasoNegocio = objEdit.CasoNegocio;
             res.HorasTotales = objEdit.HorasTotales;
+            res.HorasTotalesreal = objEdit.HorasTotalesreal;
             res.Interesados = objEdit.Interesados;
             res.FechaInicio = objEdit.FechaInicio;
             res.FechaFinalProp = objEdit.FechaFinalProp;

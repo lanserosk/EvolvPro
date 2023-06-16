@@ -120,6 +120,7 @@
                                 <div class="modal-body text-dark">
                                     <form id="FormProyectos">
                                         <input id="IdProyecto" name="IdProyecto" asp-for="IdProyecto" type="hidden" class="form-control" placeholder="Ejm Juan Perez" />
+                                        <input id="HorasReales" name="HorasTotalesreal" asp-for="HorasTotalesreal" type="hidden" class="form-control" placeholder="Ejm Juan Perez" />
                                         <div class="row">
                                             <div class="col-6">
                                                 <label for="message-text" class="col-form-label">Nombre del proyecto</label>
@@ -538,6 +539,7 @@
                     $('#IdProyecto').val(data.idProyecto);
                     $('#NombrePry').val(data.nombrePry);
                     $('#HorasTotales').val(data.horasTotales);
+                    $('#HorasReales').val(data.horasTotalesreal);
                     $('#CasoNegocio').val(data.casoNegocio);
                     $('#Interesados').val(data.interesados);
                     $('#FechaInicio').val(data.fechaInicio);

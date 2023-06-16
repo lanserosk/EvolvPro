@@ -259,7 +259,7 @@
                             <form id="formDetIssue">
                                 <div class="row">
                                     <input id="IdDetalleIssue" type="hidden" class="form-control" />
-                                    <input id="IdIssue" type="hidden" class="form-control" />
+                                    <input id="IdIssue22" type="hidden" class="form-control" />
                                     <div class="col-12">
                                         <label for="message-text" class="col-form-label">Seleccione una Categoria</label>
                                         <div>
@@ -269,8 +269,6 @@
                                     </div>
                                 </div>
                             </form>
-                            <div id="contenidoDetIssue">
-                            </div>
                             <div id="contenidoDetIssue">
                             </div>
                         </div>
@@ -421,7 +419,7 @@
             $("#btnGuardarCate").click(function () {
                 //procedemos
                 var idDetIssue = document.getElementById("IdDetalleIssue").value;
-                var idIssue = document.getElementById("IdIssue").value;
+                var idIssue = document.getElementById("IdIssue22").value;
                 var categoria = document.getElementById("categoria").value;
 
                 var data1 = {
@@ -577,32 +575,7 @@
             }).fail();
 
         }
-        function cargarDetCategoria() {
-            var idIssue = document.getElementById("IdIssue").value;
-            $.ajax({
-                url: '/Home/mostrarDetCategoria',
-                type: 'post',
-                dataType: 'json',
-                data: { id: idIssue },
-                cache: false
-            }).done(function (resp) {
-                console.log(resp);
-                var div = $("#contenidoDetIssue");
-                var tabla = "<table class='table table-striped'> <thead> <tr> <th> codigo </th> <th> Categoria </th> <th>  </th> </tr> </thead> <tbody> ";
-                $.each(resp, function (index, detcate) {
-
-                    tabla += "<tr>";
-                    tabla += "<td>" + detcate.detalleIssueId + "</td>";
-                    tabla += "<td>" + detcate.categoriaNombre + "</td>";
-                    tabla += "<td><a class='btn btn-danger' href=\"javascript:elimiarDetIssue('" + detcate.detalleIssueId + "')\">Eliminar</a></td>";
-                    tabla += "</tr>";
-                });
-                tabla += "</tbody></table>";
-                div.empty();
-                div.append(tabla);
-            }).fail();
-
-        }
+        
         function cargarProyectos() {
             var idUsu = document.getElementById("IdUsu").value;
             var idTipo = document.getElementById("IdTipo").value;
@@ -703,8 +676,34 @@
         function crudCategoria(idIssue) {
             cargarCategorias();
             $('#CategoriaModal').modal('show');
-            $('#IdIssue').val(idIssue);
+            $('#IdIssue22').val(idIssue);
             cargarDetCategoria();
+        }
+        function cargarDetCategoria() {
+            var idIssue = document.getElementById("IdIssue22").value;
+            $.ajax({
+                url: '/Home/mostrarDetCategoria',
+                type: 'post',
+                dataType: 'json',
+                data: { id: idIssue },
+                cache: false
+            }).done(function (resp) {
+                console.log(resp);
+                var div = $("#contenidoDetIssue");
+                var tabla = "<table class='table table-striped'> <thead> <tr> <th> codigo </th> <th> Categoria </th> <th>  </th> </tr> </thead> <tbody> ";
+                $.each(resp, function (index, detcate) {
+
+                    tabla += "<tr>";
+                    tabla += "<td>" + detcate.detalleIssueId + "</td>";
+                    tabla += "<td>" + detcate.categoriaNombre + "</td>";
+                    tabla += "<td><a class='btn btn-danger' href=\"javascript:elimiarDetIssue('" + detcate.detalleIssueId + "')\">Eliminar</a></td>";
+                    tabla += "</tr>";
+                });
+                tabla += "</tbody></table>";
+                div.empty();
+                div.append(tabla);
+            }).fail();
+
         }
         function cargarDetEstado() {
 
